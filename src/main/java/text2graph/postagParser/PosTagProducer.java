@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import text2graph.dependencyParser.PlagFile;
-
+import text2graph.misc.POSFile;
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
@@ -18,10 +17,10 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class PosTagProducer implements Runnable{
 
 	private final BlockingQueue<POSFile> queue;
-	private PlagFile[] files;
+	private POSFile[] files;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<POSFile> queue, PlagFile[] files, String taggerParams){
+	public PosTagProducer(BlockingQueue<POSFile> queue, POSFile[] files, String taggerParams){
 		this.queue = queue;
 		this.files = files;
 		try {
@@ -33,11 +32,13 @@ public class PosTagProducer implements Runnable{
 
 	@Override
 	public void run() {
-		for (PlagFile file : files) {
-			
-			System.out.println(Thread.currentThread().getName()+" producing file "+file.getRelPath());
-			POSFile taggedFile = tagFile(file);
-			System.out.println(Thread.currentThread().getName()+" done parsing file "+file.getRelPath());
+		int i = 0;
+		int filecount = files.length;
+		
+		for (POSFile file : files) {
+			i++;
+			POSFile taggedFile = tagFile(file, i==filecount);
+			System.out.println(Thread.currentThread().getName()+": done POS-tagging file "+file.getRelPath());
 			try {
 				queue.put(taggedFile);
 			} catch (InterruptedException e) {
@@ -47,9 +48,9 @@ public class PosTagProducer implements Runnable{
 	}
 
 
-	public POSFile tagFile(PlagFile file) {
-		POSFile taggedFile = new POSFile(file);
-
+	public POSFile tagFile(POSFile file, boolean isLastInQueue) {
+		file.setLastInQueue(isLastInQueue);
+		
 		try {
 			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath())));
 
@@ -62,13 +63,13 @@ public class PosTagProducer implements Runnable{
 					temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
-				taggedFile.addSentence(temp.toArray(new String[0]));
+				file.addSentence(temp.toArray(new String[0]));
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		return taggedFile;
+		return file;
 	}
 
 }
