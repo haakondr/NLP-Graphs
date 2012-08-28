@@ -11,6 +11,8 @@ import text2graph.postagParser.PosTagProducer;
 public class App {
     public static void main( String[] args ) {
 		BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
+		
+		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt
 		POSFile[] files = Fileutils.getUnparsedFiles(args[0], args[1]);
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
