@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import text2graph.models.POSFile;
+
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {

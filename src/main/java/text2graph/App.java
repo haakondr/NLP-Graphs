@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import text2graph.dependencyParser.DependencyParser;
 import text2graph.misc.Fileutils;
-import text2graph.misc.POSFile;
+import text2graph.models.POSFile;
 import text2graph.postagParser.PosTagProducer;
 
 public class App {

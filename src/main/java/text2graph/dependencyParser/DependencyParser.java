@@ -10,7 +10,7 @@ import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 import text2graph.misc.Fileutils;
-import text2graph.misc.POSFile;
+import text2graph.models.POSFile;
 
 
 public class DependencyParser implements Runnable {
