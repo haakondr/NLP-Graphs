@@ -9,12 +9,13 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-
-
 
 public class Fileutils {
 
@@ -38,50 +39,51 @@ public class Fileutils {
 		}
 	}
 
-	public static File[] getFiles(String directory) {
-		return new File(directory).listFiles();
+	public static File[] getFiles(Path dir) {
+		return dir.toFile().listFiles();
 	}
 
 
-	public static List<String> readAllLines(String filename) {
-		List<String> out = new ArrayList<String>();
-		try {
-			FileInputStream fstream = new FileInputStream(filename);
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String line = null;
-			while ((line = br.readLine()) != null)   {
-				out.add(line);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//	public static List<String> readAllLines(String filename) {
+//		List<String> out = new ArrayList<String>();
+//		try {
+//			FileInputStream fstream = new FileInputStream(filename);
+//			DataInputStream in = new DataInputStream(fstream);
+//			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//			String line = null;
+//			while ((line = br.readLine()) != null)   {
+//				out.add(line);
+//			}
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return out;
+//
+//	}
 
-		return out;
-
-	}
-
-	public static List<POSFile> getTaskList(String dir, String baseDir) {
+	public static List<POSFile> getFileList(Path dir, Path baseDir) {
 		List<POSFile> tasks = new ArrayList<POSFile>();
 		
 		for (File file : getFiles(dir)) {
 			if(file.isFile() && file.getName().endsWith(".txt")) {
-				tasks.add(new POSFile(file, baseDir));
+				tasks.add(new POSFile(file.toPath(), baseDir));
 			}else if(file.isDirectory()) {
-				tasks.addAll(getTaskList(file.getPath(), baseDir));
+				tasks.addAll(getFileList(file.toPath(), baseDir));
 			}
 		}
 		return tasks;
 	}
 
-	public static POSFile[] getTaskList(String dir) {
-		return getTaskList(dir, dir).toArray(new POSFile[0]);
+	public static POSFile[] getFileList(Path dir) {
+		return getFileList(dir, dir).toArray(new POSFile[0]);
 	}
 	
-	public static POSFile[] getUnparsedFiles(String dir, String outDir) {
-		POSFile[] files = getTaskList(dir);
+	
+	public static POSFile[] getUnparsedFiles(Path dir, String outDir) {
+		POSFile[] files = getFileList(dir);
 		List<POSFile> out = new ArrayList<POSFile>();
 		for (POSFile file : files) {
 			File outFile = new File(outDir+file.getRelPath());
@@ -110,6 +112,23 @@ public class Fileutils {
 		}
 
 		return chunks.toArray(new POSFile[0][0]);
+	}
+	
+	public static String getText(Path path) {
+		
+		List<String> lines;
+		try {
+			lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+			StringBuffer sb = new StringBuffer();
+			for (String line : lines) {
+				sb.append(line);
+			}
+			
+			return sb.toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

@@ -52,7 +52,7 @@ public class PosTagProducer implements Runnable{
 		file.setLastInQueue(isLastInQueue);
 		
 		try {
-			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath())));
+			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath().toString())));
 
 			for (List<HasWord> sentence : sentences) {
 				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence);

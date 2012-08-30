@@ -1,5 +1,7 @@
 package text2graph;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -12,8 +14,9 @@ public class App {
     public static void main( String[] args ) {
 		BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
 		
-		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt
-		POSFile[] files = Fileutils.getUnparsedFiles(args[0], args[1]);
+		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt 
+		Path input = Paths.get(args[0]);
+		POSFile[] files = Fileutils.getUnparsedFiles(input, args[1]);
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
