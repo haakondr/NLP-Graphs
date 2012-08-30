@@ -11,7 +11,7 @@ public class POSFile {
 	private Path relPath;
 	private List<String[]> sentences;
 	private boolean isLastInQueue;
-	private File file;
+//	private File file;
 	private Path path;
 	
 //	public POSFile(File file, String baseDir) {
@@ -27,9 +27,9 @@ public class POSFile {
 		this.relPath = basePath.relativize(path);
 	}
 	
-	public String getFilename() {
-		return file.getName();
-	}
+//	public String getFilename() {
+//		return file.getName();
+//	}
 	
 //	public String getPath() {
 //		return file.getPath();
