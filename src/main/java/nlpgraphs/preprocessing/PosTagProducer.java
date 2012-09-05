@@ -1,4 +1,4 @@
-package text2graph.postagParser;
+package nlpgraphs.preprocessing;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import text2graph.models.POSFile;
+import nlpgraphs.misc.POSFile;
+
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;

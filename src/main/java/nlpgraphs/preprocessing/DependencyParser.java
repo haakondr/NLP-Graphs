@@ -1,4 +1,4 @@
-package text2graph.dependencyParser;
+package nlpgraphs.preprocessing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.POSFile;
+
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
-import text2graph.misc.Fileutils;
-import text2graph.models.POSFile;
 
 
 public class DependencyParser implements Runnable {

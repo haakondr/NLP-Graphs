@@ -1,15 +1,17 @@
 package text2graph.misc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.POSFile;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import text2graph.models.POSFile;
 
 public class FileutilsTest {
 

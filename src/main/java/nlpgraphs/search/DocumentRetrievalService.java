@@ -1,9 +1,12 @@
-package text2graph.candidateRetrieval;
+package nlpgraphs.search;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.POSFile;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -21,9 +24,6 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
-
-import text2graph.misc.Fileutils;
-import text2graph.models.POSFile;
 
 public class DocumentRetrievalService {
 
@@ -73,5 +73,4 @@ public class DocumentRetrievalService {
 		}
 		return simDocs;
 	}
-	
 }

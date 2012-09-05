@@ -1,17 +1,20 @@
-package text2graph.candidateRetrieval;
+package text2graph.search;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+import nlpgraphs.search.DocumentRetrievalService;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
+
+
 
 public class CandidateRetrievalTest {
 

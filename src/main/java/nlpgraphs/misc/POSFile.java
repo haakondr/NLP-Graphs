@@ -1,4 +1,4 @@
-package text2graph.models;
+package nlpgraphs.misc;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

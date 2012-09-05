@@ -1,14 +1,15 @@
-package text2graph;
+package nlpgraphs;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import text2graph.dependencyParser.DependencyParser;
-import text2graph.misc.Fileutils;
-import text2graph.models.POSFile;
-import text2graph.postagParser.PosTagProducer;
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.POSFile;
+import nlpgraphs.preprocessing.DependencyParser;
+import nlpgraphs.preprocessing.PosTagProducer;
+
 
 public class App {
     public static void main( String[] args ) {
