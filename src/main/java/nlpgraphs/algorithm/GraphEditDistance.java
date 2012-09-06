@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.code.javakbest.JVC;
 
-import nlpgraphs.graph.Graph;
-import nlpgraphs.graph.Node;
+import nlpgraphs.classes.Graph;
+import nlpgraphs.classes.Node;
 import nlpgraphs.misc.Utils;
 
 
@@ -38,7 +38,7 @@ public class GraphEditDistance {
 	public double getDistance() {
 		/**
 		 * Retrieves the graph edit distance of graph g1 & g2,
-		 * using Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
+		 * using the Jonker-Volgenant algorithm to retrieve the (seemingly) optimal cost assignment of the cost matrix.
 		 */
 		JVC jvc = JVC.solve(this.costMatrix);
 		return jvc.getCost();
@@ -86,7 +86,6 @@ public class GraphEditDistance {
 	}
 
 	private double getSubstituteCost(Node node1, Node node2) {
-//		System.out.println(node1.getEdges()+" diff "+node2.getEdges()+": "+getEdgeDiff(node1, node2));
 		return getRelabelCost(node1, node2) + getEdgeDiff(node1, node2);
 	}
 
@@ -123,7 +122,4 @@ public class GraphEditDistance {
 			System.out.println();
 		}
 	}
-
-
-
 }

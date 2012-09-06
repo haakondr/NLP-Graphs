@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import nlpgraphs.classes.POSFile;
 import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.POSFile;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;

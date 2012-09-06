@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import nlpgraphs.graph.Edge;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.graph.Node;
+import nlpgraphs.classes.Edge;
+import nlpgraphs.classes.Graph;
+import nlpgraphs.classes.Node;
 import nlpgraphs.misc.Utils;
 
 import org.junit.Test;

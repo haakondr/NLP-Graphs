@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import nlpgraphs.misc.POSFile;
+import nlpgraphs.classes.POSFile;
 
 
 import edu.stanford.nlp.ling.HasWord;

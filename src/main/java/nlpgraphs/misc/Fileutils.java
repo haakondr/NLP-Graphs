@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import nlpgraphs.classes.POSFile;
+
 
 public class Fileutils {
 

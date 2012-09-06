@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import nlpgraphs.classes.POSFile;
 import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.POSFile;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;

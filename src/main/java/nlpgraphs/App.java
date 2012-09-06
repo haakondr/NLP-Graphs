@@ -5,8 +5,8 @@ import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import nlpgraphs.classes.POSFile;
 import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.POSFile;
 import nlpgraphs.preprocessing.DependencyParser;
 import nlpgraphs.preprocessing.PosTagProducer;
 

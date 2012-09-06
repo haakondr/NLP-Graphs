@@ -6,8 +6,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import nlpgraphs.classes.POSFile;
 import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.POSFile;
 
 import org.junit.Before;
 import org.junit.Test;
