@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.code.javakbest.JVC;
 
-import nlpgraphs.classes.Graph;
-import nlpgraphs.classes.Node;
+import nlpgraphs.graph.Graph;
+import nlpgraphs.graph.Node;
 import nlpgraphs.misc.Utils;
 
 

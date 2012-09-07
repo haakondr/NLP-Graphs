@@ -2,17 +2,13 @@ package text2graph.algorithm;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import nlpgraphs.algorithm.GraphEditDistance;
-import nlpgraphs.classes.Edge;
-import nlpgraphs.classes.Graph;
-import nlpgraphs.classes.Node;
-import nlpgraphs.misc.Utils;
+import nlpgraphs.graph.Edge;
+import nlpgraphs.graph.Graph;
+import nlpgraphs.graph.Node;
 
-import org.junit.Before;
 import org.junit.Test;
 
 
@@ -44,7 +40,6 @@ public class GraphEditDistanceTest {
 		g2.addEdge(new Edge("4-5", n4, n5));
 		
 		ged = new GraphEditDistance(g1, g2, 1, 1, 1);
-		ged.printMatrix();
 		
 		double dist = ged.getDistance();
 		assertEquals(2, (int)dist);
