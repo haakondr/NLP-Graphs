@@ -13,11 +13,15 @@ import nlpgraphs.preprocessing.PosTagProducer;
 
 public class App {
     public static void main( String[] args ) {
+    	preprocess(args[0], args[1]);
+    	
+    }
+    
+    private static void preprocess(String input, String output) {
 		BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
 		
 		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt 
-		Path input = Paths.get(args[0]);
-		POSFile[] files = Fileutils.getUnparsedFiles(input, args[1]);
+		POSFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), output);
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
@@ -25,7 +29,7 @@ public class App {
 			threadCount = (cpuCount < 10) ? 2 : 10;
 		}
 		
-		DependencyParser consumer  = new DependencyParser(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", args[1], threadCount);
+		DependencyParser consumer  = new DependencyParser(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", output, threadCount);
 		
 		POSFile[][] chunks = Fileutils.getChunks(files, threadCount);
 		System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
@@ -36,5 +40,9 @@ public class App {
 		}
 
 		new Thread(consumer, "maltparserConsumer").start();
+    }
+    
+    private static void findPlagiarism(String trainDir, String testDir, int threshold) {
+    	
     }
 }
