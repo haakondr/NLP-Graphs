@@ -2,11 +2,8 @@ package nlpgraphs.graph;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Graph {
 
@@ -32,11 +29,15 @@ public class Graph {
 		nodes.add(node);
 	}
 
+	public int getSize() {
+		return nodes.size();
+	}
+
 
 	public HashMap<String, List<Edge>> getAdjacent() {
 		return adjacent;
 	}
-	
+
 	public void addEdge(Edge edge) {
 		adjacent.get(edge.getTo().getId()).add(edge);
 		adjacent.get(edge.getFrom().getId()).add(edge);
@@ -50,10 +51,22 @@ public class Graph {
 		return adjacent.get(nodeId);
 	}
 
+	public void removeNode(int i) {
+		nodes.remove(i);
+	}
+
+	public void removeNode(String id) {
+		for (Node node : nodes) {
+			if(node.getId().equals(id)) {
+				nodes.remove(node);
+			}
+		}
+	}
+
 	public Node getNode(int i) {
 		return nodes.get(i);
 	}
-	
+
 	public Node getNode(String id) {
 		//TODO: rewrite to linkedhashmap or something, so iteration isnt needed?
 		for (Node node : nodes) {

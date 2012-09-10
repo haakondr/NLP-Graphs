@@ -19,7 +19,7 @@ public class GraphUtils {
 	public static Graph parseGraph(String filename) {
 		Graph graph = new Graph(Paths.get(filename));
 		HashMap<String, List<String[]>> adj = new HashMap<>();
-		
+
 		try {
 			List<String> lines =  Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
 			for (String line : lines) {
@@ -39,11 +39,13 @@ public class GraphUtils {
 		if(!adj.containsKey(tokens[0])) {
 			adj.put(tokens[0], new ArrayList<String[]>());
 		}
-		adj.get(tokens[0]).add(new String[] {tokens[6], tokens[7]});
-		
+		if(!tokens[6].equals("0")) {
+			adj.get(tokens[0]).add(new String[] {tokens[6], tokens[7]});
+		}
+
 		return new Node(tokens[0], new String[] {tokens[1], tokens[4]});
 	}
-	
+
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
 			if(!graph.getAdjacent().containsKey(node.getId())) {
