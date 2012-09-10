@@ -15,12 +15,15 @@ public class GraphEditDistance {
 	private final double SUBSTITUTE_COST;
 	private final double INSERT_COST;
 	private final double DELETE_COST;
+	private Graph g1, g2;
 
 
 	public GraphEditDistance(Graph g1, Graph g2, double subCost, double insCost, double delCost) {
 		this.SUBSTITUTE_COST = subCost;
 		this.INSERT_COST = insCost;
 		this.DELETE_COST = delCost;
+		this.g1 = g1;
+		this.g2 = g2;
 		this.costMatrix = createCostMatrix(g1, g2);
 	}
 	
@@ -105,7 +108,7 @@ public class GraphEditDistance {
 	}
 
 	private double getEdgeDiff(Node node1, Node node2) {
-		return Utils.listDiff(node1.getEdges(), node2.getEdges());
+		return Utils.listDiff(g1.getEdges(node1.getId()), g2.getEdges(node2.getId()));
 	}
 
 	public void printMatrix() {

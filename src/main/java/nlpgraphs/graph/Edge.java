@@ -1,6 +1,7 @@
 package nlpgraphs.graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Edge {
@@ -8,6 +9,7 @@ public class Edge {
 	private String id;
 	private Node from;
 	private Node to;
+//	private String to, from;
 	private List<String> attributes;
 	
 	public Edge(String id, Node from, Node to, List<String> attributes) {
@@ -17,6 +19,20 @@ public class Edge {
 		this.attributes = attributes;
 	}
 	
+	public Edge(String id, Node from, Node to, String[] attributes) {
+		this(id, from, to, Arrays.asList(attributes));
+	}
+	
+//	public Edge(String id, String from, String to, List<String> attributes) {
+//		this.id = id;
+//		this.from = from;
+//		this.to = to;
+//		this.attributes = attributes;
+//	}
+	
+//	public Edge(String id, String from, String to) {
+//		this(id, from, to, new ArrayList<String>());
+//	}
 	public Edge(String id, Node from, Node to) {
 		this(id, from, to, new ArrayList<String>());
 	}
@@ -24,6 +40,8 @@ public class Edge {
 	public String getId() {
 		return id;
 	}
+	
+	
 
 	public Node getFrom() {
 		return from;
@@ -32,6 +50,15 @@ public class Edge {
 	public Node getTo() {
 		return to;
 	}
+	
+
+//	public String getTo() {
+//		return to;
+//	}
+//
+//	public String getFrom() {
+//		return from;
+//	}
 
 	public List<String> getAttributes() {
 		return attributes;
@@ -41,9 +68,13 @@ public class Edge {
 		attributes.add(attr);
 	}
 	
+//	@Override
+//	public String toString() {
+//		return from.getId()+"-"+to.getId();
+//	}
 	@Override
 	public String toString() {
-		return from.getId()+"-"+to.getId();
+		return from + "-" +to;
 	}
 	
 	@Override

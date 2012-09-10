@@ -23,9 +23,9 @@ public class GraphEditDistanceTest {
 		g1 = new Graph();
 		g2 = new Graph();
 		
-		Node n1 = new Node("1", Arrays.asList(new String[] {"NN", "one"}));
-		Node n2 = new Node("2", Arrays.asList(new String[] {"GG", "two"}));
-		Node n3 = new Node("3", Arrays.asList(new String[] {"TT", "three"}));
+		Node n1 = new Node("1", new String[] {"NN", "one"});
+		Node n2 = new Node("2", new String[] {"GG", "two"});
+		Node n3 = new Node("3", new String[] {"TT", "three"});
 
 		g1.addNode(n1);
 		g1.addNode(n2);
@@ -33,8 +33,8 @@ public class GraphEditDistanceTest {
 		g1.addEdge(new Edge("1-2", n1, n2));
 		g1.addEdge(new Edge("2-3", n2, n3));
 		
-		Node n4 = new Node("4", Arrays.asList(new String[] {"NN", "one"}));
-		Node n5 = new Node("5", Arrays.asList(new String[] {"GG", "two"}));
+		Node n4 = new Node("4", new String[] {"NN", "one"});
+		Node n5 = new Node("5", new String[] {"GG", "two"});
 		g2.addNode(n4);
 		g2.addNode(n5);
 		g2.addEdge(new Edge("4-5", n4, n5));
@@ -47,6 +47,11 @@ public class GraphEditDistanceTest {
 	
 	@Test
 	public void testCostMatrix() {
+		
+	}
+	
+	@Test
+	public void testEdgeDiff() {
 		
 	}
 	
