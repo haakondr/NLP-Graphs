@@ -1,0 +1,49 @@
+package text2graph.misc;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
+import nlpgraphs.graph.Edge;
+import nlpgraphs.graph.Graph;
+import nlpgraphs.graph.Node;
+import nlpgraphs.misc.GraphUtils;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class GraphUtilsTest {
+
+	private Graph graph;
+	
+	@Before
+	public void setup() {
+		graph = GraphUtils.parseGraph("src/test/resources/parsed_documents/test.txt");
+	}
+	
+	@Test
+	public void shouldBeCorrectSize() {
+		assertEquals(12, graph.getSize());
+	}
+	
+	@Test
+	public void shouldRetrieveSameNode() {
+		Node n1 = graph.getNode(0);
+		Node n1_ = graph.getNode("1");
+		assertEquals(n1.getId(), n1_.getId());
+	}
+	
+	@Test
+	public void shouldRetrieveEdges() {
+		Node node_the = graph.getNode("10");
+		Node node_sun = graph.getNode("11");
+		
+		List<Edge> edges_the = graph.getEdges(node_the);
+		List<Edge> edges_sun = graph.getEdges(node_sun);
+		assertEquals(1, edges_the.size());
+		assertEquals(2, edges_sun.size());
+		
+		assertEquals("11", edges_the.get(0).getTo().getId());
+		assertEquals("10", edges_the.get(0).getFrom().getId());
+	}
+}

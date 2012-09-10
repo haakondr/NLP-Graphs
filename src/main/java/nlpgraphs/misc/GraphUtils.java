@@ -54,6 +54,7 @@ public class GraphUtils {
 			for (String[] edge : adj.get(node.getId())){
 				Node to = graph.getNode(edge[0]);
 				graph.getAdjacent().get(node.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
+				graph.getAdjacent().get(to.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 			}
 		}
 	}
