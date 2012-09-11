@@ -3,6 +3,7 @@ package nlpgraphs.misc;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,13 +18,16 @@ import nlpgraphs.graph.Node;
 
 public class GraphUtils {
 
-
-	public static Graph parseGraph(String filename) {
-		Graph graph = new Graph(Paths.get(filename));
+	public static Graph parseGraphs(String filename) {
+		return parseGraph(Paths.get(filename));
+	}
+	
+	public static Graph parseGraph(Path file) {
+		Graph graph = new Graph(file.getFileName().toString());
 		HashMap<String, List<String[]>> adj = new HashMap<>();
 
 		try {
-			List<String> lines =  Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+			List<String> lines =  Files.readAllLines(file, StandardCharsets.UTF_8);
 			for (String line : lines) {
 				graph.addNode(createNode(line, adj));
 			}
@@ -41,7 +45,7 @@ public class GraphUtils {
 		if(!adj.containsKey(tokens[0])) {
 			adj.put(tokens[0], new ArrayList<String[]>());
 		}
-		if(!tokens[6].equals("0")) {
+		if(!tokens[6].matches("[\\d]+_0")){
 			adj.get(tokens[0]).add(new String[] {tokens[6], tokens[7]});
 		}
 

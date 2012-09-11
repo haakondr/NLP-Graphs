@@ -2,6 +2,7 @@ package text2graph.misc;
 
 import static org.junit.Assert.assertEquals;
 
+import java.nio.file.Paths;
 import java.util.List;
 
 import nlpgraphs.graph.Edge;
@@ -18,7 +19,7 @@ public class GraphUtilsTest {
 	
 	@Before
 	public void setup() {
-		graph = GraphUtils.parseGraph("src/test/resources/parsed_documents/test.txt");
+		graph = GraphUtils.parseGraph(Paths.get("src/test/resources/parsed_documents/test.txt"));
 	}
 	
 	@Test

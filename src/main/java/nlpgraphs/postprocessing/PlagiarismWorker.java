@@ -1,4 +1,4 @@
-package nlpgraphs;
+package nlpgraphs.postprocessing;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -17,30 +17,27 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private Graph[] train;
 	private List<File> testFiles;
 	List<PlagiarismWorker> forks = new ArrayList<>();
-	private int threshold;
+	private int jobsLeft;
 
-	public PlagiarismWorker(Graph[] train, List<File> test, int threshold) {
+	public PlagiarismWorker(Graph[] train, List<File> test, int jobsLeft) {
 		this.testFiles = test;
 		this.train = train;
-		this.threshold = threshold;
+		this.jobsLeft = jobsLeft;
 	}
 
 	@Override
 	protected List<String> compute() {
 		List<String> results = new ArrayList<>();
-		if(train.length < threshold) {
+		if(jobsLeft < 2) {
 			for (File testFile : testFiles) {
 				results.add(getDistance(testFile));
 			}
 		}else {
 			int split = testFiles.size() / 2;
 			
-			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split));
+			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split), jobsLeft -2);
 			p1.fork();
-			
-			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()));
-			
-			
+			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()), jobsLeft -2);
 			results.addAll(p2.compute());
 			results.addAll(p1.join());
 		}
@@ -49,7 +46,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	}
 
 	private String getDistance(File file) {
-		Graph test = GraphUtils.parseGraph(file.toString());
+		Graph test = GraphUtils.parseGraph(file.toPath());
 
 		List<Double> distances = new ArrayList<>();
 		for (Graph trainGraph : train) {
@@ -57,7 +54,8 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 			distances.add(ged.getDistance());
 		}
 		String lowest = Double.toString(getLowest(distances));
-		return test.getFile().toString()+"\t"+ lowest;
+		System.out.println(test.getFilename()+" has plagiarism of "+lowest);
+		return test.getFilename()+"\t"+ lowest;
 	}
 
 	private double getLowest(List<Double> distances) {

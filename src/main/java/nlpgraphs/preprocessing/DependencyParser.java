@@ -12,6 +12,8 @@ import nlpgraphs.misc.Fileutils;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
+import edu.stanford.nlp.util.StringUtils;
+
 
 
 public class DependencyParser implements Runnable {
@@ -60,8 +62,18 @@ public class DependencyParser implements Runnable {
 	}
 	public void consume(POSFile posfile) throws MaltChainedException, NullPointerException {
 		List<String> parsedTokens = new ArrayList<>();
+		int sentenceNumber = 1;
 		for (String[] sentence : posfile.getSentences()) {
-			parsedTokens.addAll(Arrays.asList(maltService.parseTokens(sentence)));
+			String[] parsedSentences = maltService.parseTokens(sentence);
+			
+			for (String parsedSentence : parsedSentences) {
+				String[] tokens = parsedSentence.split("\t");
+				tokens[6] = sentenceNumber+"_"+tokens[6];
+				parsedTokens.add(StringUtils.join(tokens, "\t"));
+			}
+//			tokens[6] = sentenceNumber+"_"+tokens[6];
+			sentenceNumber++;
+//			parsedTokens.addAll(Arrays.asList(parsedSentences));
 		}
 		Fileutils.writeToFile(outDir+posfile.getRelPath(), parsedTokens.toArray(new String[0]));
 		System.out.println("Done dependency parsing file "+posfile.getRelPath());

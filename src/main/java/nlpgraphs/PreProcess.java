@@ -1,35 +1,28 @@
 package nlpgraphs;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import nlpgraphs.classes.POSFile;
-import nlpgraphs.graph.Graph;
 import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.GraphUtils;
 import nlpgraphs.preprocessing.DependencyParser;
 import nlpgraphs.preprocessing.PosTagProducer;
 
 
-public class App {
+public class PreProcess {
     public static void main( String[] args ) {
     	preprocess(args[0], args[1]);
-    	postProcess(args[1]+"/train/", args[1]+"/test/");
+
     }
     
     private static void preprocess(String input, String output) {
 		BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
 		
 		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt 
-		POSFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), output);
-
+//		POSFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), output);
+		POSFile[] files = Fileutils.getFileList(Paths.get(input));
+		
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
 		if((files.length > 10 && cpuCount > 4)) {
@@ -49,21 +42,6 @@ public class App {
 		new Thread(consumer, "maltparserConsumer").start();
     }
     
-    private static void postProcess(String trainDir, String testDir) {
-    	File[] trainFiles = Fileutils.getFiles(Paths.get(trainDir));
-    	List<Graph> trainGraphs = new ArrayList<>();
-    	for (File file : trainFiles) {
-			trainGraphs.add(GraphUtils.parseGraph(file.toString()));
-		}
-    	File[] test = Fileutils.getFiles(Paths.get(testDir));
-    	
-    	int threshold = test.length / Runtime.getRuntime().availableProcessors();
-    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threshold);
-   
-    	ForkJoinPool pool = new ForkJoinPool();
-    	List<String> results = pool.invoke(worker);
-    	
-    	Fileutils.writeToFile("plag.txt", results.toArray(new String[0]));
-    }
+  
     
 } 
