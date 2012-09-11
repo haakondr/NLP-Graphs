@@ -80,7 +80,6 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 		try {
 			DocumentRetrievalService drs = new DocumentRetrievalService(Paths.get(originalDir.toString()+"/train/"));
 			String filename = originalDir.toString()+"/test/"+file.getName();
-			System.out.println(filename);
 			return drs.getSimilarDocuments(Fileutils.getText(Paths.get(filename)), recall);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
