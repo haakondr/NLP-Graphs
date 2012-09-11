@@ -35,6 +35,6 @@ public class FileutilsTest {
 	@Test
 	public void shouldGetFiles() {
 		File[] files = Fileutils.getFiles(dir);
-		assertEquals(18, files.length);
+		assertEquals(17, files.length);
 	}
 }
