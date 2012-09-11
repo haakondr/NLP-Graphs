@@ -31,7 +31,7 @@ public class PostProcess {
 		}
 
 		System.out.println("using "+cpuCount+" threads");
-		PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threads, Paths.get(args[0]));
+		PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threads, Paths.get(args[2]));
 
 		ForkJoinPool pool = new ForkJoinPool();
 		List<String> results = pool.invoke(worker);

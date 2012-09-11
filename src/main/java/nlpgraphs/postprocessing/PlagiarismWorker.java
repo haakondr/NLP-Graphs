@@ -25,13 +25,13 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private List<File> testFiles;
 	List<PlagiarismWorker> forks = new ArrayList<>();
 	private int jobsLeft;
-	private Path trainDir;
+	private Path originalTrain;
 
-	public PlagiarismWorker(Graph[] train, List<File> test, int jobsLeft, Path traindir) {
+	public PlagiarismWorker(Graph[] train, List<File> test, int jobsLeft, Path originalTrainDir) {
 		this.testFiles = test;
 		this.train = train;
 		this.jobsLeft = jobsLeft;
-		this.trainDir = traindir;
+		this.originalTrain = originalTrainDir;
 	}
 
 	@Override
@@ -44,9 +44,9 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 		}else {
 			int split = testFiles.size() / 2;
 			
-			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split), jobsLeft -2, trainDir);
+			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split), jobsLeft -2, originalTrain);
 			p1.fork();
-			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()), jobsLeft -2, trainDir);
+			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()), jobsLeft -2, originalTrain);
 			results.addAll(p2.compute());
 			results.addAll(p1.join());
 		}
@@ -78,7 +78,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	
 	private List<String> getSimilarDocuments(File file, int recall) {
 		try {
-			DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
+			DocumentRetrievalService drs = new DocumentRetrievalService(originalTrain);
 			return drs.getSimilarDocuments(Fileutils.getText(file.toPath()), recall);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
