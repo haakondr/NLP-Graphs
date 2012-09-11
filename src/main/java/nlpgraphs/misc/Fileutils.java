@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import nlpgraphs.classes.POSFile;
+import nlpgraphs.graph.Graph;
 
 
 public class Fileutils {
@@ -110,6 +111,27 @@ public class Fileutils {
 
 		return chunks.toArray(new POSFile[0][0]);
 	}
+	
+	//TODO: rewrite with generics
+	public static Path[][] getChunks(Path[] files, int n) {
+		List<Path[]> chunks = new ArrayList<>();
+
+		int fileCount = files.length;
+		int chunksize = fileCount / n;
+		int i = 0;
+		while(i < fileCount) {
+			if(i+chunksize*2 <= fileCount) {
+				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
+				i += chunksize;
+			}else{
+				chunks.add(Arrays.copyOfRange(files, i, fileCount));
+				i = fileCount;
+			}
+		}
+
+		return chunks.toArray(new Path[0][0]);
+	}
+	
 	
 	public static String getText(Path path) {
 		

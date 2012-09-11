@@ -36,7 +36,8 @@ public class DependencyParser implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) {
+		boolean run = true;
+		while(run) {
 			try {
 				POSFile posfile = queue.poll(2000, TimeUnit.SECONDS);
 				consume(posfile);
@@ -52,7 +53,7 @@ public class DependencyParser implements Runnable {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				System.out.println("Consumer timed out after 10000 seconds with nothing from producer threads");
-				System.exit(0);
+				run = false;
 			}
 		}
 

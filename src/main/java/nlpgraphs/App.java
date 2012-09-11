@@ -1,12 +1,18 @@
 package nlpgraphs;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import nlpgraphs.classes.POSFile;
+import nlpgraphs.graph.Graph;
 import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.GraphUtils;
 import nlpgraphs.preprocessing.DependencyParser;
 import nlpgraphs.preprocessing.PosTagProducer;
 
@@ -42,7 +48,14 @@ public class App {
 		new Thread(consumer, "maltparserConsumer").start();
     }
     
-    private static void findPlagiarism(String trainDir, String testDir, int threshold) {
+    private static void postProcess(String trainDir, String testDir) {
+    	File[] trainFiles = Fileutils.getFiles(Paths.get(trainDir));
+    	List<Graph> trainGraphs = new ArrayList<>();
+    	for (File file : trainFiles) {
+			trainGraphs.add(GraphUtils.parseGraph(file.toString()));
+		}
+    	File[] test = Fileutils.getFiles(Paths.get(testDir));
     	
+    	new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test));
     }
 }

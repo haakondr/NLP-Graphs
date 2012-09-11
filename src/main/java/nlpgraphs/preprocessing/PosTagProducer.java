@@ -54,16 +54,18 @@ public class PosTagProducer implements Runnable{
 		
 		try {
 			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath().toString())));
-
+			int sentenceNumber = 1;
 			for (List<HasWord> sentence : sentences) {
 				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
 				List<String> temp = new ArrayList<>();
 				
+			
 				int i = 1;
 				for (TaggedWord token : taggedSentence) {
-					temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+					temp.add(sentenceNumber+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
+				sentenceNumber++;
 				file.addSentence(temp.toArray(new String[0]));
 			}
 		} catch (FileNotFoundException e) {

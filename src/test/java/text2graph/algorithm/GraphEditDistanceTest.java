@@ -54,22 +54,23 @@ public class GraphEditDistanceTest {
 		
 	}
 	
-	@Test
-	public void testExecutionTime() {
-		g1 = new Graph();
-		g2 = new Graph();
-		
-		for (int i = 0; i < 1000; i++) {
-			g1.addNode(new Node(String.valueOf(i), new String[] {String.valueOf(i)}));
-			g2.addNode(new Node(String.valueOf(i), new String[] {String.valueOf(i)}));
-			if(i>0) {
-				g1.addEdge(new Edge(String.valueOf(i-1)+"_"+String.valueOf(i), g1.getNode(i-1), g1.getNode(i)));
-				g2.addEdge(new Edge(String.valueOf(i-1)+"_"+String.valueOf(i), g1.getNode(i-1), g1.getNode(i)));
-			}
-		}
-		
-		ged = new GraphEditDistance(g1, g2, 1, 1, 1);
-		double dist = ged.getDistance();
-		assertEquals(0, (int)dist);
-	}
+//TODO: uncomment to test execution time for graph edit distance algorithm.
+//	@Test
+//	public void testExecutionTime() {
+//		g1 = new Graph();
+//		g2 = new Graph();
+//		
+//		for (int i = 0; i < 1000; i++) {
+//			g1.addNode(new Node(String.valueOf(i), new String[] {String.valueOf(i)}));
+//			g2.addNode(new Node(String.valueOf(i), new String[] {String.valueOf(i)}));
+//			if(i>0) {
+//				g1.addEdge(new Edge(String.valueOf(i-1)+"_"+String.valueOf(i), g1.getNode(i-1), g1.getNode(i)));
+//				g2.addEdge(new Edge(String.valueOf(i-1)+"_"+String.valueOf(i), g1.getNode(i-1), g1.getNode(i)));
+//			}
+//		}
+//		
+//		ged = new GraphEditDistance(g1, g2, 1, 1, 1);
+//		double dist = ged.getDistance();
+//		assertEquals(0, (int)dist);
+//	}
 }
