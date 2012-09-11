@@ -17,16 +17,18 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private Graph[] train;
 	private List<File> testFiles;
 	List<PlagiarismWorker> forks = new ArrayList<>();
+	private int threshold;
 
-	public PlagiarismWorker(Graph[] train, List<File> test) {
+	public PlagiarismWorker(Graph[] train, List<File> test, int threshold) {
 		this.testFiles = test;
 		this.train = train;
+		this.threshold = threshold;
 	}
 
 	@Override
 	protected List<String> compute() {
 		List<String> results = new ArrayList<>();
-		if(train.length == 1) {
+		if(train.length < threshold) {
 			for (File testFile : testFiles) {
 				results.add(getDistance(testFile));
 			}

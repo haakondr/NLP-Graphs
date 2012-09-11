@@ -57,7 +57,8 @@ public class App {
 		}
     	File[] test = Fileutils.getFiles(Paths.get(testDir));
     	
-    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test));
+    	int threshold = test.length / Runtime.getRuntime().availableProcessors();
+    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threshold);
    
     	ForkJoinPool pool = new ForkJoinPool();
     	List<String> results = pool.invoke(worker);
