@@ -23,7 +23,7 @@ public class PostProcess {
 	    	File[] test = Fileutils.getFiles(Paths.get(args[1]));
 	    	
 	    	int threads = Runtime.getRuntime().availableProcessors() / test.length;
-	    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threads);
+	    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threads, Paths.get(args[0]));
 	   
 	    	ForkJoinPool pool = new ForkJoinPool();
 	    	List<String> results = pool.invoke(worker);
