@@ -47,7 +47,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 
 	private String getDistance(File file) {
 		Graph test = GraphUtils.parseGraph(file.toPath());
-
+		System.out.println(Thread.currentThread().getName()+" checking "+test.getFilename()+" for plagiarism");
 		List<Double> distances = new ArrayList<>();
 		for (Graph trainGraph : train) {
 			GraphEditDistance ged = new GraphEditDistance(test, trainGraph);
