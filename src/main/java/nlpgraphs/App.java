@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import nlpgraphs.classes.POSFile;
@@ -20,7 +21,7 @@ import nlpgraphs.preprocessing.PosTagProducer;
 public class App {
     public static void main( String[] args ) {
     	preprocess(args[0], args[1]);
-    	
+    	postProcess(args[1]+"/train/", args[1]+"/test/");
     }
     
     private static void preprocess(String input, String output) {
@@ -56,6 +57,12 @@ public class App {
 		}
     	File[] test = Fileutils.getFiles(Paths.get(testDir));
     	
-    	new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test));
+    	PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test));
+   
+    	ForkJoinPool pool = new ForkJoinPool();
+    	List<String> results = pool.invoke(worker);
+    	
+    	Fileutils.writeToFile("plag.txt", results.toArray(new String[0]));
     }
-}
+    
+} 

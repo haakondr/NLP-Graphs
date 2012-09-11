@@ -12,7 +12,7 @@ import nlpgraphs.algorithm.GraphEditDistance;
 import nlpgraphs.graph.Graph;
 import nlpgraphs.misc.GraphUtils;
 
-public class PlagiarismWorker extends RecursiveTask<List<String[]>>{
+public class PlagiarismWorker extends RecursiveTask<List<String>>{
 
 	private Graph[] train;
 	private List<File> testFiles;
@@ -24,8 +24,8 @@ public class PlagiarismWorker extends RecursiveTask<List<String[]>>{
 	}
 
 	@Override
-	protected List<String[]> compute() {
-		List<String[]> results = new ArrayList<>();
+	protected List<String> compute() {
+		List<String> results = new ArrayList<>();
 		if(train.length == 1) {
 			for (File testFile : testFiles) {
 				results.add(getDistance(testFile));
@@ -46,7 +46,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String[]>>{
 		return results;
 	}
 
-	private String[] getDistance(File file) {
+	private String getDistance(File file) {
 		Graph test = GraphUtils.parseGraph(file.toString());
 
 		List<Double> distances = new ArrayList<>();
@@ -55,7 +55,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String[]>>{
 			distances.add(ged.getDistance());
 		}
 		String lowest = Double.toString(getLowest(distances));
-		return new String[] {test.getFile().toString(), lowest};
+		return test.getFile().toString()+"\t"+ lowest;
 	}
 
 	private double getLowest(List<Double> distances) {
