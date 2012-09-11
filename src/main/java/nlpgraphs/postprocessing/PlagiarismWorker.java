@@ -20,7 +20,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private int jobsLeft;
 
 	public PlagiarismWorker(Graph[] train, List<File> test, int jobsLeft) {
-		System.out.println();
+		System.out.println(jobsLeft);
 		this.testFiles = test;
 		this.train = train;
 		this.jobsLeft = jobsLeft;
