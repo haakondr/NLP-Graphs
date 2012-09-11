@@ -25,13 +25,13 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private List<File> testFiles;
 	List<PlagiarismWorker> forks = new ArrayList<>();
 	private int jobsLeft;
-	private Path originalTrain;
+	private Path originalDir;
 
 	public PlagiarismWorker(Graph[] train, List<File> test, int jobsLeft, Path originalTrainDir) {
 		this.testFiles = test;
 		this.train = train;
 		this.jobsLeft = jobsLeft;
-		this.originalTrain = originalTrainDir;
+		this.originalDir = originalTrainDir;
 	}
 
 	@Override
@@ -44,9 +44,9 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 		}else {
 			int split = testFiles.size() / 2;
 			
-			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split), jobsLeft -2, originalTrain);
+			PlagiarismWorker p1 = new PlagiarismWorker(train, testFiles.subList(0, split), jobsLeft -2, originalDir);
 			p1.fork();
-			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()), jobsLeft -2, originalTrain);
+			PlagiarismWorker p2 = new PlagiarismWorker(train, testFiles.subList(split, testFiles.size()), jobsLeft -2, originalDir);
 			results.addAll(p2.compute());
 			results.addAll(p1.join());
 		}
@@ -70,7 +70,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private List<Graph> getSimilarGraphs(File file, int recall) {
 		List<Graph> graphs = new ArrayList<>();
 		for (String filename : getSimilarDocuments(file, recall)) {
-			graphs.add(GraphUtils.parseGraph(Paths.get(filename)));
+			graphs.add(GraphUtils.parseGraph(Paths.get("out/train/"+filename)));
 		}
 		
 		return graphs;
@@ -78,8 +78,10 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	
 	private List<String> getSimilarDocuments(File file, int recall) {
 		try {
-			DocumentRetrievalService drs = new DocumentRetrievalService(originalTrain);
-			return drs.getSimilarDocuments(Fileutils.getText(file.toPath()), recall);
+			DocumentRetrievalService drs = new DocumentRetrievalService(Paths.get(originalDir.toString()+"/train/"));
+			String filename = originalDir.toString()+"/test/"+file.getName();
+			System.out.println(filename);
+			return drs.getSimilarDocuments(Fileutils.getText(Paths.get(filename)), recall);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 			return null;

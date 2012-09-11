@@ -62,7 +62,7 @@ public class DocumentRetrievalService {
 		IndexSearcher is = new IndexSearcher(ir);
 		
 		TopScoreDocCollector collector = TopScoreDocCollector.create(recall, true);
-		Query query = new QueryParser(Version.LUCENE_36, "text", analyzer).parse(queryText);
+		Query query = new QueryParser(Version.LUCENE_36, "text", analyzer).parse(QueryParser.escape(queryText));
 		is.search(query, collector);
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
 		
