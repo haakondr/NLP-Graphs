@@ -34,6 +34,10 @@ public class PreProcess {
 		POSFile[][] chunks = Fileutils.getChunks(files, threadCount);
 		System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
 
+		if(threadCount > chunks.length) {
+			threadCount = chunks.length;
+		}
+		
 		for (int i = 0; i < threadCount; i++) {
 			PosTagProducer producer = new PosTagProducer(queue, chunks[i], "english-left3words-distsim.tagger");
 			new Thread(producer, "PosTagProducer: "+i).start();
