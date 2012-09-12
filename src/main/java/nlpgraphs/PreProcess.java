@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import nlpgraphs.classes.POSFile;
+import nlpgraphs.classes.DocumentFile;
 import nlpgraphs.misc.Fileutils;
 import nlpgraphs.preprocessing.DependencyParser;
 import nlpgraphs.preprocessing.PosTagProducer;
@@ -17,11 +17,11 @@ public class PreProcess {
     }
     
     private static void preprocess(String input, String output) {
-		BlockingQueue<POSFile> queue = new LinkedBlockingQueue<POSFile>();
+		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>();
 		
 		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt 
 //		POSFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), output);
-		POSFile[] files = Fileutils.getFileList(Paths.get(input));
+		DocumentFile[] files = Fileutils.getFileList(Paths.get(input));
 		
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
@@ -31,7 +31,7 @@ public class PreProcess {
 		
 		DependencyParser consumer  = new DependencyParser(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", output, threadCount);
 		
-		POSFile[][] chunks = Fileutils.getChunks(files, threadCount);
+		DocumentFile[][] chunks = Fileutils.getChunks(files, threadCount);
 		System.out.println("thread count: "+threadCount+" chunks: "+chunks.length);
 
 		if(threadCount > chunks.length) {

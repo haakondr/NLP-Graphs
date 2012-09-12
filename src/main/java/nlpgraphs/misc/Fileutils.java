@@ -11,19 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nlpgraphs.classes.POSFile;
+import nlpgraphs.classes.DocumentFile;
 import nlpgraphs.graph.Graph;
 
 
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {
-		File f = new File(filename);
-		File parent = f.getParentFile();
+		createFileIfNotExist(filename);
 
-		if(!parent.exists()) {
-			parent.mkdirs();
-		}
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
@@ -37,37 +33,58 @@ public class Fileutils {
 		}
 	}
 
+	public static void writeToFile(String filename, String text) {
+		createFileIfNotExist(filename);
+		
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			writer.write(text);
+			writer.close();
+		}catch ( IOException ioe ) {
+			ioe.printStackTrace();
+		}
+	}
+
+	public static void createFileIfNotExist(String filename) {
+		File f = new File(filename);
+		File parent = f.getParentFile();
+
+		if(!parent.exists()) {
+			parent.mkdirs();
+		}
+	}
+
 	public static File[] getFiles(Path dir) {
 		return dir.toFile().listFiles();
 	}
 
 
-//	public static List<String> readAllLines(String filename) {
-//		List<String> out = new ArrayList<String>();
-//		try {
-//			FileInputStream fstream = new FileInputStream(filename);
-//			DataInputStream in = new DataInputStream(fstream);
-//			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-//			String line = null;
-//			while ((line = br.readLine()) != null)   {
-//				out.add(line);
-//			}
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return out;
-//
-//	}
+	//	public static List<String> readAllLines(String filename) {
+	//		List<String> out = new ArrayList<String>();
+	//		try {
+	//			FileInputStream fstream = new FileInputStream(filename);
+	//			DataInputStream in = new DataInputStream(fstream);
+	//			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	//			String line = null;
+	//			while ((line = br.readLine()) != null)   {
+	//				out.add(line);
+	//			}
+	//		} catch (FileNotFoundException e) {
+	//			e.printStackTrace();
+	//		} catch (IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//
+	//		return out;
+	//
+	//	}
 
-	public static List<POSFile> getFileList(Path dir, Path baseDir) {
-		List<POSFile> tasks = new ArrayList<POSFile>();
-		
+	public static List<DocumentFile> getFileList(Path dir, Path baseDir) {
+		List<DocumentFile> tasks = new ArrayList<DocumentFile>();
+
 		for (File file : getFiles(dir)) {
 			if(file.isFile() && file.getName().endsWith(".txt")) {
-				tasks.add(new POSFile(file.toPath(), baseDir));
+				tasks.add(new DocumentFile(file.toPath(), baseDir));
 			}else if(file.isDirectory()) {
 				tasks.addAll(getFileList(file.toPath(), baseDir));
 			}
@@ -75,26 +92,26 @@ public class Fileutils {
 		return tasks;
 	}
 
-	public static POSFile[] getFileList(Path dir) {
-		return getFileList(dir, dir).toArray(new POSFile[0]);
+	public static DocumentFile[] getFileList(Path dir) {
+		return getFileList(dir, dir).toArray(new DocumentFile[0]);
 	}
-	
-	
-	public static POSFile[] getUnparsedFiles(Path dir, String outDir) {
-		POSFile[] files = getFileList(dir);
-		List<POSFile> out = new ArrayList<POSFile>();
-		for (POSFile file : files) {
+
+
+	public static DocumentFile[] getUnparsedFiles(Path dir, String outDir) {
+		DocumentFile[] files = getFileList(dir);
+		List<DocumentFile> out = new ArrayList<DocumentFile>();
+		for (DocumentFile file : files) {
 			File outFile = new File(outDir+file.getRelPath());
 			if(!outFile.exists()) {
 				out.add(file);
 			}
 		}
-		
-		return out.toArray(new POSFile[0]);
+
+		return out.toArray(new DocumentFile[0]);
 	}
 
-	public static POSFile[][] getChunks(POSFile[] files, int n) {
-		List<POSFile[]> chunks = new ArrayList<>();
+	public static DocumentFile[][] getChunks(DocumentFile[] files, int n) {
+		List<DocumentFile[]> chunks = new ArrayList<>();
 
 		int fileCount = files.length;
 		int chunksize = fileCount / n;
@@ -109,9 +126,9 @@ public class Fileutils {
 			}
 		}
 
-		return chunks.toArray(new POSFile[0][0]);
+		return chunks.toArray(new DocumentFile[0][0]);
 	}
-	
+
 	//TODO: rewrite with generics
 	public static Path[][] getChunks(Path[] files, int n) {
 		List<Path[]> chunks = new ArrayList<>();
@@ -131,10 +148,10 @@ public class Fileutils {
 
 		return chunks.toArray(new Path[0][0]);
 	}
-	
-	
+
+
 	public static String getText(Path path) {
-		
+
 		List<String> lines;
 		try {
 			lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -142,7 +159,7 @@ public class Fileutils {
 			for (String line : lines) {
 				sb.append(line);
 			}
-			
+
 			return sb.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
