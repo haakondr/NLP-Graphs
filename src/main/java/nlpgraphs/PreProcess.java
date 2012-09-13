@@ -17,7 +17,7 @@ public class PreProcess {
     }
     
     private static void preprocess(String input, String output) {
-		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>();
+		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>(50);
 		
 		//TODO: spør om man skal fortsette fra tidligere runs, eller starte på nytt 
 		DocumentFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), output);
