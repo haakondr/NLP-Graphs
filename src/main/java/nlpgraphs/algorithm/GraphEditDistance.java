@@ -6,7 +6,7 @@ import com.google.code.javakbest.JVC;
 
 import nlpgraphs.graph.Graph;
 import nlpgraphs.graph.Node;
-import nlpgraphs.misc.Utils;
+import nlpgraphs.misc.GraphUtils;
 
 
 public class GraphEditDistance {
@@ -25,6 +25,10 @@ public class GraphEditDistance {
 		this.g1 = g1;
 		this.g2 = g2;
 		this.costMatrix = createCostMatrix(g1, g2);
+	}
+
+	public GraphEditDistance(Graph g1, Graph g2) {
+		this(g1, g2, 1, 1, 1);
 	}
 	
 	public double getDistance() {
@@ -108,7 +112,7 @@ public class GraphEditDistance {
 	}
 
 	private double getEdgeDiff(Node node1, Node node2) {
-		return Utils.listDiff(g1.getEdges(node1.getId()), g2.getEdges(node2.getId()));
+		return GraphUtils.listDiff(g1.getEdges(node1.getId()), g2.getEdges(node2.getId()));
 	}
 
 	public void printMatrix() {

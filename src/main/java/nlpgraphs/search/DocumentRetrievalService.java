@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import nlpgraphs.classes.POSFile;
+import nlpgraphs.document.DocumentFile;
 import nlpgraphs.misc.Fileutils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -30,7 +30,7 @@ public class DocumentRetrievalService {
 	private RAMDirectory index;
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
-	private POSFile[] documents;
+	private DocumentFile[] documents;
 	private StandardAnalyzer analyzer;
 	
 	public DocumentRetrievalService(Path dir) throws CorruptIndexException, IOException {
@@ -44,7 +44,7 @@ public class DocumentRetrievalService {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		writer = new IndexWriter(index, indexWriterConfig);
 		documents = Fileutils.getFileList(dir);
-		for (POSFile file: documents) {
+		for (DocumentFile file: documents) {
 			writer.addDocument(getDocument(file.getPath()));
 		}
 		writer.close();
@@ -62,7 +62,7 @@ public class DocumentRetrievalService {
 		IndexSearcher is = new IndexSearcher(ir);
 		
 		TopScoreDocCollector collector = TopScoreDocCollector.create(recall, true);
-		Query query = new QueryParser(Version.LUCENE_36, "text", analyzer).parse(queryText);
+		Query query = new QueryParser(Version.LUCENE_36, "text", analyzer).parse(QueryParser.escape(queryText));
 		is.search(query, collector);
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
 		

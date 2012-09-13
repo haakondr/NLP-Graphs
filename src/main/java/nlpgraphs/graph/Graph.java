@@ -7,14 +7,14 @@ import java.util.List;
 
 public class Graph {
 
-	private Path file;
+	private String filename;
 	private List<Node> nodes;
 	private HashMap<String, List<Edge>> adjacent;
 
 
-	public Graph(Path file) {
+	public Graph(String filename) {
 		this();
-		this.file = file;
+		this.filename = filename;
 	}
 
 	public Graph() {
@@ -81,12 +81,7 @@ public class Graph {
 		return nodes;
 	}
 
-	public Path getFile() {
-		return file;
+	public String getFilename() {
+		return filename;
 	}
-
-	public void setFile(Path file) {
-		this.file = file;
-	}
-
 }

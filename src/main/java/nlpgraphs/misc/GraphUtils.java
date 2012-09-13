@@ -3,10 +3,13 @@ package nlpgraphs.misc;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 import nlpgraphs.graph.Edge;
@@ -15,13 +18,16 @@ import nlpgraphs.graph.Node;
 
 public class GraphUtils {
 
-
-	public static Graph parseGraph(String filename) {
-		Graph graph = new Graph(Paths.get(filename));
+	public static Graph parseGraphs(String filename) {
+		return parseGraph(Paths.get(filename));
+	}
+	
+	public static Graph parseGraph(Path file) {
+		Graph graph = new Graph(file.getFileName().toString());
 		HashMap<String, List<String[]>> adj = new HashMap<>();
 
 		try {
-			List<String> lines =  Files.readAllLines(Paths.get(filename), StandardCharsets.UTF_8);
+			List<String> lines =  Files.readAllLines(file, StandardCharsets.UTF_8);
 			for (String line : lines) {
 				graph.addNode(createNode(line, adj));
 			}
@@ -39,7 +45,7 @@ public class GraphUtils {
 		if(!adj.containsKey(tokens[0])) {
 			adj.put(tokens[0], new ArrayList<String[]>());
 		}
-		if(!tokens[6].equals("0")) {
+		if(!tokens[6].matches("[\\d]+_0")){
 			adj.get(tokens[0]).add(new String[] {tokens[6], tokens[7]});
 		}
 
@@ -57,5 +63,19 @@ public class GraphUtils {
 				graph.getAdjacent().get(to.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 			}
 		}
+	}
+	
+	public static <T> int listDiff(List<T> list1, List<T> list2) {
+		//TODO: rewrite to something that doesn't require overriding hashCode in edge/node
+		Set<T> intersect = new HashSet<>(list1);
+		intersect.retainAll(list2);
+		
+		Set<T> temp = new HashSet<>();
+		temp.addAll(list1);
+		temp.addAll(list2);
+		
+		temp.removeAll(intersect);
+		
+		return temp.size();
 	}
 }

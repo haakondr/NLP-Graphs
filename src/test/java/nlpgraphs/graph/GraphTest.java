@@ -1,4 +1,4 @@
-package text2graph.graph;
+package nlpgraphs.graph;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import nlpgraphs.graph.Edge;
 import nlpgraphs.graph.Graph;
 import nlpgraphs.graph.Node;
-import nlpgraphs.misc.Utils;
+import nlpgraphs.misc.GraphUtils;
 
 import org.junit.Test;
 
@@ -21,10 +21,10 @@ public class GraphTest {
 		List<String> list2 = Arrays.asList(new String[] {"apple", "orange", "banana", "strawberry"});
 		List<String> list3 = Arrays.asList(new String[] {"apple", "apple", "apple", "orange"});
 		
-		assertEquals(2, Utils.listDiff(list1, list2));
-		assertEquals(Utils.listDiff(list1, list2), Utils.listDiff(list2, list1));
-		assertEquals(0, Utils.listDiff(list1, list3));
-		assertEquals(2, Utils.listDiff(list3, list2));
+		assertEquals(2, GraphUtils.listDiff(list1, list2));
+		assertEquals(GraphUtils.listDiff(list1, list2), GraphUtils.listDiff(list2, list1));
+		assertEquals(0, GraphUtils.listDiff(list1, list3));
+		assertEquals(2, GraphUtils.listDiff(list3, list2));
 
 		Node n1 = new Node("1", new String[] {"NN", "one"});
 		Node n2 = new Node("2", new String[] {"GG", "two"});
@@ -41,12 +41,12 @@ public class GraphTest {
 		g1.addEdge(new Edge("3-4", n3, n4));
 		g1.addEdge(new Edge("2-4", n2, n4));
 		
-		assertEquals(0, Utils.listDiff(g1.getEdges(n1), g1.getEdges(n3)));
-		assertEquals(Utils.listDiff(g1.getEdges(n1), g1.getEdges(n3)), Utils.listDiff(g1.getEdges(n3), g1.getEdges(n1)));
-		assertEquals(1, Utils.listDiff(g1.getEdges(n1), g1.getEdges(n2)));
-		assertEquals(1, Utils.listDiff(g1.getEdges(n1), g1.getEdges(n2)));
+		assertEquals(0, GraphUtils.listDiff(g1.getEdges(n1), g1.getEdges(n3)));
+		assertEquals(GraphUtils.listDiff(g1.getEdges(n1), g1.getEdges(n3)), GraphUtils.listDiff(g1.getEdges(n3), g1.getEdges(n1)));
+		assertEquals(1, GraphUtils.listDiff(g1.getEdges(n1), g1.getEdges(n2)));
+		assertEquals(1, GraphUtils.listDiff(g1.getEdges(n1), g1.getEdges(n2)));
 		
-		assertEquals(1, Utils.listDiff(g1.getEdges(n4), g1.getEdges(n1)));
+		assertEquals(1, GraphUtils.listDiff(g1.getEdges(n4), g1.getEdges(n1)));
 	}
 
 	@Test

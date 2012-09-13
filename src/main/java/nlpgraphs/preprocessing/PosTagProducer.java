@@ -8,20 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import nlpgraphs.classes.POSFile;
+import nlpgraphs.document.DocumentFile;
+import nlpgraphs.document.NLPSentence;
+import nlpgraphs.document.SentenceUtilsTest;
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.SentenceUtils;
 
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer implements Runnable{
 
-	private final BlockingQueue<POSFile> queue;
-	private POSFile[] files;
+	private final BlockingQueue<DocumentFile> queue;
+	private DocumentFile[] files;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<POSFile> queue, POSFile[] files, String taggerParams){
+	public PosTagProducer(BlockingQueue<DocumentFile> queue, DocumentFile[] files, String taggerParams){
 		this.queue = queue;
 		this.files = files;
 		try {
@@ -35,10 +40,10 @@ public class PosTagProducer implements Runnable{
 	public void run() {
 		int i = 0;
 		int filecount = files.length;
-		
-		for (POSFile file : files) {
+
+		for (DocumentFile file : files) {
 			i++;
-			POSFile taggedFile = tagFile(file, i==filecount);
+			DocumentFile taggedFile = tagFile(file, i==filecount);
 			System.out.println(Thread.currentThread().getName()+": done POS-tagging file "+file.getRelPath());
 			try {
 				queue.put(taggedFile);
@@ -49,28 +54,37 @@ public class PosTagProducer implements Runnable{
 	}
 
 
-	public POSFile tagFile(POSFile file, boolean isLastInQueue) {
+	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
 		file.setLastInQueue(isLastInQueue);
-		
-		try {
-			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath().toString())));
+		file.setSentences(SentenceUtils.getSentences(file.getPath().toString()));
 
-			for (List<HasWord> sentence : sentences) {
-				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
+		int sentenceNumber = 1, wordnumber = 1;
+		for (NLPSentence sentence : file.getSentences()) {
+			try {
+				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
 				List<String> temp = new ArrayList<>();
-				
+
 				int i = 1;
 				for (TaggedWord token : taggedSentence) {
-					temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+					wordnumber++;
+
+					temp.add(sentenceNumber+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
-				file.addSentence(temp.toArray(new String[0]));
+				sentenceNumber++;
+				sentence.setPostags(temp.toArray(new String[0]));
+			}catch (IndexOutOfBoundsException e) {
+				e.printStackTrace();
+				for (Word word : sentence.getWords()) {
+					System.out.print(word.word());
+				}
+				System.out.println(file.getPath().toString()+" sentence number: "+sentenceNumber+" wordnumber: "+wordnumber);
+				System.out.println("previous sentence: "+file.getSentences().get(sentenceNumber-2).toString());
+				System.out.println("sentence length:" +sentence.getLength());
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		} 
 
 		return file;
-	}
 
+	}
 }

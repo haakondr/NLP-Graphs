@@ -1,4 +1,4 @@
-package text2graph.search;
+package nlpgraphs.search;
 
 
 import static org.junit.Assert.assertEquals;
