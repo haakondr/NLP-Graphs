@@ -39,4 +39,9 @@ public class CandidateRetrievalTest {
 		List<String> similarDocuments = drs.getSimilarDocuments(query, 3);
 		assertEquals(3, similarDocuments.size());
 	}
+	
+//	@Test
+//	public void shouldRetrieveCorrectDocuments() throws CorruptIndexException, IOException, ParseException {
+//		drs = new DocumentRetrievalService(Paths.get("pan11/source-documents/"));
+//	}
 }
