@@ -1,4 +1,4 @@
-package text2graph.misc;
+package nlpgraphs.misc;
 
 import static org.junit.Assert.assertEquals;
 

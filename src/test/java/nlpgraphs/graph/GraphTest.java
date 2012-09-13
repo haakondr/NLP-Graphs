@@ -1,4 +1,4 @@
-package text2graph.graph;
+package nlpgraphs.graph;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,6 @@ import nlpgraphs.graph.Edge;
 import nlpgraphs.graph.Graph;
 import nlpgraphs.graph.Node;
 import nlpgraphs.misc.GraphUtils;
-import nlpgraphs.misc.Utils;
 
 import org.junit.Test;
 

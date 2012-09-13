@@ -1,4 +1,4 @@
-package text2graph.misc;
+package nlpgraphs.misc;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,7 +6,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import nlpgraphs.classes.DocumentFile;
+import nlpgraphs.document.DocumentFile;
 import nlpgraphs.misc.Fileutils;
 
 import org.junit.Before;
@@ -35,6 +35,6 @@ public class FileutilsTest {
 	@Test
 	public void shouldGetFiles() {
 		File[] files = Fileutils.getFiles(dir);
-		assertEquals(17, files.length);
+		assertEquals(18, files.length);
 	}
 }

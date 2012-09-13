@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nlpgraphs.classes.DocumentFile;
+import nlpgraphs.document.DocumentFile;
 import nlpgraphs.graph.Graph;
 
 
@@ -57,27 +57,6 @@ public class Fileutils {
 	public static File[] getFiles(Path dir) {
 		return dir.toFile().listFiles();
 	}
-
-
-	//	public static List<String> readAllLines(String filename) {
-	//		List<String> out = new ArrayList<String>();
-	//		try {
-	//			FileInputStream fstream = new FileInputStream(filename);
-	//			DataInputStream in = new DataInputStream(fstream);
-	//			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	//			String line = null;
-	//			while ((line = br.readLine()) != null)   {
-	//				out.add(line);
-	//			}
-	//		} catch (FileNotFoundException e) {
-	//			e.printStackTrace();
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
-	//
-	//		return out;
-	//
-	//	}
 
 	public static List<DocumentFile> getFileList(Path dir, Path baseDir) {
 		List<DocumentFile> tasks = new ArrayList<DocumentFile>();
@@ -148,7 +127,6 @@ public class Fileutils {
 
 		return chunks.toArray(new Path[0][0]);
 	}
-
 
 	public static String getText(Path path) {
 

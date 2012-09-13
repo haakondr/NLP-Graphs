@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import nlpgraphs.classes.DocumentFile;
-import nlpgraphs.classes.Sentence;
+import nlpgraphs.document.DocumentFile;
+import nlpgraphs.document.NLPSentence;
+import nlpgraphs.document.SentenceUtilsTest;
+import nlpgraphs.misc.Fileutils;
+import nlpgraphs.misc.SentenceUtils;
 
 
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer implements Runnable{
@@ -52,38 +56,35 @@ public class PosTagProducer implements Runnable{
 
 	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
 		file.setLastInQueue(isLastInQueue);
+		file.setSentences(SentenceUtils.getSentences(file.getPath().toString()));
 
-		try {
-			//TODO: hent ut setninger manuelt, lag HasWords og tagSentence. ingen grunn til å bruke tokenizeText da (?)
-			List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new BufferedReader(new FileReader(file.getPath().toString())));
-			int sentenceNumber = 1;
-			for (List<HasWord> sentence : sentences) {
-				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence);
+		int sentenceNumber = 1, wordnumber = 1;
+		for (NLPSentence sentence : file.getSentences()) {
+			try {
+				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
 				List<String> temp = new ArrayList<>();
-
 
 				int i = 1;
 				for (TaggedWord token : taggedSentence) {
+					wordnumber++;
 
 					temp.add(sentenceNumber+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
 				sentenceNumber++;
-				file.addSentence(createSentence(file.getOriginalText(), sentenceNumber, taggedSentence, temp));
+				sentence.setPostags(temp.toArray(new String[0]));
+			}catch (IndexOutOfBoundsException e) {
+				e.printStackTrace();
+				for (Word word : sentence.getWords()) {
+					System.out.print(word.word());
+				}
+				System.out.println(file.getPath().toString()+" sentence number: "+sentenceNumber+" wordnumber: "+wordnumber);
+				System.out.println("previous sentence: "+file.getSentences().get(sentenceNumber-2).toString());
+				System.out.println("sentence length:" +sentence.getLength());
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		} 
 
 		return file;
-	}
-	
-	public Sentence createSentence(String originalText, int sentenceNumber,List<TaggedWord> taggedSentence, List<String> taggedTokens) {
-		int begin = taggedSentence.get(0).beginPosition();
-		int end = taggedSentence.get(taggedSentence.size()-1).endPosition();
-		String origSentence = originalText.substring(begin, end);
-		System.out.println(origSentence);
-		System.out.println();
-		return new Sentence(sentenceNumber, begin, origSentence,taggedTokens.toArray(new String[0]));
+
 	}
 }

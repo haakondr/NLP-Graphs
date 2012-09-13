@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import nlpgraphs.classes.DocumentFile;
-import nlpgraphs.classes.Sentence;
+import nlpgraphs.document.DocumentFile;
+import nlpgraphs.document.NLPSentence;
 import nlpgraphs.misc.Fileutils;
 
 import org.json.JSONArray;
@@ -65,14 +65,14 @@ public class DependencyParser implements Runnable {
 
 	}
 	public void consume(DocumentFile posfile) throws MaltChainedException, NullPointerException {
-		List<String> parsedTokens = new ArrayList<>();
+//		List<String> parsedTokens = new ArrayList<>();
 		int sentenceNumber = 1;
 		JSONObject out = new JSONObject();
 		try {
 			out.put("filename", posfile.getPath().getFileName().toString());
 			JSONArray jsonSentences = new JSONArray();
 
-			for (Sentence sentence : posfile.getSentences()) {
+			for (NLPSentence sentence : posfile.getSentences()) {
 				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
 
 				JSONObject jsonSentence = new JSONObject();
@@ -95,11 +95,11 @@ public class DependencyParser implements Runnable {
 				jsonSentence.put("tokens", jsonTokens);
 				sentenceNumber++;
 				jsonSentences.put(jsonSentence);
+				out.put("sentences", jsonSentences);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-//		Fileutils.writeToFile(outDir+posfile.getRelPath(), parsedTokens.toArray(new String[0]));
 		Fileutils.writeToFile(outDir+posfile.getRelPath(), out.toString());
 		System.out.println("Done dependency parsing file "+posfile.getRelPath());
 	}

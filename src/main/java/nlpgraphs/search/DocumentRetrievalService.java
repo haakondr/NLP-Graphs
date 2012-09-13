@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import nlpgraphs.classes.DocumentFile;
+import nlpgraphs.document.DocumentFile;
 import nlpgraphs.misc.Fileutils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

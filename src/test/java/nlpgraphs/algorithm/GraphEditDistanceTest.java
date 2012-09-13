@@ -1,4 +1,4 @@
-package text2graph.algorithm;
+package nlpgraphs.algorithm;
 
 import static org.junit.Assert.*;
 
