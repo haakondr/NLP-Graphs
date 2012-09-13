@@ -19,7 +19,7 @@ public class SentenceUtilsTest {
 	@Test
 	public void shouldRetrieveSentences() {
 		
-		List<NLPSentence> sentences = SentenceUtils.getSentences("src/test/resources/documents/sentences.txt");
+		List<NLPSentence> sentences = SentenceUtils.getSentences("src/test/resources/documents/sentences2.txt");
 		NLPSentence s1 = sentences.get(0);
 
 		assertEquals("My name is Håkon, and I live in Trondheim!".length(), s1.getLength());
