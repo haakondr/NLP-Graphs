@@ -78,7 +78,7 @@ public class DependencyParser implements Runnable {
 				JSONObject jsonSentence = new JSONObject();
 				jsonSentence.put("sentenceNumber", sentenceNumber);
 				jsonSentence.put("originalText", sentence.getText());
-				jsonSentence.put("offset", sentence.getOffset());
+				jsonSentence.put("offset", sentence.getStart());
 				jsonSentence.put("length", sentence.getLength());
 				JSONArray jsonTokens = new JSONArray();
 				for (String parsedToken : parsedSentences) {

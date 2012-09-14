@@ -6,24 +6,24 @@ import edu.stanford.nlp.ling.Word;
 
 public class NLPSentence {
 	
-	private int number, offset;
+	private int number, start;
 	private String text;
 	private String[] postags;
 	private List<Word> words;
 	
-	public NLPSentence(int number, int offset, String text, String[] postags) {
-		this(number, offset, text);
+	public NLPSentence(int number, int start, String text, String[] postags) {
+		this(number, start, text);
 		this.postags = postags;
 	}
 	
-	public NLPSentence(int number, int offset, String text, List<Word> words) {
-		this(number, offset, text);
+	public NLPSentence(int number, int start, String text, List<Word> words) {
+		this(number, start, text);
 		this.words = words;
 	}
 	
-	public NLPSentence(int number, int offset, String text) {
+	public NLPSentence(int number, int start, String text) {
 		this.number = number;
-		this.offset = offset;
+		this.start = start;
 		this.text = text;
 	}
 	
@@ -35,8 +35,8 @@ public class NLPSentence {
 		return number;
 	}
 
-	public int getOffset() {
-		return offset;
+	public int getStart() {
+		return start;
 	}
 
 	public String getText() {

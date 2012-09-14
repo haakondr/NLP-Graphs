@@ -25,7 +25,7 @@ public class SentenceUtils {
 			List<NLPSentence> sentences = new ArrayList<NLPSentence>();
 			List<Word> words = new ArrayList<>();
 
-			int character = 1, offset = 1, sentenceNumber = 1;
+			int character = 1, offset = 1, sentenceNumber = 1, sentenceStart = 0;
 			while((character = reader.read()) != -1) {
 				char c = (char) character;
 
@@ -46,12 +46,14 @@ public class SentenceUtils {
 				}
 
 				if(isSentenceDelimiter(c)) {
-					if(sentenceBuilder.toString().trim().length() > 1) {
-						sentences.add(new NLPSentence(sentenceNumber, offset, sentenceBuilder.toString(), words));
+					String previousWord = words.get(words.size()-1).word();
+					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
+						sentences.add(new NLPSentence(sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
 						words = new ArrayList<Word>();
 						sentenceBuilder = new StringBuilder();
 						wordBuilder = new StringBuilder();
 						sentenceNumber++;
+						sentenceStart = offset+1;
 					}
 				}
 				//TODO: should offset be before or after creating sentence?
@@ -62,7 +64,8 @@ public class SentenceUtils {
 				sentences.add(new NLPSentence(sentenceNumber, offset, sentenceBuilder.toString(), words));
 				sentenceNumber++;
 			}
-
+			reader.close();
+			
 			return sentences;
 		}catch (IOException e) {
 			e.printStackTrace();
@@ -100,5 +103,9 @@ public class SentenceUtils {
 
 	public static boolean isPartOfWord(char c) {
 		return Character.isLetter(c) || Character.isDigit(c);
+	}
+	
+	public static boolean isWordWithPunctation(String s) {
+		return s.equalsIgnoreCase("Mr") || s.equalsIgnoreCase("Mrs") || s.equalsIgnoreCase("ca");
 	}
 }

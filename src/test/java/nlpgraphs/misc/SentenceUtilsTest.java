@@ -1,10 +1,11 @@
-package nlpgraphs.document;
+package nlpgraphs.misc;
 
 import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Paths;
 import java.util.List;
 
+import nlpgraphs.document.NLPSentence;
 import nlpgraphs.misc.Fileutils;
 import nlpgraphs.misc.SentenceUtils;
 
@@ -48,5 +49,18 @@ public class SentenceUtilsTest {
 		assertEquals(22, sum);
 		assertEquals(79, charactersInText);
 		assertEquals(100, textLength);
+	}
+	
+	@Test
+	public void testOffset() {
+		List<NLPSentence> sentences = SentenceUtils.getSentences("src/test/resources/documents/source-document08364.txt");
+		NLPSentence s1 = sentences.get(0);
+		assertEquals(0, s1.getStart());
+		assertEquals(92, sentences.get(1).getStart());
+		assertEquals(91, s1.getStart() + s1.getLength());
+		for (int i = 0; i < 15; i++) {
+			System.out.println(sentences.get(i).getText());
+		}
+		assertEquals(1803, sentences.get(14).getStart());
 	}
 }
