@@ -3,10 +3,10 @@ package nlpgraphs.algorithm;
 import static org.junit.Assert.*;
 
 
-import nlpgraphs.algorithm.GraphEditDistance;
-import nlpgraphs.graph.Edge;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.graph.Edge;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.graph.Node;
 
 import org.junit.Test;
 

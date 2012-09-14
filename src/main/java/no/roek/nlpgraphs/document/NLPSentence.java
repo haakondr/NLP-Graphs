@@ -1,4 +1,4 @@
-package nlpgraphs.document;
+package no.roek.nlpgraphs.document;
 
 import java.util.List;
 

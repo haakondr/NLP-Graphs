@@ -1,10 +1,10 @@
-package nlpgraphs.document;
+package no.roek.nlpgraphs.document;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.Fileutils;
 
 
 public class DocumentFile {

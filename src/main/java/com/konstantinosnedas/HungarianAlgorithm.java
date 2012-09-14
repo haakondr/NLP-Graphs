@@ -1,4 +1,4 @@
-package nlpgraphs.algorithm;
+package com.konstantinosnedas;
 
 /*
  * Created on Apr 25, 2005

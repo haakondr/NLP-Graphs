@@ -1,4 +1,4 @@
-package nlpgraphs.misc;
+package no.roek.nlpgraphs.misc;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import edu.stanford.nlp.ling.Word;
 
-import nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.NLPSentence;
 
 public class SentenceUtils {
 

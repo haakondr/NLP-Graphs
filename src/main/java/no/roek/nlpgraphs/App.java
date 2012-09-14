@@ -1,4 +1,4 @@
-package nlpgraphs;
+package no.roek.nlpgraphs;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -9,13 +9,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import nlpgraphs.document.DocumentFile;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.GraphUtils;
-import nlpgraphs.postprocessing.PlagiarismWorker;
-import nlpgraphs.preprocessing.DependencyParser;
-import nlpgraphs.preprocessing.PosTagProducer;
+import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
+import no.roek.nlpgraphs.preprocessing.DependencyParser;
+import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 
 public class App {
 	

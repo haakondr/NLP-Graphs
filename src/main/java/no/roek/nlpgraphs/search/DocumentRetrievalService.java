@@ -1,12 +1,12 @@
-package nlpgraphs.search;
+package no.roek.nlpgraphs.search;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import nlpgraphs.document.DocumentFile;
-import nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.misc.Fileutils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;

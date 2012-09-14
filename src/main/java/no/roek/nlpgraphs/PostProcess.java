@@ -1,4 +1,4 @@
-package nlpgraphs;
+package no.roek.nlpgraphs;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
-import nlpgraphs.graph.Graph;
-import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.GraphUtils;
-import nlpgraphs.postprocessing.PlagiarismWorker;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 
 public class PostProcess {
 

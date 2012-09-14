@@ -1,13 +1,13 @@
-package nlpgraphs.preprocessing;
+package no.roek.nlpgraphs.preprocessing;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import nlpgraphs.document.DocumentFile;
-import nlpgraphs.document.NLPSentence;
-import nlpgraphs.misc.SentenceUtils;
+import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.misc.SentenceUtils;
 
 
 import edu.stanford.nlp.ling.TaggedWord;

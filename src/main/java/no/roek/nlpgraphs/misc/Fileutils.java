@@ -1,4 +1,4 @@
-package nlpgraphs.misc;
+package no.roek.nlpgraphs.misc;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nlpgraphs.document.DocumentFile;
-import nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.graph.Graph;
 
 
 public class Fileutils {

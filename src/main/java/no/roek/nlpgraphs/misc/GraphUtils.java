@@ -1,4 +1,4 @@
-package nlpgraphs.misc;
+package no.roek.nlpgraphs.misc;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 
-import nlpgraphs.graph.Edge;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.graph.Edge;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.graph.Node;
 
 public class GraphUtils {
 

@@ -1,4 +1,4 @@
-package nlpgraphs.postprocessing;
+package no.roek.nlpgraphs.postprocessing;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +13,11 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
 
 
-import nlpgraphs.algorithm.GraphEditDistance;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.misc.Fileutils;
-import nlpgraphs.misc.GraphUtils;
-import nlpgraphs.search.DocumentRetrievalService;
+import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.search.DocumentRetrievalService;
 
 public class PlagiarismWorker extends RecursiveTask<List<String>>{
 

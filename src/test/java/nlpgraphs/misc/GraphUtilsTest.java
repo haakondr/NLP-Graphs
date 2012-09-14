@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.nio.file.Paths;
 import java.util.List;
 
-import nlpgraphs.graph.Edge;
-import nlpgraphs.graph.Graph;
-import nlpgraphs.graph.Node;
-import nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.graph.Edge;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.junit.Before;
 import org.junit.Test;

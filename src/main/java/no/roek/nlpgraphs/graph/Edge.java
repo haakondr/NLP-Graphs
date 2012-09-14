@@ -1,4 +1,4 @@
-package nlpgraphs.graph;
+package no.roek.nlpgraphs.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;

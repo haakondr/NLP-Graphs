@@ -1,13 +1,13 @@
-package nlpgraphs;
+package no.roek.nlpgraphs;
 
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import nlpgraphs.document.DocumentFile;
-import nlpgraphs.misc.Fileutils;
-import nlpgraphs.preprocessing.DependencyParser;
-import nlpgraphs.preprocessing.PosTagProducer;
+import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.preprocessing.DependencyParser;
+import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 
 
 public class PreProcess {
