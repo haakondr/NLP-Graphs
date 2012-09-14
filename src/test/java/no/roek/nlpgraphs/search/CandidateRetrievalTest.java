@@ -1,4 +1,4 @@
-package nlpgraphs.search;
+package no.roek.nlpgraphs.search;
 
 
 import static org.junit.Assert.assertEquals;

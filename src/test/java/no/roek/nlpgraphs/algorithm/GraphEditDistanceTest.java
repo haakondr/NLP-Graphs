@@ -1,4 +1,4 @@
-package nlpgraphs.algorithm;
+package no.roek.nlpgraphs.algorithm;
 
 import static org.junit.Assert.*;
 
