@@ -62,7 +62,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 			GraphEditDistance ged = new GraphEditDistance(test, trainGraph);
 			distances.add(ged.getDistance());
 		}
-		String lowest = Double.toString(getLowest(distances));
+		double lowest = Collections.min(distances);
 		System.out.println(test.getFilename()+" has plagiarism of "+lowest);
 		return test.getFilename()+"\t"+ lowest;
 	}
@@ -85,10 +85,5 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	private double getLowest(List<Double> distances) {
-		Collections.sort(distances);
-		return distances.get(0);
 	}
 }
