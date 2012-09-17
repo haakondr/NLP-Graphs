@@ -14,6 +14,7 @@ public class DocumentFile {
 	private boolean isLastInQueue;
 	private Path path;
 	private String originalText;
+	private List<PlagiarismReference> plagiarismReferences = new ArrayList<>();
 
 	public DocumentFile(Path path, Path basePath) {
 		this.path = path;
@@ -64,5 +65,13 @@ public class DocumentFile {
 
 	public String getOriginalText() {
 		return originalText;
+	}
+	
+	public void addPlagiarismReference(PlagiarismReference p) {
+		plagiarismReferences.add(p);
+	}
+	
+	public List<PlagiarismReference> getPlagiarismReferences() {
+		return plagiarismReferences;
 	}
 }

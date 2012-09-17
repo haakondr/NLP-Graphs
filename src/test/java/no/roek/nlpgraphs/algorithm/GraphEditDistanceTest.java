@@ -1,9 +1,6 @@
 package no.roek.nlpgraphs.algorithm;
 
-import static org.junit.Assert.*;
-
-
-import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import static org.junit.Assert.assertEquals;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;

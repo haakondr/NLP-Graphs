@@ -1,6 +1,6 @@
 package com.google.code.javakbest;
 
-import static java.lang.Math.*;
+import static java.lang.Math.min;
 
 /**
  *

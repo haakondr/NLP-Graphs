@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import no.roek.nlpgraphs.document.DocumentFile;
-import no.roek.nlpgraphs.misc.Fileutils;
 
 import org.junit.Before;
 import org.junit.Test;
