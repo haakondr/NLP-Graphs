@@ -2,11 +2,9 @@ package no.roek.nlpgraphs;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -16,9 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 import no.roek.nlpgraphs.document.DocumentFile;
-import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
@@ -52,6 +48,7 @@ public class App {
 			e.printStackTrace();
 		}
 	}
+	
 	private static void preprocess(String input) {
 		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>();
 		DocumentFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), parsedFilesDir);
@@ -80,11 +77,6 @@ public class App {
     }
 	
 	private static void postProcess(String originalTrainDir, String trainDir, String testDir) {
-		File[] trainFiles = Fileutils.getFiles(Paths.get(trainDir));
-		List<Graph> trainGraphs = new ArrayList<>();
-		for (File file : trainFiles) {
-			trainGraphs.add(GraphUtils.parseGraph(file.toPath()));
-		}
 		File[] test = Fileutils.getFiles(Paths.get(testDir));
 
 		int cpuCount = Runtime.getRuntime().availableProcessors() - 2;
@@ -96,7 +88,7 @@ public class App {
 		}
 
 		System.out.println("using "+cpuCount+" threads");
-		PlagiarismWorker worker = new PlagiarismWorker(trainGraphs.toArray(new Graph[0]), Arrays.asList(test), threads, Paths.get(originalTrainDir));
+		PlagiarismWorker worker = new PlagiarismWorker(Arrays.asList(test), threads, Paths.get(originalTrainDir), parsedFilesDir, trainDir, testDir);
 
 		ForkJoinPool pool = new ForkJoinPool();
 		List<String> results = pool.invoke(worker);
