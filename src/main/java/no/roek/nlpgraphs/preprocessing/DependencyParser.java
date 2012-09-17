@@ -47,7 +47,6 @@ public class DependencyParser implements Runnable {
 					finishedProducerThreads++;
 					if(finishedProducerThreads == producerThreadsCount) {
 						System.out.println("All producer threads done, stopping consumer thread.");
-						System.exit(0);
 					}
 				}
 			} catch (InterruptedException | MaltChainedException e) {

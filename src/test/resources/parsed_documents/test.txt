@@ -1,12 +1,88 @@
-1_1	Tomorrow	_	NN	NN	_	1_4	nsubj
-1_2	I	_	CD	CD	_	1_1	num
-1_3	am	_	VBP	VBP	_	1_4	aux
-1_4	going	_	VBG	VBG	_	1_0	null
-1_5	to	_	TO	TO	_	1_6	aux
-1_6	play	_	VB	VB	_	1_4	xcomp
-1_7	football	_	NN	NN	_	1_6	dobj
-1_8	out	_	IN	IN	_	1_6	advmod
-1_9	in	_	IN	IN	_	1_6	prep
-1_10	the	_	DT	DT	_	1_11	det
-1_11	sun	_	NN	NN	_	1_9	pobj
-1_12	.	_	.	.	_	1_4	punct
+{
+  "filename": "test.txt",
+  "sentences": [{
+    "length": 52,
+    "offset": 0,
+    "originalText": "Tomorrow I am going to play football out in the sun.",
+    "sentenceNumber": 1,
+    "tokens": [
+      {
+        "deprel": "nsubj",
+        "id": "1_1",
+        "pos": "NN",
+        "rel": "1_4",
+        "word": "Tomorrow"
+      },
+      {
+        "deprel": "num",
+        "id": "1_2",
+        "pos": "CD",
+        "rel": "1_1",
+        "word": "I"
+      },
+      {
+        "deprel": "aux",
+        "id": "1_3",
+        "pos": "VBP",
+        "rel": "1_4",
+        "word": "am"
+      },
+      {
+        "deprel": "null",
+        "id": "1_4",
+        "pos": "VBG",
+        "rel": "1_0",
+        "word": "going"
+      },
+      {
+        "deprel": "aux",
+        "id": "1_5",
+        "pos": "TO",
+        "rel": "1_6",
+        "word": "to"
+      },
+      {
+        "deprel": "xcomp",
+        "id": "1_6",
+        "pos": "VB",
+        "rel": "1_4",
+        "word": "play"
+      },
+      {
+        "deprel": "dobj",
+        "id": "1_7",
+        "pos": "NN",
+        "rel": "1_6",
+        "word": "football"
+      },
+      {
+        "deprel": "advmod",
+        "id": "1_8",
+        "pos": "IN",
+        "rel": "1_6",
+        "word": "out"
+      },
+      {
+        "deprel": "prep",
+        "id": "1_9",
+        "pos": "IN",
+        "rel": "1_6",
+        "word": "in"
+      },
+      {
+        "deprel": "det",
+        "id": "1_10",
+        "pos": "DT",
+        "rel": "1_11",
+        "word": "the"
+      },
+      {
+        "deprel": "pobj",
+        "id": "1_11",
+        "pos": "NN",
+        "rel": "1_9",
+        "word": "sun"
+      }
+    ]
+  }]
+}

@@ -29,7 +29,7 @@ public class SentenceUtils {
 				char c = (char) character;
 
 				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder);
-				
+
 				if(isWordDelimiter(c)) {
 					wordBuilder = createWord(wordBuilder, words, offset);
 				}
@@ -45,7 +45,12 @@ public class SentenceUtils {
 				}
 
 				if(isSentenceDelimiter(c)) {
-					String previousWord = words.get(words.size()-1).word();
+					String previousWord;
+					if(words.size()== 0) {
+						previousWord = "placeholder";
+					}else {
+						previousWord = words.get(words.size()-1).word();
+					}
 					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
 						sentences.add(new NLPSentence(sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
 						words = new ArrayList<Word>();
@@ -64,7 +69,7 @@ public class SentenceUtils {
 				sentenceNumber++;
 			}
 			reader.close();
-			
+
 			return sentences;
 		}catch (IOException e) {
 			e.printStackTrace();
@@ -91,7 +96,7 @@ public class SentenceUtils {
 	public static boolean isNewLine(char c) {
 		return (c == '\n' || c == '\r');
 	}
-	
+
 	public static boolean isSentenceDelimiter(char c) {
 		return c == '.' || c == '!' || c == '?';
 	}
@@ -103,7 +108,7 @@ public class SentenceUtils {
 	public static boolean isPartOfWord(char c) {
 		return Character.isLetter(c) || Character.isDigit(c);
 	}
-	
+
 	public static boolean isWordWithPunctation(String s) {
 		return s.equalsIgnoreCase("Mr") || s.equalsIgnoreCase("Mrs") || s.equalsIgnoreCase("ca");
 	}
