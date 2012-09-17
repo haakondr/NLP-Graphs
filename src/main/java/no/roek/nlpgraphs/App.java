@@ -20,7 +20,7 @@ import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 
 public class App {
 	
-	private static String parsedFilesDir, trainDir, testDir, dataDir, resultsFile;
+	private static String parsedFilesDir, trainDir, testDir, dataDir, resultsFile, annotationsDir;
 	
 	public static void main(String[] args) {
 		init();
@@ -41,6 +41,7 @@ public class App {
 		dataDir = configFile.getProperty("DATA_DIR");
 		testDir = configFile.getProperty("TEST_DIR");
 		trainDir = configFile.getProperty("TRAIN_DIR");
+		annotationsDir = configFile.getProperty("ANNOTATIONS_DIR");
 		resultsFile = configFile.getProperty("RESULTS_FILE");
 		} catch (IOException e) {
 			e.printStackTrace();
