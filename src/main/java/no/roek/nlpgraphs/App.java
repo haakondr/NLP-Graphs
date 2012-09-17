@@ -57,7 +57,7 @@ public class App {
 	}
 
 	public static Thread preprocess(String input) {
-		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>();
+		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>(30);
 		DocumentFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), parsedFilesDir);
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
