@@ -12,7 +12,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
-
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
@@ -43,7 +42,6 @@ public class App {
 		testDir = configFile.getProperty("TEST_DIR");
 		trainDir = configFile.getProperty("TRAIN_DIR");
 		resultsFile = configFile.getProperty("RESULTS_FILE");
-		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

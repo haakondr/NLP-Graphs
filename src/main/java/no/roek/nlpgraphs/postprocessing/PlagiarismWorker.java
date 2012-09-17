@@ -9,15 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.queryParser.ParseException;
-
-
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
-import no.roek.nlpgraphs.search.DocumentRetrievalService;
+
+import org.apache.lucene.queryParser.ParseException;
 
 public class PlagiarismWorker extends RecursiveTask<List<String>>{
 

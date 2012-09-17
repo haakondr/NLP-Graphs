@@ -1,7 +1,5 @@
 package no.roek.nlpgraphs.preprocessing;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -14,9 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
-
-
-import edu.stanford.nlp.util.StringUtils;
 
 
 

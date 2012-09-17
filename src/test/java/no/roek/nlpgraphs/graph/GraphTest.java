@@ -1,13 +1,10 @@
 package no.roek.nlpgraphs.graph;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import no.roek.nlpgraphs.graph.Edge;
-import no.roek.nlpgraphs.graph.Graph;
-import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.junit.Test;

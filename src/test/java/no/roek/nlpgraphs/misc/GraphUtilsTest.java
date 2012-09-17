@@ -8,7 +8,6 @@ import java.util.List;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.junit.Before;
 import org.junit.Test;

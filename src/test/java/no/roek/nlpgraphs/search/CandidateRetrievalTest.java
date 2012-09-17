@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.search.DocumentRetrievalService;
+import no.roek.nlpgraphs.postprocessing.DocumentRetrievalService;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;

@@ -2,14 +2,10 @@ package no.roek.nlpgraphs.misc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.nio.file.Paths;
 import java.util.List;
 
 import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.SentenceUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import edu.stanford.nlp.ling.Word;

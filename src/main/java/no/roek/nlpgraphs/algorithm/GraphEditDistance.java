@@ -2,12 +2,11 @@ package no.roek.nlpgraphs.algorithm;
 
 import java.util.List;
 
-import com.google.code.javakbest.JVC;
-import com.konstantinosnedas.HungarianAlgorithm;
-
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
+
+import com.konstantinosnedas.HungarianAlgorithm;
 
 
 public class GraphEditDistance {

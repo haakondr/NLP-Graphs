@@ -8,9 +8,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.stanford.nlp.ling.Word;
-
 import no.roek.nlpgraphs.document.NLPSentence;
+import edu.stanford.nlp.ling.Word;
 
 public class SentenceUtils {
 

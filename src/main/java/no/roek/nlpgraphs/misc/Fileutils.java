@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import no.roek.nlpgraphs.document.DocumentFile;
-import no.roek.nlpgraphs.graph.Graph;
 
 
 public class Fileutils {

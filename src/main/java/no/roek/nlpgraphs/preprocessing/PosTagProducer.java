@@ -8,8 +8,6 @@ import java.util.concurrent.BlockingQueue;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.SentenceUtils;
-
-
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
