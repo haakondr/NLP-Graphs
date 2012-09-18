@@ -13,6 +13,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
@@ -38,22 +39,12 @@ public class App {
 
 
 	private static void init() {
-		Properties configFile = new Properties();
-		InputStream is;
-		try {
-			is = new FileInputStream("app.properties");
-
-			configFile.load(is);
-
-			parsedFilesDir = configFile.getProperty("PARSED_DIR");
-			dataDir = configFile.getProperty("DATA_DIR");
-			testDir = configFile.getProperty("TEST_DIR");
-			trainDir = configFile.getProperty("TRAIN_DIR");
-			annotationsDir = configFile.getProperty("ANNOTATIONS_DIR");
-			resultsFile = configFile.getProperty("RESULTS_FILE");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		parsedFilesDir = ConfigService.getParsedFilesDir();
+		dataDir = ConfigService.getDataDir();
+		testDir = ConfigService.getTestDir();
+		trainDir = ConfigService.getTrainDir();
+		annotationsDir = ConfigService.getAnnotationsDir();
+		resultsFile = ConfigService.getResultsFile();
 	}
 
 	public static Thread preprocess(String input) {
