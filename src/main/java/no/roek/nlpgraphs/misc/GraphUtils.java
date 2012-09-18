@@ -21,25 +21,23 @@ import no.roek.nlpgraphs.graph.Node;
 
 public class GraphUtils {
 
-	public static Graph parseGraph(String filename) {
-		JsonReader jsonReader;
+	public static List<Graph> getGraphs(String filename) {
+		List<Graph> graphs = new ArrayList<>();
 		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
-		
-		JsonParser jsonParser = new JsonParser();
-		JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-//		for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-//			
-//		}
-		
-		//TODO: dette returnerer kun første setning i en fil. returner alle?
-		JsonElement jsonSentence = fileObject.get("sentences").getAsJsonArray().get(0);
-		return parseGraph(jsonSentence.getAsJsonObject(), filename);
-		
+			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+
+			JsonParser jsonParser = new JsonParser();
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+			}
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
+		
+		return graphs;
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {

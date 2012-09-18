@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
@@ -54,26 +55,35 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	}
 
 	private String getDistance(File file) {
-		Graph test = GraphUtils.parseGraph(file.toString());
-		System.out.println(Thread.currentThread().getName()+" checking "+test.getFilename()+" for plagiarism");
-		List<Double> distances = new ArrayList<>();
-		for (Graph trainGraph : getSimilarGraphs(file, 3)) {
-			GraphEditDistance ged = new GraphEditDistance(test, trainGraph);
-			distances.add(ged.getDistance());
-		}
-		double lowest = Collections.min(distances);
-		System.out.println(test.getFilename()+" has plagiarism of "+lowest);
-		return test.getFilename()+"\t"+ lowest;
+		List<Graph> sentences = GraphUtils.getGraphs(file.toString());
+		System.out.println(Thread.currentThread().getName()+" checking "+file.toString()+" for plagiarism");
+		
+		return "";
 	}
 	
-	private List<Graph> getSimilarGraphs(File file, int recall) {
-		List<Graph> graphs = new ArrayList<>();
-		for (String filename : getSimilarDocuments(file, recall)) {
-			graphs.add(GraphUtils.parseGraph(parsedData+trainDir+filename));
-		}
-		
-		return graphs;
-	}
+//	private String getDistance(File file) {
+//		Graph test = GraphUtils.parseGraph(file.toString());
+//		System.out.println(Thread.currentThread().getName()+" checking "+test.getFilename()+" for plagiarism");
+//		List<Double> distances = new ArrayList<>();
+//		for (Graph trainGraph : getSimilarGraphs(file, 3)) {
+//			GraphEditDistance ged = new GraphEditDistance(test, trainGraph);
+//			distances.add(ged.getDistance());
+//		}
+//		double lowest = Collections.min(distances);
+//		System.out.println(test.getFilename()+" has plagiarism of "+lowest);
+//		return test.getFilename()+"\t"+ lowest;
+//	}
+//	
+//	private List<Graph> getSimilarGraphs(File file, int recall) {
+//		List<Graph> graphs = new ArrayList<>();
+//		for (String filename : getSimilarDocuments(file, recall)) {
+//			//TODO: hent ut similar sentences
+//			graphs.addAll(GraphUtils.getGraphs(parsedData+trainDir+filename));
+//		}
+//		
+//		return graphs;
+//	}
+	
 	
 	private List<String> getSimilarDocuments(File file, int recall) {
 		try {
