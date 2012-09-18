@@ -1,16 +1,9 @@
 package no.roek.nlpgraphs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.document.DocumentFile;
@@ -22,7 +15,7 @@ import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 
 public class App {
 
-	private static String parsedFilesDir, trainDir, testDir, dataDir, resultsFile, annotationsDir;
+	private static String parsedFilesDir, trainDir, testDir, dataDir;
 
 	public static void main(String[] args) throws InterruptedException {
 		init();
@@ -44,8 +37,6 @@ public class App {
 		dataDir = ConfigService.getDataDir();
 		testDir = ConfigService.getTestDir();
 		trainDir = ConfigService.getTrainDir();
-		annotationsDir = ConfigService.getAnnotationsDir();
-		resultsFile = ConfigService.getResultsFile();
 	}
 
 	public static Thread preprocess(String input) {

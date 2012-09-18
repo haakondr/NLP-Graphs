@@ -22,19 +22,24 @@ import no.roek.nlpgraphs.misc.GraphUtils;
 public class PlagiarismWorker extends Thread {
 
 	private File[] testFiles;
-	private String parsedData, trainDir, testDir, originalDir;
+	private String parsedData, trainDir, testDir, originalDir, resultsDir;
+	private int documentRecall, plagiarismThreshold;
+	
 	public PlagiarismWorker(File[] testFiles) {
 		this.testFiles = testFiles;
 		this.originalDir = ConfigService.getDataDir();
 		this.parsedData = ConfigService.getParsedFilesDir();
 		this.trainDir = ConfigService.getTrainDir();
 		this.testDir = ConfigService.getTestDir();
+		this.resultsDir = ConfigService.getResultsDir();
+		this.documentRecall = ConfigService.getDocumentRecall();
+		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
 	}
 
 	@Override
 	public void run() {
 		for (File testFile : testFiles) {
-			List<PlagiarismReference> plagiarisms = findPlagiarism(testFile, 5);
+			List<PlagiarismReference> plagiarisms = findPlagiarism(testFile);
 			writeResults(testFile, plagiarisms);
 		}
 		
@@ -42,17 +47,17 @@ public class PlagiarismWorker extends Thread {
 	}
 
 
-	public List<PlagiarismReference> findPlagiarism(File file, double threshold) {
+	public List<PlagiarismReference> findPlagiarism(File file) {
 		List<PlagiarismReference> references = new ArrayList<>();
 		
-		List<String> simDocs = findSimilarDocuments(file, 10);
+		List<String> simDocs = findSimilarDocuments(file, documentRecall);
 		List<Graph> mySentences = GraphUtils.getGraphs(parsedData+testDir+file.toString());
 
 		for (String trainFile : simDocs) {
 			for (Graph otherGraph : GraphUtils.getGraphs(parsedData+trainDir+trainFile)) {
 				for (Graph graph : mySentences) {
 					GraphEditDistance ged = new GraphEditDistance(graph, otherGraph);
-					if (ged.getDistance() < threshold) {
+					if (ged.getDistance() < plagiarismThreshold) {
 						references.add(getPlagiarismReference(graph, otherGraph));
 					}
 				}
@@ -102,12 +107,11 @@ public class PlagiarismWorker extends Thread {
 		
 		XMLOutputter outputter = new XMLOutputter();
 		try {
-			FileWriter writer = new FileWriter("userinfo.xml");
+			FileWriter writer = new FileWriter(resultsDir+file.getName());
 			outputter.output(doc, writer);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 }
