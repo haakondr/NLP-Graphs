@@ -2,14 +2,22 @@ package no.roek.nlpgraphs.document;
 
 public class PlagiarismReference {
 	private String type, obfuscation,language, sourceReference, sourceLanguage;
-	private int offset, length, sourceOffset, sourceLength;
+	private String offset, length, sourceOffset, sourceLength;
 		
-	public PlagiarismReference(String type, String obfuscation, String language, int offset, int length, String sourceReference, String sourceLanguage, int sourceOffset, int sourceLength) {
+	public PlagiarismReference(String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
 		this.type = type;
 		this.obfuscation = obfuscation;
 		this.language = language;
 		this.sourceReference = sourceReference;
 		this.sourceLanguage = sourceLanguage;
+		this.offset = offset;
+		this.length = length;
+		this.sourceOffset = sourceOffset;
+		this.sourceLength = sourceLength;
+	}
+	
+	public PlagiarismReference(String offset, String length, String sourceReference, String sourceOffset, String sourceLength) {
+		this.sourceReference = sourceReference;
 		this.offset = offset;
 		this.length = length;
 		this.sourceOffset = sourceOffset;
@@ -36,19 +44,19 @@ public class PlagiarismReference {
 		return sourceLanguage;
 	}
 
-	public int getOffset() {
+	public String getOffset() {
 		return offset;
 	}
 
-	public int getLength() {
+	public String getLength() {
 		return length;
 	}
 
-	public int getSourceOffset() {
+	public String getSourceOffset() {
 		return sourceOffset;
 	}
 
-	public int getSourceLength() {
+	public String getSourceLength() {
 		return sourceLength;
 	}
 }

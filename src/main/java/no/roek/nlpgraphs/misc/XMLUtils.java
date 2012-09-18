@@ -32,12 +32,12 @@ public class XMLUtils {
 					String type = row.getAttributeValue("type");
 					String obfuscation = row.getAttributeValue("obfuscation");
 					String language = row.getAttributeValue("this_language");
-					int offset = row.getAttribute("this_offset").getIntValue();
-					int length = row.getAttribute("this_length").getIntValue();
+					String offset = row.getAttributeValue("this_offset");
+					String length = row.getAttributeValue("this_length");
 					String sourceReference = row.getAttributeValue("source_reference");
 					String sourceLanguage = row.getAttributeValue("source_language");
-					int sourceOffset = row.getAttribute("source_offset").getIntValue();
-					int sourceLength = row.getAttribute("source_length").getIntValue();
+					String sourceOffset = row.getAttributeValue("source_offset");
+					String sourceLength = row.getAttributeValue("source_length");
 					
 					plagiarisms.add(new PlagiarismReference(type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
 				}
