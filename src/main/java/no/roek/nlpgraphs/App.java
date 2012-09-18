@@ -48,13 +48,13 @@ public class App {
 	}
 
 	public static Thread preprocess(String input) {
-		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>(30);
+		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>(10);
 		DocumentFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), parsedFilesDir);
 
 		int cpuCount = Runtime.getRuntime().availableProcessors();
 		int threadCount = 1;
 		if((files.length > 10 && cpuCount > 4)) {
-			threadCount = (cpuCount < 10) ? 2 : 10;
+			threadCount = (cpuCount < 7) ? 2 : 7;
 		}
 
 		DependencyParser consumer  = new DependencyParser(queue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log", parsedFilesDir, threadCount);

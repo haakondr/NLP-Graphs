@@ -53,6 +53,7 @@ public class SentenceUtils {
 					}
 					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
 						sentences.add(new NLPSentence(sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
+						createWord(wordBuilder, words, offset);
 						words = new ArrayList<Word>();
 						sentenceBuilder = new StringBuilder();
 						wordBuilder = new StringBuilder();

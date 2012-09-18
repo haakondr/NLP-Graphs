@@ -6,7 +6,8 @@ import java.util.List;
 
 public class Graph {
 
-	private String filename;
+	private String filename, originalText;
+	private int offset, length, sentenceNumber;
 	private List<Node> nodes;
 	private HashMap<String, List<Edge>> adjacent;
 
@@ -82,5 +83,41 @@ public class Graph {
 
 	public String getFilename() {
 		return filename;
+	}
+
+	public String getOriginalText() {
+		return originalText;
+	}
+
+	public void setOriginalText(String originalText) {
+		this.originalText = originalText;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public int getSentenceNumber() {
+		return sentenceNumber;
+	}
+
+	public void setSentenceNumber(int sentenceNumber) {
+		this.sentenceNumber = sentenceNumber;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 }

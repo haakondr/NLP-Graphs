@@ -18,7 +18,7 @@ public class GraphUtilsTest {
 	
 	@Before
 	public void setup() {
-		graph = GraphUtils.parseGraph(Paths.get("src/test/resources/parsed_documents/test.txt"));
+		graph = GraphUtils.parseGraph("src/test/resources/parsed_documents/test.txt");
 	}
 	
 	@Test

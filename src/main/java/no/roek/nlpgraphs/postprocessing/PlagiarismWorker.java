@@ -54,7 +54,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	}
 
 	private String getDistance(File file) {
-		Graph test = GraphUtils.parseGraph(file.toPath());
+		Graph test = GraphUtils.parseGraph(file.toString());
 		System.out.println(Thread.currentThread().getName()+" checking "+test.getFilename()+" for plagiarism");
 		List<Double> distances = new ArrayList<>();
 		for (Graph trainGraph : getSimilarGraphs(file, 3)) {
@@ -69,7 +69,7 @@ public class PlagiarismWorker extends RecursiveTask<List<String>>{
 	private List<Graph> getSimilarGraphs(File file, int recall) {
 		List<Graph> graphs = new ArrayList<>();
 		for (String filename : getSimilarDocuments(file, recall)) {
-			graphs.add(GraphUtils.parseGraph(Paths.get(parsedData+trainDir+filename)));
+			graphs.add(GraphUtils.parseGraph(parsedData+trainDir+filename));
 		}
 		
 		return graphs;

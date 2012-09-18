@@ -9,7 +9,6 @@ import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
-import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer implements Runnable{
@@ -50,7 +49,7 @@ public class PosTagProducer implements Runnable{
 		file.setLastInQueue(isLastInQueue);
 		file.setSentences(SentenceUtils.getSentences(file.getPath().toString()));
 
-		int sentenceNumber = 1, wordnumber = 1;
+		int sentenceNumber = 1;
 		for (NLPSentence sentence : file.getSentences()) {
 			try {
 				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
@@ -58,8 +57,6 @@ public class PosTagProducer implements Runnable{
 
 				int i = 1;
 				for (TaggedWord token : taggedSentence) {
-					wordnumber++;
-
 					temp.add(sentenceNumber+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 					i++;
 				}
@@ -67,16 +64,9 @@ public class PosTagProducer implements Runnable{
 				sentence.setPostags(temp.toArray(new String[0]));
 			}catch (IndexOutOfBoundsException e) {
 				e.printStackTrace();
-				for (Word word : sentence.getWords()) {
-					System.out.print(word.word());
-				}
-				System.out.println(file.getPath().toString()+" sentence number: "+sentenceNumber+" wordnumber: "+wordnumber);
-				System.out.println("previous sentence: "+file.getSentences().get(sentenceNumber-2).toString());
-				System.out.println("sentence length:" +sentence.getLength());
 			}
 		} 
 
 		return file;
-
 	}
 }

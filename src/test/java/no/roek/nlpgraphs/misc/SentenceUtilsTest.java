@@ -42,8 +42,8 @@ public class SentenceUtilsTest {
 			}
 		}
 		
-		assertEquals(22, sum);
-		assertEquals(79, charactersInText);
+		assertEquals(25, sum);
+		assertEquals(82, charactersInText);
 		assertEquals(100, textLength);
 	}
 	
