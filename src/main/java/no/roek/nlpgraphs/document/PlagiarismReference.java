@@ -23,6 +23,10 @@ public class PlagiarismReference {
 		this.sourceOffset = sourceOffset;
 		this.sourceLength = sourceLength;
 	}
+	
+	public PlagiarismReference(int offset, int length, String sourceReference, int sourceOffset, int sourceLength) {
+		this(Integer.toString(offset), Integer.toString(length), sourceReference, Integer.toString(sourceOffset), Integer.toString(sourceLength));
+	}
 
 	public String getType() {
 		return type;
