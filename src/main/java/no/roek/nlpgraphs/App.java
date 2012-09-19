@@ -9,6 +9,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.postprocessing.CandidateRetrievalWorker;
+import no.roek.nlpgraphs.postprocessing.PlagJob;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
@@ -23,7 +25,7 @@ public class App {
 		if(shouldPreprocess()) {
 			preprocess(dataDir).join();
 		}
-//		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
+		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
 	}
 
 	public static boolean shouldPreprocess() {
@@ -71,22 +73,24 @@ public class App {
 
 	private static void postProcess(String originalTrainDir, String trainDir, String testDir) {
 		System.out.println("starting postprocessing");
-		File[] test = Fileutils.getFiles(Paths.get(testDir));
-
+		
+		BlockingQueue<PlagJob> queue = new LinkedBlockingQueue<>();
+		
+		new CandidateRetrievalWorker(queue, trainDir, testDir).start();
+		
+		for (int i = 0; i < getThreadCount(); i++) {
+			PlagiarismWorker consumer = new PlagiarismWorker(queue);
+			consumer.setName("PlagiarismWorker-"+i);
+			consumer.start();
+		}
+	}
+	
+	private static int getThreadCount() {
 		int threads = Runtime.getRuntime().availableProcessors() - 2;
-		if(test.length < threads) {
-			threads = test.length;
-		}else if(threads < 2) {
-			threads = 1;
+		if(threads < 2) {
+			return 1;
 		}
-		List<File[]> chunks = Fileutils.getChunks(test, threads);
 		
-		System.out.println("using "+threads+" threads");
-		
-		for (int i = 0; i < chunks.size(); i++) {
-			PlagiarismWorker worker = new PlagiarismWorker(chunks.get(i));
-			worker.setName("PlagiarismWorker-"+i);
-			worker.start();
-		}
+		return threads;
 	}
 }

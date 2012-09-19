@@ -3,6 +3,7 @@ package no.roek.nlpgraphs.document;
 public class PlagiarismReference {
 	private String type, obfuscation,language, sourceReference, sourceLanguage;
 	private String offset, length, sourceOffset, sourceLength;
+	private double similarity;
 		
 	public PlagiarismReference(String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
 		this.type = type;
@@ -22,6 +23,11 @@ public class PlagiarismReference {
 		this.length = length;
 		this.sourceOffset = sourceOffset;
 		this.sourceLength = sourceLength;
+	}
+	
+	public PlagiarismReference(String offset, String length, String sourceReference, String sourceOffset, String sourceLength, double similarity) {
+		this(offset, length, sourceReference, sourceOffset, sourceLength);
+		this.similarity = similarity;
 	}
 	
 	public PlagiarismReference(int offset, int length, String sourceReference, int sourceOffset, int sourceLength) {
@@ -62,5 +68,9 @@ public class PlagiarismReference {
 
 	public String getSourceLength() {
 		return sourceLength;
+	}
+
+	public double getSimilarity() {
+		return similarity;
 	}
 }
