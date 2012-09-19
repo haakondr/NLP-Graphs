@@ -9,7 +9,6 @@ import no.roek.nlpgraphs.misc.Fileutils;
 
 public class DocumentFile {
 	private Path relPath;
-//	private List<String[]> sentences;
 	private List<NLPSentence> sentences;
 	private boolean isLastInQueue;
 	private Path path;
@@ -23,14 +22,6 @@ public class DocumentFile {
 		this.originalText = Fileutils.getText(path);
 	}
 
-//	public void addSentence(String[] tokens) {
-//		sentences.add(tokens);
-//	}
-//
-//	public List<String[]> getSentences() {
-//		return sentences;
-//	}
-	
 	public void setSentences(List<NLPSentence> sentences) {
 		this.sentences = sentences;
 	}

@@ -21,23 +21,23 @@ import no.roek.nlpgraphs.graph.Node;
 
 public class GraphUtils {
 
-	public static Graph parseGraph(String filename) {
-		JsonReader jsonReader;
+	public static List<Graph> getGraphs(String filename) {
+		List<Graph> graphs = new ArrayList<>();
 		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
-		
-		JsonParser jsonParser = new JsonParser();
-		JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-//		for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-//			
-//		}
-		JsonElement jsonSentence = fileObject.get("sentences").getAsJsonArray().get(0);
-		return parseGraph(jsonSentence.getAsJsonObject(), filename);
-		
+			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+
+			JsonParser jsonParser = new JsonParser();
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+			}
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
+		
+		return graphs;
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
@@ -75,18 +75,6 @@ public class GraphUtils {
 		return new Node(id, new String[] {word, pos}); 
 	}
 
-	//public static Node createNode(String line, HashMap<String, List<String[]>> adj) {
-	//	String[] tokens = line.split("\t");
-	//	if(!adj.containsKey(tokens[0])) {
-	//		adj.put(tokens[0], new ArrayList<String[]>());
-	//	}
-	//	if(!tokens[6].matches("[\\d]+_0")){
-	//		adj.get(tokens[0]).add(new String[] {tokens[6], tokens[7]});
-	//	}
-	//
-	//	return new Node(tokens[0], new String[] {tokens[1], tokens[4]});
-	//}
-
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
 			if(!graph.getAdjacent().containsKey(node.getId())) {
@@ -101,7 +89,7 @@ public class GraphUtils {
 	}
 
 	public static <T> int listDiff(List<T> list1, List<T> list2) {
-		//TODO: rewrite to something that doesn't require overriding hashCode in edge/node
+		//TODO: rewrite to something that doesn't require overriding hashCode in edge/node. comparable?
 		Set<T> intersect = new HashSet<>(list1);
 		intersect.retainAll(list2);
 

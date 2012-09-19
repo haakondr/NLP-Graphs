@@ -23,11 +23,12 @@ public class CandidateRetrievalBenchmark {
 	
 	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException {
 		
-		Path dir = Paths.get(ConfigService.getTrainDir());
-		DocumentRetrievalService drs = new DocumentRetrievalService(dir);
+		String dataDir = ConfigService.getDataDir();
+		Path trainDir = Paths.get(dataDir + ConfigService.getTrainDir());
+		DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
 
 		double correct = 0, total = 0;
-		Path testDir = Paths.get(dir.toString()+"suspicious-documents");
+		Path testDir = Paths.get(dataDir + ConfigService.getTrainDir());
 		for (File testFile : Fileutils.getFiles(testDir)) {
 			List<String> similarFiles = drs.getSimilarDocuments(Fileutils.getText(testFile.toPath()), 10);
 			if(containsAllPlagiarisedFiles(Paths.get("pan11/annotations/"+testFile), similarFiles)) {

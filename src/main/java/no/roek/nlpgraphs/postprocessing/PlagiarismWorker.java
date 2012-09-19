@@ -1,88 +1,117 @@
 package no.roek.nlpgraphs.postprocessing;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.RecursiveTask;
+
+import org.apache.lucene.queryParser.ParseException;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.XMLOutputter;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
-import org.apache.lucene.queryParser.ParseException;
+public class PlagiarismWorker extends Thread {
 
-public class PlagiarismWorker extends RecursiveTask<List<String>>{
-
-	private List<File> testFiles;
-	List<PlagiarismWorker> forks = new ArrayList<>();
-	private int jobsLeft;
-	private Path originalDir;
-	private String parsedData, trainDir, testDir;
-
-	public PlagiarismWorker(List<File> test, int jobsLeft, Path originalTrainDir, String parsedData, String trainDir, String testDir) {
-		this.testFiles = test;
-		this.jobsLeft = jobsLeft;
-		this.originalDir = originalTrainDir;
-		this.parsedData = parsedData;
-		this.trainDir = trainDir;
-		this.testDir = testDir;
+	private File[] testFiles;
+	private String parsedData, trainDir, testDir, originalDir, resultsDir;
+	private int documentRecall, plagiarismThreshold;
+	
+	public PlagiarismWorker(File[] testFiles) {
+		this.testFiles = testFiles;
+		this.originalDir = ConfigService.getDataDir();
+		this.parsedData = ConfigService.getParsedFilesDir();
+		this.trainDir = ConfigService.getTrainDir();
+		this.testDir = ConfigService.getTestDir();
+		this.resultsDir = ConfigService.getResultsDir();
+		this.documentRecall = ConfigService.getDocumentRecall();
+		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
 	}
 
 	@Override
-	protected List<String> compute() {
-		List<String> results = new ArrayList<>();
-		if(jobsLeft < 2) {
-			for (File testFile : testFiles) {
-				results.add(getDistance(testFile));
-			}
-		}else {
-			int split = testFiles.size() / 2;
-			
-			PlagiarismWorker p1 = new PlagiarismWorker(testFiles.subList(0, split), jobsLeft -2, originalDir, parsedData, trainDir, testDir);
-			p1.fork();
-			PlagiarismWorker p2 = new PlagiarismWorker(testFiles.subList(split, testFiles.size()), jobsLeft -2, originalDir, parsedData, trainDir, testDir);
-			results.addAll(p2.compute());
-			results.addAll(p1.join());
+	public void run() {
+		for (File testFile : testFiles) {
+			List<PlagiarismReference> plagiarisms = findPlagiarism(testFile);
+			writeResults(testFile, plagiarisms);
 		}
 		
-		return results;
+		System.out.println(Thread.currentThread().getName() + " done finding plagiarism in "+ testFiles.length+" files.");
 	}
 
-	private String getDistance(File file) {
-		Graph test = GraphUtils.parseGraph(file.toString());
-		System.out.println(Thread.currentThread().getName()+" checking "+test.getFilename()+" for plagiarism");
-		List<Double> distances = new ArrayList<>();
-		for (Graph trainGraph : getSimilarGraphs(file, 3)) {
-			GraphEditDistance ged = new GraphEditDistance(test, trainGraph);
-			distances.add(ged.getDistance());
-		}
-		double lowest = Collections.min(distances);
-		System.out.println(test.getFilename()+" has plagiarism of "+lowest);
-		return test.getFilename()+"\t"+ lowest;
-	}
-	
-	private List<Graph> getSimilarGraphs(File file, int recall) {
-		List<Graph> graphs = new ArrayList<>();
-		for (String filename : getSimilarDocuments(file, recall)) {
-			graphs.add(GraphUtils.parseGraph(parsedData+trainDir+filename));
+
+	public List<PlagiarismReference> findPlagiarism(File file) {
+		List<PlagiarismReference> references = new ArrayList<>();
+		
+		List<String> simDocs = findSimilarDocuments(file, documentRecall);
+		List<Graph> mySentences = GraphUtils.getGraphs(parsedData+testDir+file.toString());
+
+		for (String trainFile : simDocs) {
+			for (Graph otherGraph : GraphUtils.getGraphs(parsedData+trainDir+trainFile)) {
+				for (Graph graph : mySentences) {
+					GraphEditDistance ged = new GraphEditDistance(graph, otherGraph);
+					if (ged.getDistance() < plagiarismThreshold) {
+						references.add(getPlagiarismReference(graph, otherGraph));
+					}
+				}
+			}
 		}
 		
-		return graphs;
+		return references;
 	}
-	
-	private List<String> getSimilarDocuments(File file, int recall) {
+
+	public PlagiarismReference getPlagiarismReference(Graph test, Graph train) {
+		String offset = Integer.toString(test.getOffset());
+		String length = Integer.toString(test.getLength());
+		String sourceReference = train.getFilename();
+		String sourceOffset = Integer.toString(train.getOffset());
+		String sourceLength = Integer.toString(train.getLength());
+		return new PlagiarismReference(offset, length, sourceReference, sourceOffset, sourceLength);
+	}
+
+	public List<String> findSimilarDocuments(File file, int recall) {
 		try {
-			DocumentRetrievalService drs = new DocumentRetrievalService(Paths.get(originalDir.toString()+trainDir));
-			String filename = originalDir.toString()+testDir+file.getName();
+			DocumentRetrievalService drs = new DocumentRetrievalService(Paths.get(originalDir+trainDir));
+			String filename = originalDir+testDir+file.getName();
 			return drs.getSimilarDocuments(Fileutils.getText(Paths.get(filename)), recall);
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+
+	public void writeResults(File file, List<PlagiarismReference> plagiarisms) {
+		Element root = new Element("document");
+		root.setAttribute("reference", file.getName());
+		for (PlagiarismReference plagiarismReference : plagiarisms) {
+			Element reference = new Element("feature");
+			reference.setAttribute("name", "detected-plagiarism");
+			reference.setAttribute("this_offset", plagiarismReference.getOffset());
+			reference.setAttribute("this_length", plagiarismReference.getLength());
+			reference.setAttribute("source_reference", plagiarismReference.getSourceReference());
+			reference.setAttribute("source_offset", plagiarismReference.getSourceOffset());
+			reference.setAttribute("source_length", plagiarismReference.getSourceLength());
+			root.addContent(reference);
+		}
+		
+		Document doc = new Document();
+		doc.setContent(root);
+		
+		XMLOutputter outputter = new XMLOutputter();
+		try {
+			FileWriter writer = new FileWriter(resultsDir+file.getName());
+			outputter.output(doc, writer);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

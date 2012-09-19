@@ -42,9 +42,15 @@ public class ConfigService {
 		return getProperty("ANNOTATIONS_DIR");
 	}
 	
-	public static String getResultsFile() {
-		return getProperty("RESULTS_FILE");
+	public static String getResultsDir() {
+		return getProperty("RESULTS_DIR");
 	}
 	
-
+	public static int getDocumentRecall() {
+		return Integer.parseInt(getProperty("DOCUMENT_RECALL"));
+	}
+	
+	public static int getPlagiarismThreshold() {
+		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
+	}
 }

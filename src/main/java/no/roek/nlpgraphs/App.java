@@ -1,15 +1,9 @@
 package no.roek.nlpgraphs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.document.DocumentFile;
@@ -21,7 +15,7 @@ import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 
 public class App {
 
-	private static String parsedFilesDir, trainDir, testDir, dataDir, resultsFile, annotationsDir;
+	private static String parsedFilesDir, trainDir, testDir, dataDir;
 
 	public static void main(String[] args) throws InterruptedException {
 		init();
@@ -29,7 +23,7 @@ public class App {
 		if(shouldPreprocess()) {
 			preprocess(dataDir).join();
 		}
-		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
+//		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
 	}
 
 	public static boolean shouldPreprocess() {
@@ -43,8 +37,6 @@ public class App {
 		dataDir = ConfigService.getDataDir();
 		testDir = ConfigService.getTestDir();
 		trainDir = ConfigService.getTrainDir();
-		annotationsDir = ConfigService.getAnnotationsDir();
-		resultsFile = ConfigService.getResultsFile();
 	}
 
 	public static Thread preprocess(String input) {
@@ -81,20 +73,20 @@ public class App {
 		System.out.println("starting postprocessing");
 		File[] test = Fileutils.getFiles(Paths.get(testDir));
 
-		int cpuCount = Runtime.getRuntime().availableProcessors() - 2;
-		int threads = cpuCount;
-		if(test.length < cpuCount) {
+		int threads = Runtime.getRuntime().availableProcessors() - 2;
+		if(test.length < threads) {
 			threads = test.length;
-		}else if(cpuCount < 2) {
-			cpuCount = 1;
+		}else if(threads < 2) {
+			threads = 1;
 		}
-
-		System.out.println("using "+cpuCount+" threads");
-		PlagiarismWorker worker = new PlagiarismWorker(Arrays.asList(test), threads, Paths.get(originalTrainDir), parsedFilesDir, trainDir, testDir);
-
-		ForkJoinPool pool = new ForkJoinPool();
-		List<String> results = pool.invoke(worker);
-
-		Fileutils.writeToFile(resultsFile, results.toArray(new String[0]));
+		List<File[]> chunks = Fileutils.getChunks(test, threads);
+		
+		System.out.println("using "+threads+" threads");
+		
+		for (int i = 0; i < chunks.size(); i++) {
+			PlagiarismWorker worker = new PlagiarismWorker(chunks.get(i));
+			worker.setName("PlagiarismWorker-"+i);
+			worker.start();
+		}
 	}
 }
