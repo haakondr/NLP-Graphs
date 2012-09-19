@@ -23,7 +23,7 @@ public class App {
 		if(shouldPreprocess()) {
 			preprocess(dataDir).join();
 		}
-		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
+//		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
 	}
 
 	public static boolean shouldPreprocess() {
