@@ -25,13 +25,14 @@ public class CandidateRetrievalBenchmark {
 
 		String dataDir = ConfigService.getDataDir();
 		String annotationsDir = ConfigService.getAnnotationsDir();
+		int recall = ConfigService.getDocumentRecall();
 		Path trainDir = Paths.get(dataDir + ConfigService.getTrainDir());
 		DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
 
 		double correct = 0, total = 0;
 		Path testDir = Paths.get(dataDir + ConfigService.getTestDir());
 		for (File testFile : Fileutils.getFiles(testDir)) {
-			List<String> similarFiles = drs.getSimilarDocuments(testFile.toPath().toString(), 10);
+			List<String> similarFiles = drs.getSimilarDocuments(testFile.toPath().toString(), recall);
 
 			String file = testFile.toPath().getFileName().toString();
 			String annotationsFile = file.substring(0, file.indexOf(".")) + ".xml";
@@ -41,8 +42,10 @@ public class CandidateRetrievalBenchmark {
 
 			total++;
 		}
-
-		System.out.println("candidate retrieval was "+ (correct/total)*100+ "% correct.");
+		
+		String outText = "candidate retrieval was "+ (correct/total)*100+ "% correct, with recall "+recall;
+		Fileutils.writeToFile("benchmark.txt", outText);
+		System.out.println(outText);
 	}
 
 	private static boolean containsAllPlagiarisedFiles(Path annotationFile, List<String> similarFiles) {
