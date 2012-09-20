@@ -18,20 +18,23 @@ import org.apache.lucene.queryParser.ParseException;
 
 
 public class CandidateRetrievalBenchmark {
-	
-	
-	
+
+
+
 	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException {
-		
+
 		String dataDir = ConfigService.getDataDir();
 		Path trainDir = Paths.get(dataDir + ConfigService.getTrainDir());
 		DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
 
 		double correct = 0, total = 0;
-		Path testDir = Paths.get(dataDir + ConfigService.getTrainDir());
+		Path testDir = Paths.get(dataDir + ConfigService.getTestDir());
 		for (File testFile : Fileutils.getFiles(testDir)) {
-			List<String> similarFiles = drs.getSimilarDocuments(Fileutils.getText(testFile.toPath()), 10);
-			if(containsAllPlagiarisedFiles(Paths.get("pan11/annotations/"+testFile), similarFiles)) {
+			List<String> similarFiles = drs.getSimilarDocuments(testFile.toPath().toString(), 10);
+
+			String file = testFile.toPath().getFileName().toString();
+			String annotationsFile = file.substring(0, file.indexOf(".")) + ".xml";
+			if(containsAllPlagiarisedFiles(Paths.get("data/annotations/"+annotationsFile), similarFiles)) {
 				correct++;
 			}
 
@@ -40,23 +43,29 @@ public class CandidateRetrievalBenchmark {
 
 		System.out.println("candidate retrieval was "+ (correct/total)*100+ "% correct.");
 	}
-	
+
 	private static boolean containsAllPlagiarisedFiles(Path annotationFile, List<String> similarFiles) {
 		List<PlagiarismReference> plagiarisms = XMLUtils.getPlagiarismReferences(annotationFile.toString());
 		
-		for (String simFile : similarFiles) {
-			boolean contains = false;
-			for (PlagiarismReference plagiarismReference : plagiarisms) {
-				if(plagiarismReference.getSourceReference().equals(simFile)) {
-					contains = true;
-				}
-			}
-
-			if(!contains) {
+		for (PlagiarismReference plagiarismReference : plagiarisms) {
+			if(!isInCollection(plagiarismReference.getSourceReference(), similarFiles)) {
 				return false;
+			}
+			
+		}
+		return true;
+	}
+
+
+
+	private static boolean isInCollection(String doc, List<String> collection) {
+		boolean in = false;
+		for (String string : collection) {
+			if(doc.equals(string)) {
+				in = true;
 			}
 		}
 
-		return true;
+		return in;
 	}
 }

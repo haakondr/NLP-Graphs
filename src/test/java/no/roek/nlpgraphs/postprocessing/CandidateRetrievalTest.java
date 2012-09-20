@@ -24,24 +24,24 @@ import org.junit.Test;
 public class CandidateRetrievalTest {
 
 	private DocumentRetrievalService drs;
-	private String query;
+	private String queryDoc;
 
 	@Before
 	public void setup() throws CorruptIndexException, IOException {
 		drs = new DocumentRetrievalService(Paths.get("src/test/resources/documents"));
-		query = "Hello my name is Håkon, and I live in Trondheim.";
+		queryDoc = "src/test/resources/documents/source-document01193.txt";
 	}
 
 	@Test
 	public void shouldReturnSimilarDocuments() throws IOException, ParseException {
-		List<String> similarDocuments = drs.getSimilarDocuments(query, 1);
-		assertEquals("omg.txt", similarDocuments.get(0));
+		List<String> similarDocuments = drs.getSimilarDocuments(queryDoc, 1);
+		assertEquals("source-document01193.txt", similarDocuments.get(0));
 		assertEquals(1, similarDocuments.size());
 	}
 
 	@Test
 	public void shouldRetrieveCorrectAmountOfDocuments() throws ParseException, IOException{
-		List<String> similarDocuments = drs.getSimilarDocuments(query, 3);
+		List<String> similarDocuments = drs.getSimilarDocuments(queryDoc, 3);
 		assertEquals(3, similarDocuments.size());
 	}
 }

@@ -27,8 +27,8 @@ public class FileutilsTest {
 		assertEquals(lol.getFileName().toString(), "lol.txt");
 		assertEquals(dir.relativize(lol), lol.getFileName());
 		
-		DocumentFile file = new DocumentFile(Paths.get("src/test/resources/documents/test/omg.txt"), dir);
-		assertEquals("test/omg.txt", file.getRelPath().toString());
+		DocumentFile file = new DocumentFile(Paths.get("src/test/resources/documents/omg.txt"), dir);
+		assertEquals("omg.txt", file.getRelPath().toString());
 	}
 	
 	@Test

@@ -41,15 +41,15 @@ public class GraphEditDistanceTest {
 		assertEquals(2, (int)dist);
 	}
 	
-	@Test
-	public void testCostMatrix() {
-		
-	}
-	
-	@Test
-	public void testEdgeDiff() {
-		
-	}
+//	@Test
+//	public void testCostMatrix() {
+//		
+//	}
+//	
+//	@Test
+//	public void testEdgeDiff() {
+//		
+//	}
 	
 //TODO: uncomment to test execution time for graph edit distance algorithm.
 //	@Test
