@@ -1,0 +1,14 @@
+A thesis project focusing on the usage of dependency graphs as a representation of natural language text. 
+Sentences are represented as graph objects, tagged with part-of-speech tags and relations between tokens.
+This representation is used as a measure of similarity between two sentences, utilized for plagiarism detection.
+
+--------------------------------
+
+Dependencies: java7, maven
+
+Usage:
+
+modify app.properties and select the appropriate folders for the data set. The data set should consist of a train and test folder, with text documents.
+
+mvn compile
+mvn exec:java
