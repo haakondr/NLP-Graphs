@@ -8,7 +8,7 @@ Dependencies: java7, maven
 
 Usage:
 
-modify app.properties and select the appropriate folders for the data set. The data set should consist of a train and test folder, with text documents.
+modify app.properties and select the appropriate folders for the data set.
 
 mvn compile
 mvn exec:java
