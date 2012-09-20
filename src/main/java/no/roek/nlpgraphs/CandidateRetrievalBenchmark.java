@@ -24,6 +24,7 @@ public class CandidateRetrievalBenchmark {
 	public static void main(String[] args) throws CorruptIndexException, IOException, ParseException {
 
 		String dataDir = ConfigService.getDataDir();
+		String annotationsDir = ConfigService.getAnnotationsDir();
 		Path trainDir = Paths.get(dataDir + ConfigService.getTrainDir());
 		DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
 
@@ -34,7 +35,7 @@ public class CandidateRetrievalBenchmark {
 
 			String file = testFile.toPath().getFileName().toString();
 			String annotationsFile = file.substring(0, file.indexOf(".")) + ".xml";
-			if(containsAllPlagiarisedFiles(Paths.get("data/annotations/"+annotationsFile), similarFiles)) {
+			if(containsAllPlagiarisedFiles(Paths.get(dataDir+annotationsDir+annotationsFile), similarFiles)) {
 				correct++;
 			}
 
