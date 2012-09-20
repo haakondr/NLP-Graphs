@@ -15,16 +15,17 @@ import no.roek.nlpgraphs.misc.Fileutils;
 public class CandidateRetrievalWorker extends Thread {
 
 	private BlockingQueue<PlagJob> queue;
-	private String testDir;
+	private String testDir, dataDir;
 	private DocumentRetrievalService drs;
 	private int documentRecall;
 	
-	public CandidateRetrievalWorker(BlockingQueue<PlagJob> queue, String trainDir, String testDir) {
+	public CandidateRetrievalWorker(BlockingQueue<PlagJob> queue, String dataDir, String parsedDataDir, String trainDir, String testDir) {
 		this.queue = queue;
 		this.testDir = testDir;
+		this.dataDir = dataDir;
 		this.documentRecall = ConfigService.getDocumentRecall();
 		try {
-			drs = new DocumentRetrievalService(Paths.get(trainDir));
+			drs = new DocumentRetrievalService(Paths.get(dataDir+trainDir));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,11 +33,11 @@ public class CandidateRetrievalWorker extends Thread {
 	
 	@Override
 	public void run() {
-		for (File testFile : Fileutils.getFiles(Paths.get(testDir))) {
+		for (File testFile : Fileutils.getFiles(Paths.get(dataDir+testDir))) {
 			try {
-				List<String> similarDocs = drs.getSimilarDocuments(Fileutils.getText(testFile.toPath()), documentRecall);
-				queue.put(new PlagJob(testFile.toString(), similarDocs.toArray(new String[0])));
-			} catch (IOException | ParseException | InterruptedException e) {
+				List<String> similarDocs = drs.getSimilarDocuments(testFile.toString(), documentRecall);
+				queue.put(new PlagJob(testFile.toPath().getFileName().toString(), similarDocs.toArray(new String[0])));
+			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

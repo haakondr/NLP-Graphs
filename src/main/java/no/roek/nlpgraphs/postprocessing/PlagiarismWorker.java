@@ -16,6 +16,7 @@ import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
 public class PlagiarismWorker extends Thread {
@@ -27,6 +28,8 @@ public class PlagiarismWorker extends Thread {
 	public PlagiarismWorker(BlockingQueue<PlagJob> queue) {
 		this.queue = queue;
 		this.parsedData = ConfigService.getParsedFilesDir();
+		this.testDir = ConfigService.getTestDir();
+		this.trainDir = ConfigService.getTrainDir();
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
 	}
@@ -47,10 +50,11 @@ public class PlagiarismWorker extends Thread {
 
 
 	public List<PlagiarismReference> findPlagiarism(String file, String[] simDocs) {
+		System.out.println(Thread.currentThread().getName()+": finding plagiarism cases for file "+file);
 		List<PlagiarismReference> references = new ArrayList<>();
 
 		for (String simDoc : simDocs) {
-			for (GraphPair graphPair : findPlagiarisedSentences(file, simDoc)) {
+			for (GraphPair graphPair : findPlagiarisedSentences(parsedData+testDir+file, parsedData+trainDir+simDoc)) {
 				references.add(getPlagiarismReference(graphPair));
 			}
 		}
@@ -60,8 +64,8 @@ public class PlagiarismWorker extends Thread {
 
 	public List<GraphPair> findPlagiarisedSentences(String testFile, String trainFile) {
 		List<GraphPair> similarSentences = new ArrayList<>();
-		List<Graph> testSentences = GraphUtils.getGraphs(parsedData+testDir+testFile);
-		List<Graph> trainSentences = GraphUtils.getGraphs(parsedData+trainDir+trainFile);
+		List<Graph> testSentences = GraphUtils.getGraphs(testFile);
+		List<Graph> trainSentences = GraphUtils.getGraphs(trainFile);
 
 		for (Graph testSentence : testSentences) {
 			for (Graph trainSentence : trainSentences) {
@@ -108,6 +112,7 @@ public class PlagiarismWorker extends Thread {
 
 		XMLOutputter outputter = new XMLOutputter();
 		try {
+			Fileutils.createFileIfNotExist(resultsDir+file);
 			FileWriter writer = new FileWriter(resultsDir+file);
 			outputter.output(doc, writer);
 			writer.close();

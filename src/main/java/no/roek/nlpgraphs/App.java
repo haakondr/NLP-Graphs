@@ -25,7 +25,7 @@ public class App {
 		if(shouldPreprocess()) {
 			preprocess(dataDir).join();
 		}
-		postProcess(dataDir+trainDir, parsedFilesDir+trainDir, parsedFilesDir+testDir);
+		postProcess();
 	}
 
 	public static boolean shouldPreprocess() {
@@ -71,12 +71,12 @@ public class App {
 		return consumerThread;
 	}
 
-	private static void postProcess(String originalTrainDir, String trainDir, String testDir) {
+	private static void postProcess() {
 		System.out.println("starting postprocessing");
 		
 		BlockingQueue<PlagJob> queue = new LinkedBlockingQueue<>();
 		
-		new CandidateRetrievalWorker(queue, trainDir, testDir).start();
+		new CandidateRetrievalWorker(queue, dataDir, parsedFilesDir, trainDir, testDir).start();
 		
 		for (int i = 0; i < getThreadCount(); i++) {
 			PlagiarismWorker consumer = new PlagiarismWorker(queue);
