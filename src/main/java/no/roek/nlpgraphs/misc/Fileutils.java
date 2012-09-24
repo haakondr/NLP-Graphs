@@ -31,10 +31,10 @@ public class Fileutils {
 			ioe.printStackTrace();
 		}
 	}
-	
+
 	public static void writeToFile(String filename, String text) {
 		createFileIfNotExist(filename);
-		
+
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 			writer.write(text);
@@ -48,8 +48,10 @@ public class Fileutils {
 		File f = new File(filename);
 		File parent = f.getParentFile();
 
-		if(!parent.exists()) {
-			parent.mkdirs();
+		if(!(parent == null)) {
+			if(!parent.exists()) {
+				parent.mkdirs();
+			}
 		}
 	}
 
@@ -126,14 +128,14 @@ public class Fileutils {
 
 		return chunks.toArray(new Path[0][0]);
 	}
-	
+
 	public static <T> List<T[]> getChunks(T[] files, int n) {
 		List<T[]> chunks = new ArrayList<>();
-		
+
 		int fileCount = files.length;
 		int chunksize = fileCount / n;
 		int i = 0;
-		
+
 		while(i < fileCount) {
 			if(i+chunksize*2 <= fileCount) {
 				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
