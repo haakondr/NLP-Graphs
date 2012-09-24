@@ -1,0 +1,1 @@
+entropy entropies apen kullback-leibler enthalpy energy energies likelihood probability distance rmsd entropic log-likelihood shannon z-score likelihoods error euclidean hydrophobicity fitness electrostatic

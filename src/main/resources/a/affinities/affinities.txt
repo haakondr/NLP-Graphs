@@ -1,0 +1,1 @@
+affinities affinity specificities constants sensitivities efficiencies energies stabilities properties kd extents mobilities potency stoichiometry binding pockets binders efficacies pocket proportions specificity

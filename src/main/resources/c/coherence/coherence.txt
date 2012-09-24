@@ -1,0 +1,1 @@
+coherence consistency correctness plausibility coherency uniformity comparability repeatability precision heritability reproducibility homogeneity similarity concordance clarity uniqueness completeness linearity robustness complexity conservation

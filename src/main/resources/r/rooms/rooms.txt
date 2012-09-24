@@ -1,0 +1,1 @@
+rooms room wards facilities departments homes clinics attendances bedrooms admissions cages hospitals beds department pens flooring centres offices floors buildings emergency

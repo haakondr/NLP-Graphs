@@ -1,0 +1,1 @@
+uniformity comparability homogeneity reproducibility robustness completeness consistency linearity quality anonymity objectivity precision transparency rapidity concordance interpretability simplicity continuity comprehensiveness generality independence

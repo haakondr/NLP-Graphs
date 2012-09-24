@@ -1,0 +1,1 @@
+repulsive non-bonded short-range waals repulsion solvation electrostatic torsional vdw desolvation near-native amber noe lumo intermolecular enzyme-substrate binaural h-bond long-range planarity interfacial

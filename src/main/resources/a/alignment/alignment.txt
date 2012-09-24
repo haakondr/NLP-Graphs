@@ -1,0 +1,1 @@
+alignment alignments aligned msa comparison searches comparisons similarity search algorithm fasta blast default clustalw superposition sequence homology pairwise identity dialign matches

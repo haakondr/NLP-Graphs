@@ -1,0 +1,1 @@
+penalty penalties cost constraint parameter regularization δg costs constraints weighting entropy energies gap stacking restrictions clustalw gaps intercept landscapes entropic mismatches

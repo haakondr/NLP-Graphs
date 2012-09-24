@@ -1,0 +1,1 @@
+genotypes genotype alleles haplotypes polymorphisms allele polymorphism genotyping snps homozygotes haplotype heterozygotes carriers val snp frequencies variant loci tt homozygote gg

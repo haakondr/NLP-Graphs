@@ -1,0 +1,1 @@
+bond bonds bonding atom backbone dihedral h-bond hydrogen atoms hydrogen-bond residue bonded main-chain side-chain angles linkages pairing noe phosphodiester bridge loop

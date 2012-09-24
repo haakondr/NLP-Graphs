@@ -1,0 +1,1 @@
+generality robustness practicality reproducibility applicability usefulness generalizability consistency scalability uniformity simplicity suitability modularity versatility brevity comparability relevance reliability implication constancy interpretability

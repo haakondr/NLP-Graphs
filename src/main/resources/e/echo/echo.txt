@@ -1,0 +1,1 @@
+echo echocardiography echocardiographic spin-echo echocardiogram repetition echocardiograms contrast-enhanced doppler transesophageal ms fse tr msec axial ultrasound te flip pacing scintigraphy sagittal

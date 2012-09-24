@@ -1,0 +1,1 @@
+factorials factorial primes integers cdf semidirect pochhammer eigenvalues monomials zeroes numerators jacobian nontotient pandigital rationals dft eigenvalue fourths tetrominoes coproduct multivariate

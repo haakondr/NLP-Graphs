@@ -1,0 +1,1 @@
+epistatic epistasis additive polygenic dose-effect dominance genotype-phenotype cause-effect gene-environment current-voltage many-to-one covariances gene–gene two-locus non-genetic one-to-many exposure–response stress-strain exposure-response many-to-many input-output

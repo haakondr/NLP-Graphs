@@ -1,0 +1,1 @@
+glyph glyphs ligatures font unicode fonts truetype codepoint ligature numeral precomposed diacritic proto-canaanite alphabets hieroglyphs opentype cjk lucida encodings orthographic arial

@@ -1,0 +1,1 @@
+restraints constraints restraint noe dihedral noes angles torsion violations cross-peaks angle constraint violation atoms dipolar protons rmsd energies inter-atomic backbone rdcs

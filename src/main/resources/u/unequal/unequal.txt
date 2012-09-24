@@ -1,0 +1,1 @@
+unequal equal two-tailed mann-whitney two-sample uneven unpaired t-tests t-test meiotic intrachromosomal two-sided bonferroni sce chi-square one-way unbalanced rank-sum one-tailed student estimated

@@ -1,0 +1,1 @@
+reporter luciferase construct constructs renilla plasmid reporters plasmids firefly gfp lacz transgene vector luc fusion shrna vectors egfp prl-tk transfection fusions

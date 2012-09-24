@@ -1,0 +1,1 @@
+states state conformations counties cities provinces conformation countries districts processes populations transitions communities condition towns coast parts regions syndromes entities probabilities

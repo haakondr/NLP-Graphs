@@ -1,0 +1,1 @@
+medians percentiles parentheses means median sds averages whiskers variances percentages deviations interquartile sems iqr quartiles bars brackets proportions triplicates sd deviation

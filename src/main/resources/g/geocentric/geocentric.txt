@@ -1,0 +1,1 @@
+geocentric heliocentric geodetic aristotelean ecef copernican ecliptic keplerian hipparchus utm non-inertial sun-synchronous sidereal ellipsoids celestial almagest inertial enu cartesian geosynchronous majoritarian

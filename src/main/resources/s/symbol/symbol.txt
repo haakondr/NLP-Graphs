@@ -1,0 +1,1 @@
+symbol symbols locuslink name id identifier names ids accession hugo unigene gene identifiers refseq entrez genbank rectangle omim aliases bar nomenclature

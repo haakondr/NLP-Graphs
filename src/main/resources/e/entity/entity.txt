@@ -1,0 +1,1 @@
+entity entities features characteristics object ontology phenomenon feature semantic phenomena attributes neoplasm bioinfer character hallmark situation attribute aspect word sentence situations

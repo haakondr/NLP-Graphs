@@ -1,0 +1,1 @@
+molecule molecules monomer ligand ligands substrate moiety adhesion binding complexes binds substrates dimer conformation monomers proteins glycoprotein bound tetramer protein cytokine

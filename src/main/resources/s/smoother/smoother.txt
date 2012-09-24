@@ -1,0 +1,1 @@
+smoother smoothers smoothing print-tip lowess smoothed regression intensity-dependent estimators estimator normalization cosine sigmoidal smooth splines qspline lloess normalizations polynomial rank-based regression-based

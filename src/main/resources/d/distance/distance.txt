@@ -1,0 +1,1 @@
+distance distances proximity dissimilarity euclidean spacing similarity entropy miles coefficient angle likelihood rmsd km length lengths radius path probability location sum

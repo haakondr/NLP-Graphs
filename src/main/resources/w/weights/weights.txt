@@ -1,0 +1,1 @@
+weights weight probabilities weighting variances coefficients sizes parameters probability lengths parameter masses ratios p-values intensities distances volumes variance mass energies weighted

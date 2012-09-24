@@ -1,0 +1,1 @@
+sums sum variances totals amount averages percentages percents difference geodex eigenvalues histogram kl gsma f-statistic variance logarithm knn arithmetic pearson summed

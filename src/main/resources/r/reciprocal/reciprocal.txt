@@ -1,0 +1,1 @@
+reciprocal bidirectional blastx mutual best-hit non-reciprocal blastp all-against-all bi-directional blastn blast high-scoring pairwise transitive inverse hit interchromosomal unidirectional non-self e-value best

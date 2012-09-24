@@ -1,0 +1,1 @@
+copies copy pseudogenes loci sequences insertions repeats introns insertion paralogs transposons duplications duplication provirus elements locus retroelements integration ltrs duplicated clones

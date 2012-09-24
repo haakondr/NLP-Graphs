@@ -1,0 +1,1 @@
+unary ternary bitwise nullary octal vigesimal sexagesimal s-complement intensional xor infix binary duodecimal hindu-arabic boolean semiring decimal postfix dyadic commutative place-value

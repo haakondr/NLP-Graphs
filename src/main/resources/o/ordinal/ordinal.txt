@@ -1,0 +1,1 @@
+ordinal categorical dichotomous likert likert-type dichotomized numeric logistic binary continuous patient-reported five-point log-transformed chi-square dummy multinomial four-point dichotomised three-level univariate stepwise

@@ -1,0 +1,1 @@
+shotgun wgs metagenomic reads whole-genome sequencing abi-sanger bac large-insert fosmid contig metagenome celera phrap est bacs assemblies unassembled contigs tiling single-pass

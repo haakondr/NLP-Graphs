@@ -1,0 +1,1 @@
+backbone main-chain side-chain atoms sidechain backbones bond bonds glycosidic helix amide atom sugar chain ribose cα dihedral residue carbonyl hydrogen stacking

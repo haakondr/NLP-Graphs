@@ -1,0 +1,1 @@
+conserved invariant non-conserved well-conserved orthologous constrained aligned homologous c-terminal divergent putative n-terminal shared conservation active-site catalytic nonconserved syntenic alignable amino-terminal identical

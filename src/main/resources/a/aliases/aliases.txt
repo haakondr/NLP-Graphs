@@ -1,0 +1,1 @@
+aliases synonyms hugo names hgnc matchminer synonym alias symbols ids locuslink acronyms keywords identifiers accession symbol name pseudowords entrez parenthesis unigene

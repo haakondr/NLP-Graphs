@@ -1,0 +1,1 @@
+polynomial polynomials quadratic linear exponential nonlinear spline non-linear gaussian sigmoidal cubic sigmoid rbf hyperbolic least-squares kernel least-square loess regression bdim parabolic

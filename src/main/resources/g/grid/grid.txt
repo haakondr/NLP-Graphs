@@ -1,0 +1,1 @@
+grid grids mesh lattice pixel voxel cgr radius spot coordinates kisumu bin map circle electrode spatial image slide micrometer rows ndvi

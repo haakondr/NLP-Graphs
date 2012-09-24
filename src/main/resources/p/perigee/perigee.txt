@@ -1,0 +1,1 @@
+perigee apogee periapsis apoapsis nmi semimajor delta-v inclination leo semi-major lageos eccentricity perihelion geosynchronous geostationary solid-fueled aphelion aerobraking lübbecke precession ellipse

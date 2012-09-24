@@ -1,0 +1,1 @@
+squared square mean-square root-mean-square pearson absolute spearman sum product-moment intra-cluster intra-class calculating intraclass angular euclidean euclidian error average rms rmse rank-based

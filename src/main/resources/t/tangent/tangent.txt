@@ -1,0 +1,1 @@
+tangent p-v pressure-volume cosine sine sigmoid least-squares sigmoidal out- exponential best-fit xy non-linear logarithmic intercept log-log slope non-rigid pial monotonic eccentricity

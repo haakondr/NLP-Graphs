@@ -1,0 +1,1 @@
+department departments clinic clinics outpatient hospital ward wards visits ed emergency inpatient hospitals specialist admissions office consultation unit university specialty service

@@ -1,0 +1,1 @@
+residuals coefficients variances slopes log regression coefficient slope m-values logarithm fitted lowess p-values smoothed z-scores gaussian loadings outliers deviation eigenvalues histograms

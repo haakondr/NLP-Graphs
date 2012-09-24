@@ -1,0 +1,1 @@
+domains domain domain-containing motifs motif proteins superfamily subdomains regions region helices families fold protein repeats modules residues segments superfamilies pfam subdomain

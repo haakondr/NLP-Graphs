@@ -1,0 +1,1 @@
+attributes characteristics features attribute aspects variables entities properties traits dimensions categories classes descriptors covariates concepts barriers qualities determinants property objects tfs

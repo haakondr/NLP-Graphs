@@ -1,0 +1,1 @@
+stretches stretch tracts repeats regions nucleotides bases overhangs segments tails strings sequences coiled-coil runs spacers region lengths linker indels residues introns

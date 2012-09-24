@@ -1,0 +1,1 @@
+annotated mapped curated annotations annotation predicted retrieved downloaded refseq assigned ensembl databases searched aligned entries assembled non-redundant annotate swiss-prot classified overlapping

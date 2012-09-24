@@ -1,0 +1,1 @@
+gaps gap mismatches indels deletions insertions outliers ambiguities discrepancies contigs disparities introns nicks missing nucleotides barriers errors penalties bases inconsistencies reads

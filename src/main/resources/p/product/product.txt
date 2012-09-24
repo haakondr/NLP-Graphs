@@ -1,0 +1,1 @@
+product products fragments fragment amplicon amplicons reaction primers reactions inserts amplified cdnas template pcr bands band arna orf bamhi bglii dnas

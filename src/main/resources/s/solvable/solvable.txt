@@ -1,0 +1,1 @@
+solvable abelian nilpotent decidable np-hard isomorphic np-complete solved unsolvable reducible semisimple sylow finite quintic finitely deterministic tractable non-abelian torsion-free algebra factorization

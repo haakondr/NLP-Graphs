@@ -1,0 +1,1 @@
+sequent propositional combinatory deduction sentential intuitionistic reductio syllogisms disjunction calculus entailment provable heyting combinator finiteness quantifiers mordell calculi ponens corollaries newton-cotes

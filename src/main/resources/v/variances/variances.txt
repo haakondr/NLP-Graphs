@@ -1,0 +1,1 @@
+variances variance covariance medians residuals proportions covariances normality coefficients heritability t-tests distributions p-values variation variability probabilities weights means deviations t-test intensities

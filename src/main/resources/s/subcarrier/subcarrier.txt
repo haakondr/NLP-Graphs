@@ -1,0 +1,1 @@
+subcarrier subcarriers pal-m chrominance secam vhf khz ntsc qam sideband mirchi narrowband demodulated sinusoidal luma longwave subsampling l-r mediumwave amplitude modulated

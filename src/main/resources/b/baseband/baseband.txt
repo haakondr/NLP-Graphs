@@ -1,0 +1,1 @@
+baseband modulating lowpass chrominance modulated continuous-time sinusoid narrowband spread-spectrum pcm gigahertz s-video hz sideband bandlimited khz rf wideband luminance megahertz qam

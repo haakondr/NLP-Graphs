@@ -1,0 +1,1 @@
+scaffolds scaffold contigs reads nanofiber contig self-assembling assemblies mbp bacs wgs phrap assembly plga ests polymers bac shotgun chromosomes singlets mb

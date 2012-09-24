@@ -1,0 +1,1 @@
+entrez embl arrayexpress swissprot geo genebank locuslink sequin omnibus tblastn locusid taxa refseq blastn cd-search databank fasciculata omia blastclust homologene nonredundant

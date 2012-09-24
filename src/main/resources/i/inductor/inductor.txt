@@ -1,0 +1,1 @@
+inductor resistor re-charge inductance capacitor 0v inductors eqn tr1 capacitance 9v coil uncharged low-pass solenoid sinusoidal mosfet voltage freewheeling vr1 odds

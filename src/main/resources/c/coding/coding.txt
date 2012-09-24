@@ -1,0 +1,1 @@
+coding orf protein-coding non-coding exons intergenic introns noncoding cds intronic intron exonic utr flanking untranslated encoding upstream orfs exon cassette codon

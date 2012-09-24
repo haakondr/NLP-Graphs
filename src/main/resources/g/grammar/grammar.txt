@@ -1,0 +1,1 @@
+grammar grammars scfg lexicon grammatical cyk dictionaries context-free parse parsers semantic ambiguity lgp dictionary semantics words lexical syntactic parser formatting symbols

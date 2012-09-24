@@ -1,0 +1,1 @@
+semantics obo predicates meanings semantic vocabulary concepts adjectives terminology grammar underpinning nlp meaning verbs syntax propbank vocabularies axioms ontologies sql proc

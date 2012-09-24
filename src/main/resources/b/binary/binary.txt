@@ -1,0 +1,1 @@
+binary dichotomous categorical multiclass ordinal numerical multi-class svm discrete numeric boolean hierarchical dummy svm-based random continuous ascii probabilistic linear classifier simple

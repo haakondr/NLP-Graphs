@@ -1,0 +1,1 @@
+copy copies loci insertions chromosomal allele locus loh insertion duplications chromosome deletions proviral cgh single-copy abundance duplication transgene alleles amplifications pseudogenes

@@ -1,0 +1,1 @@
+energies energy enthalpy constants electrostatic enthalpies probabilities entropy stacking stabilities interactions energetics affinities solvation δg restraints bonding conformations distances contacts potentials

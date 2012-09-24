@@ -1,0 +1,1 @@
+transitive phylogenic exhaustive reciprocal one-to-many part-of sequence-similarity structure–function blast-based tblastx homology-based best-hit tblastn pair-wise blastn functional blastx blastp human–mouse all-against-all orthology

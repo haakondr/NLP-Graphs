@@ -1,0 +1,1 @@
+trilinear bilinear barycentric circumcenter gouraud anisotropic anti-aliasing enu texel low-pass affine mip multilinear contravariant centroid bogoliubov ecef projective equalization nine-point maildrop

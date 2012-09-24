@@ -1,0 +1,1 @@
+direction directions orientation axis polarity orientations location rotation plane magnitude angle axes velocity speed motion displacement movement locations force trend shift

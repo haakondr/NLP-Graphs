@@ -1,0 +1,1 @@
+stations station transmitters ads counties cities municipalities monitors telephones districts towns emissions time-series phones buildings installations radio traffic facilities centroids centres

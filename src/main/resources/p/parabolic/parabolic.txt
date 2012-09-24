@@ -1,0 +1,1 @@
+parabolic sigmoidal polynomial cosine quadratic least-squares spline exponential loess sigmoid bell-shaped isotherm least-square michaelis–menten straight-line nonlinear stress-strain step-stool laplace lowess kleiber

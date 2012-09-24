@@ -1,0 +1,1 @@
+quadratic polynomial linear nonlinear non-linear exponential cubic log-linear logarithmic hyperbolic parabolic regression legendre spline sigmoidal lowess fitting gaussian piecewise cosine dose–response

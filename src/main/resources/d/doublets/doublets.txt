@@ -1,0 +1,1 @@
+doublets doublet phrases strings subsequences integers g-tracts words runs dinucleotides heptads triplets quadruplets phrase coder thymidines comma unitags guanines amyloid-like word

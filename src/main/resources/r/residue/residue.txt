@@ -1,0 +1,1 @@
+residue residues substitution arg glu gly lysine cysteine thr asp cys ala ser atom phe hydrophobic atoms lys proline tyr amino

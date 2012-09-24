@@ -1,0 +1,1 @@
+conformers conformations conformer conformation structures mfe chab decoys hairpin s-as structure g-quadruplex duplex rotamers tetraloops minima stem–loop geometries reannealing r-factor energies

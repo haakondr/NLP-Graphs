@@ -1,0 +1,1 @@
+bandwidth band-pass bandpass fwhm wavelengths width wavelength range widths slits scope low-pass argon chroma db exc tuning slit excitation dichroic hertz

@@ -1,0 +1,1 @@
+quaternion quaternions scalar commutative semisimple conjugate vector abelian multilinear pseudoscalar dihedral finite-dimensional non-commutative unital determinant associative spinor polynomial infinite-dimensional orthogonal quotient

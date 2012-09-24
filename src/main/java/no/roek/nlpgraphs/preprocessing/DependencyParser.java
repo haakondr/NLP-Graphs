@@ -1,32 +1,32 @@
 package no.roek.nlpgraphs.preprocessing;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.jobs.ParseJob;
+import no.roek.nlpgraphs.jobs.SimilarityJob;
+import no.roek.nlpgraphs.misc.GraphUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 
 
-public class DependencyParser implements Runnable {
+public class DependencyParser extends Thread {
 
-	private final BlockingQueue<DocumentFile> queue;
+	private final BlockingQueue<ParseJob> queue;
+	private final BlockingQueue<SimilarityJob> distQueue;
 	private MaltParserService maltService;
-	private String outDir;
-	private int producerThreadsCount;
-	private int finishedProducerThreads;
 
-	public DependencyParser(BlockingQueue<DocumentFile> queue, String maltParams, String outDir, int producerThreadsCount) {
+	public DependencyParser(BlockingQueue<ParseJob> queue, BlockingQueue<SimilarityJob> distQueue, String maltParams) {
 		this.queue = queue;
-		this.outDir = outDir;
-		this.producerThreadsCount = producerThreadsCount;
+		this.distQueue = distQueue;
 		try {
 			this.maltService = new MaltParserService();
 			maltService.initializeParserModel(maltParams);
@@ -40,16 +40,9 @@ public class DependencyParser implements Runnable {
 		boolean run = true;
 		while(run) {
 			try {
-				DocumentFile posfile = queue.poll(2000, TimeUnit.SECONDS);
-				consume(posfile);
-
-				if(posfile.isLastInQueue()) {
-					finishedProducerThreads++;
-					if(finishedProducerThreads == producerThreadsCount) {
-						System.out.println("All producer threads done, stopping consumer thread.");
-					}
-				}
-			} catch (InterruptedException | MaltChainedException e) {
+				ParseJob parseJob = queue.poll(2000, TimeUnit.SECONDS);
+				distQueue.put(consume(parseJob));
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				System.out.println("Consumer timed out after 10000 seconds with nothing from producer threads");
@@ -58,45 +51,75 @@ public class DependencyParser implements Runnable {
 		}
 
 	}
-	public void consume(DocumentFile posfile) throws MaltChainedException, NullPointerException {
-//		List<String> parsedTokens = new ArrayList<>();
-		int sentenceNumber = 1;
-		JSONObject out = new JSONObject();
-		try {
-			out.put("filename", posfile.getPath().getFileName().toString());
-			JSONArray jsonSentences = new JSONArray();
-
-			for (NLPSentence sentence : posfile.getSentences()) {
-				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
-
-				JSONObject jsonSentence = new JSONObject();
-				jsonSentence.put("sentenceNumber", sentenceNumber);
-				jsonSentence.put("originalText", sentence.getText());
-				jsonSentence.put("offset", sentence.getStart());
-				jsonSentence.put("length", sentence.getLength());
-				JSONArray jsonTokens = new JSONArray();
-				for (String parsedToken : parsedSentences) {
-					String[] token = parsedToken.split("\t");
-					
-					JSONObject jsonToken = new JSONObject();
-					jsonToken.put("id", token[0]);
-					jsonToken.put("word", token[1]);
-					jsonToken.put("pos", token[4]);
-					jsonToken.put("rel", sentenceNumber+"_"+token[6]);
-					jsonToken.put("deprel", token[7]);
-					jsonTokens.put(jsonToken);
-				}
-				jsonSentence.put("tokens", jsonTokens);
-				sentenceNumber++;
-				jsonSentences.put(jsonSentence);
-				out.put("sentences", jsonSentences);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	
+	public SimilarityJob consume(ParseJob job) {
+		List<GraphPair> graphPairs = new ArrayList<>();
+		for (TextPair pair : job.getTextPairs()) {
+			Graph test = getGraph(pair.getTestSentence());
+			Graph train = getGraph(pair.getTrainSentence());
+			graphPairs.add(new GraphPair(test, train));
 		}
-		Fileutils.writeToFile(outDir+posfile.getRelPath(), out.toString());
-		System.out.println("Done dependency parsing file "+posfile.getRelPath());
+
+		return new SimilarityJob(job.getTestFile(), graphPairs);
 	}
+	
+	public Graph getGraph(NLPSentence sentence) {
+		try {
+			String[] parsedTokens = maltService.parseTokens(sentence.getPostaggedTokens());
+			
+			return GraphUtils.getGraph(parsedTokens, sentence);
+		} catch (MaltChainedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+//	public Node getNode(String word, HashMap<String, Node> nodes) {
+//		String[] token = word.split("\t");
+//		Node node = new Node(token[0], new String[] {token[1], token[4]});
+//		nodes.put(node.getId(), node);
+//		return node;
+//	}
+	
+//	public void consume(ParseJob posfile) throws MaltChainedException, NullPointerException {
+////		List<String> parsedTokens = new ArrayList<>();
+//		int sentenceNumber = 1;
+//		JSONObject out = new JSONObject();
+//		try {
+//			out.put("filename", posfile.getPath().getFileName().toString());
+//			JSONArray jsonSentences = new JSONArray();
+//
+//			for (NLPSentence sentence : posfile.getSentences()) {
+//				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
+//
+//				JSONObject jsonSentence = new JSONObject();
+//				jsonSentence.put("sentenceNumber", sentenceNumber);
+//				jsonSentence.put("originalText", sentence.getText());
+//				jsonSentence.put("offset", sentence.getStart());
+//				jsonSentence.put("length", sentence.getLength());
+//				JSONArray jsonTokens = new JSONArray();
+//				for (String parsedToken : parsedSentences) {
+//					String[] token = parsedToken.split("\t");
+//					
+//					JSONObject jsonToken = new JSONObject();
+//					jsonToken.put("id", token[0]);
+//					jsonToken.put("word", token[1]);
+//					jsonToken.put("pos", token[4]);
+//					jsonToken.put("rel", sentenceNumber+"_"+token[6]);
+//					jsonToken.put("deprel", token[7]);
+//					jsonTokens.put(jsonToken);
+//				}
+//				jsonSentence.put("tokens", jsonTokens);
+//				sentenceNumber++;
+//				jsonSentences.put(jsonSentence);
+//				out.put("sentences", jsonSentences);
+//			}
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Fileutils.writeToFile(outDir+posfile.getRelPath(), out.toString());
+//		System.out.println("Done dependency parsing file "+posfile.getRelPath());
+//	}
 
 
 }

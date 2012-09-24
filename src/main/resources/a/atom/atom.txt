@@ -1,0 +1,1 @@
+atom atoms bond residue bonds backbone oxygens hydrogen atomic resonances bonding dihedral hydroxyl side-chain main-chain amide ions non-hydrogen waals angles sidechain

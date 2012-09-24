@@ -1,10 +1,29 @@
 package no.roek.nlpgraphs.document;
 
-public class NLPToken {
+import edu.stanford.nlp.ling.Word;
 
-	private String word;
+public class NLPToken extends Word{
+
+	private String pos;
 	
 	public NLPToken(String word) {
-		this.word = word;
+		super(word);
+	}
+	
+	public NLPToken(String word, String pos) {
+		this(word);
+		this.pos = pos;
+	}
+	
+	public String getWord() {
+		return super.word();
+	}
+
+	public String getPos() {
+		return pos;
+	}
+
+	public void setPos(String pos) {
+		this.pos = pos;
 	}
 }

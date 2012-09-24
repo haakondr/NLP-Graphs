@@ -1,0 +1,1 @@
+id ids identifier accession identifiers locuslink databank entrez unigene refseq name database entries annotations symbol databases pdb ensembl annotation ncbi genbank

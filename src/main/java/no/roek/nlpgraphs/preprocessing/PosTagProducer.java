@@ -4,22 +4,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.jobs.ParseJob;
+import no.roek.nlpgraphs.jobs.PostagJob;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
-public class PosTagProducer implements Runnable{
+public class PosTagProducer extends Thread {
 
-	private final BlockingQueue<DocumentFile> queue;
-	private DocumentFile[] files;
+	private final BlockingQueue<PostagJob> queue;
+	private final BlockingQueue<ParseJob> parseQueue;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<DocumentFile> queue, DocumentFile[] files, String taggerParams){
+	public PosTagProducer(BlockingQueue<PostagJob> queue, BlockingQueue<ParseJob> parseQueue, String taggerParams){
 		this.queue = queue;
-		this.files = files;
+		this.parseQueue = parseQueue;
 		try {
 			this.tagger = new MaxentTagger(taggerParams);
 		} catch (ClassNotFoundException | IOException e) {
@@ -29,21 +33,45 @@ public class PosTagProducer implements Runnable{
 
 	@Override
 	public void run() {
-		int i = 0;
-		int filecount = files.length;
-
-		for (DocumentFile file : files) {
-			i++;
-			DocumentFile taggedFile = tagFile(file, i==filecount);
-			System.out.println(Thread.currentThread().getName()+": done POS-tagging file "+file.getRelPath());
+		boolean running = true;
+		while(running) {
 			try {
-				queue.put(taggedFile);
+				PostagJob job = queue.poll(2000, TimeUnit.SECONDS);
+				parseQueue.put(getPosTags(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+
+	public ParseJob getPosTags(PostagJob job) {
+		ParseJob parseJob = new ParseJob(job.getFile().toString());
+		
+		for(TextPair pair : job.getTextPairs()) {
+			NLPSentence taggedTestSentence = getMaltString(pair.getTestSentence());
+			NLPSentence taggedTrainSentence = getMaltString(pair.getTrainSentence());		
+			pair.setTestSentence(getMaltString(taggedTestSentence));
+			pair.setTrainSentence(getMaltString(taggedTrainSentence));
+			parseJob.addTextPair(pair);
+		}
+
+		return parseJob;
+	}
+
+	public NLPSentence getMaltString(NLPSentence sentence) {
+		List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
+
+		List<String> temp = new ArrayList<>();
+		int i = 1;
+		for (TaggedWord token : taggedSentence) {
+			temp.add(sentence.getNumber()+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+		}
+
+		sentence.setPostaggedTokens(temp.toArray(new String[0]));
+
+		return sentence;
+	}
 
 	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
 		file.setLastInQueue(isLastInQueue);

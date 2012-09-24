@@ -1,0 +1,1 @@
+dipolar quadrupolar noe scalar inter-residue inter-atomic restraints tensor rdc schizoaffective planarity dti rdcs h-h noes anisotropic iterating dihedral thiostrepton all-atom electrostatic

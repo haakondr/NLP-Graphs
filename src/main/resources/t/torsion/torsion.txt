@@ -1,0 +1,1 @@
+torsion dihedral angles torsions restraints torsional noe phi angle conformations bond bending glycosidic conformation atom carbonyl planarity rotation atoms cα violations

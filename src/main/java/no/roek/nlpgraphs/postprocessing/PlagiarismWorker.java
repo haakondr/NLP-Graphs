@@ -7,29 +7,28 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.output.XMLOutputter;
-
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.jobs.PlagJob;
+import no.roek.nlpgraphs.jobs.SimilarityJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.XMLOutputter;
+
 public class PlagiarismWorker extends Thread {
+	
+	private BlockingQueue<SimilarityJob> queue;
+	private String resultsDir;
+	private double plagiarismThreshold;
 
-	private String parsedData, trainDir, testDir, originalDir, resultsDir;
-	private int plagiarismThreshold;
-	private BlockingQueue<PlagJob> queue;
-
-	public PlagiarismWorker(BlockingQueue<PlagJob> queue) {
+	public PlagiarismWorker(BlockingQueue<SimilarityJob> queue) {
 		this.queue = queue;
-		this.parsedData = ConfigService.getParsedFilesDir();
-		this.testDir = ConfigService.getTestDir();
-		this.trainDir = ConfigService.getTrainDir();
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
 	}
@@ -39,47 +38,59 @@ public class PlagiarismWorker extends Thread {
 		boolean run = true;
 		while(run) {
 			try {
-				PlagJob job = queue.poll(2000, TimeUnit.SECONDS);
-				List<PlagiarismReference> plagReferences = findPlagiarism(job.getTestFile(), job.getSimilarDocuments());
-				writeResults(job.getTestFile(), plagReferences);
+				SimilarityJob job = queue.poll(2000, TimeUnit.SECONDS);
+				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+				writeResults(job.getFile().getFileName().toString(), plagReferences);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-
-	public List<PlagiarismReference> findPlagiarism(String file, String[] simDocs) {
-		System.out.println(Thread.currentThread().getName()+": finding plagiarism cases for file "+file);
-		List<PlagiarismReference> references = new ArrayList<>();
-
-		for (String simDoc : simDocs) {
-			for (GraphPair graphPair : findPlagiarisedSentences(parsedData+testDir+file, parsedData+trainDir+simDoc)) {
-				references.add(getPlagiarismReference(graphPair));
+	public List<PlagiarismReference> findPlagiarism(SimilarityJob job) {
+		List<PlagiarismReference> plagReferences = new ArrayList<>();
+		
+		for(GraphPair pair : job.getGraphPairs()) {
+			GraphEditDistance ged = new GraphEditDistance(pair.getSuspiciousGraph(), pair.getSourceGraph());
+			if(ged.getDistance() < plagiarismThreshold) {
+				plagReferences.add(getPlagiarismReference(pair));
 			}
 		}
-
-		return references;
+		
+		return plagReferences;
 	}
 
-	public List<GraphPair> findPlagiarisedSentences(String testFile, String trainFile) {
-		List<GraphPair> similarSentences = new ArrayList<>();
-		List<Graph> testSentences = GraphUtils.getGraphs(testFile);
-		List<Graph> trainSentences = GraphUtils.getGraphs(trainFile);
+//	public List<PlagiarismReference> findPlagiarism(String file, String[] simDocs) {
+//		System.out.println(Thread.currentThread().getName()+": finding plagiarism cases for file "+file);
+//		List<PlagiarismReference> references = new ArrayList<>();
+//
+//		for (String simDoc : simDocs) {
+//			for (GraphPair graphPair : findPlagiarisedSentences(parsedData+testDir+file, parsedData+trainDir+simDoc)) {
+//				references.add(getPlagiarismReference(graphPair));
+//			}
+//		}
+//
+//		return references;
+//	}
 
-		for (Graph testSentence : testSentences) {
-			for (Graph trainSentence : trainSentences) {
-				GraphEditDistance ged = new GraphEditDistance(testSentence, trainSentence);
-				double dist = ged.getDistance();
-
-				if(dist < plagiarismThreshold) {
-					similarSentences.add(new GraphPair(testSentence, trainSentence, dist));
-				}
-			}
-		}
-
-		return similarSentences;
-	}
+//	public List<GraphPair> findPlagiarisedSentences(String testFile, String trainFile) {
+//		List<GraphPair> similarSentences = new ArrayList<>();
+//		List<Graph> testSentences = GraphUtils.getGraphs(testFile);
+//		List<Graph> trainSentences = GraphUtils.getGraphs(trainFile);
+//
+//		for (Graph testSentence : testSentences) {
+//			for (Graph trainSentence : trainSentences) {
+//				GraphEditDistance ged = new GraphEditDistance(testSentence, trainSentence);
+//				double dist = ged.getDistance();
+//
+//				if(dist < plagiarismThreshold) {
+//					similarSentences.add(new GraphPair(testSentence, trainSentence, dist));
+//				}
+//			}
+//		}
+//
+//		return similarSentences;
+//	}
 
 	public PlagiarismReference getPlagiarismReference(GraphPair pair) {
 		Graph test = pair.getSuspiciousGraph();

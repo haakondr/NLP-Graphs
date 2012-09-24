@@ -1,0 +1,1 @@
+introns intron exons intronic utrs intergenic exon coding protein-coding splice untranslated non-coding orfs splicing cds nucleotides transcripts pseudogenes noncoding flanking exonic

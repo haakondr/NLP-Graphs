@@ -1,0 +1,1 @@
+borders boundaries border boundary margins junctions edges junction splice location margin tip midline area sides locations opacities zones edge stripe diameters

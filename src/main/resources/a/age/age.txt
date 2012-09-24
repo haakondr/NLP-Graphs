@@ -1,0 +1,1 @@
+age ages parity gender race ethnicity sex bmi gestational marital menarche height ses age-group birth employment income smoking education demographics residence

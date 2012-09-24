@@ -1,0 +1,1 @@
+wavelet fourier fft wavelets time-frequency gabor cosine affine band-pass orthogonal logarithmic wvd logit square-root high-pass spectral low-pass eigenvector haar bandpass legendre

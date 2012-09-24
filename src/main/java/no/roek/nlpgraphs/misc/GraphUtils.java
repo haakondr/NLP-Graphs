@@ -1,79 +1,113 @@
 package no.roek.nlpgraphs.misc;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-
+import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
 public class GraphUtils {
 
-	public static List<Graph> getGraphs(String filename) {
-		List<Graph> graphs = new ArrayList<>();
-		try {
-			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
+		Graph graph = new Graph();
+		graph.setLength(sentence.getLength());
+		graph.setOffset(sentence.getStart());
+		graph.setOriginalText(sentence.getText());
+		graph.setSentenceNumber(sentence.getNumber());
 
-			JsonParser jsonParser = new JsonParser();
-			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
-			}
+		HashMap<String, List<String[]>> adjacent = new HashMap<>();
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
+		for(String wordString : parsedTokens) {
+			graph.addNode(getNode(wordString, adjacent));
 		}
 		
-		return graphs;
-	}
-
-	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
-		Graph graph = new Graph(filename);
-		graph.setLength(jsonGraph.get("length").getAsInt());
-		graph.setOffset(jsonGraph.get("offset").getAsInt());
-		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
-		graph.setSentenceNumber(jsonGraph.get("sentenceNumber").getAsInt());
-
-		HashMap<String, List<String[]>> adj = new HashMap<>();
-
-		for (JsonElement jsonNode : jsonGraph.get("tokens").getAsJsonArray()) {
-			graph.addNode(createNode(jsonNode.getAsJsonObject(), adj));
-		}
-
-		addEdges(graph, adj);
+		addEdges(graph, adjacent);
+		
 		return graph;
 	}
 
-	public static Node createNode(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
-		String id = jsonNode.get("id").getAsString();
-		String word = jsonNode.get("word").getAsString();
-		String pos = jsonNode.get("pos").getAsString();
-		String rel = jsonNode.get("rel").getAsString();
-		String deprel = jsonNode.get("deprel").getAsString();
+	public static Node getNode(String wordString, HashMap<String, List<String[]>> adjacent) {
+		String[] token = wordString.split("\t");
+		String id = token[0];
+		String word = token[1];
+		String pos = token[4];
+		String rel = token[6];
+		String deprel = token[7];
 
-		if(!adj.containsKey(id)) {
-			adj.put(id, new ArrayList<String[]>());
+		if(!adjacent.containsKey(id)) {
+			adjacent.put(id, new ArrayList<String[]>());
 		}
 
-		if(!rel.matches("[\\d]+_0")) {
-			adj.get(id).add(new String[] {rel, deprel});
+		if(!isRelationToIdNull(rel)) {
+			adjacent.get(id).add(new String[] {rel, deprel});
 		}
-
-		return new Node(id, new String[] {word, pos}); 
+		
+		return new Node(id, new String[] {word, pos});
 	}
+	
+	private static boolean isRelationToIdNull(String rel) {
+		return rel.matches("[\\d]+_0");
+	}
+
+
+//	public static List<Graph> getGraphs(String filename) {
+//		List<Graph> graphs = new ArrayList<>();
+//		try {
+//			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+//
+//			JsonParser jsonParser = new JsonParser();
+//			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+//			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+//				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+//			}
+//
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//		return graphs;
+//	}
+//
+//	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
+//		Graph graph = new Graph(filename);
+//		graph.setLength(jsonGraph.get("length").getAsInt());
+//		graph.setOffset(jsonGraph.get("offset").getAsInt());
+//		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
+//		graph.setSentenceNumber(jsonGraph.get("sentenceNumber").getAsInt());
+//
+//		HashMap<String, List<String[]>> adj = new HashMap<>();
+//
+//		for (JsonElement jsonNode : jsonGraph.get("tokens").getAsJsonArray()) {
+//			graph.addNode(createNode(jsonNode.getAsJsonObject(), adj));
+//		}
+//
+//		addEdges(graph, adj);
+//		return graph;
+//	}
+//
+//	public static Node createNode(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
+//		String id = jsonNode.get("id").getAsString();
+//		String word = jsonNode.get("word").getAsString();
+//		String pos = jsonNode.get("pos").getAsString();
+//		String rel = jsonNode.get("rel").getAsString();
+//		String deprel = jsonNode.get("deprel").getAsString();
+//
+//		if(!adj.containsKey(id)) {
+//			adj.put(id, new ArrayList<String[]>());
+//		}
+//
+//		if(!rel.matches("[\\d]+_0")) {
+//			adj.get(id).add(new String[] {rel, deprel});
+//		}
+//
+//		return new Node(id, new String[] {word, pos}); 
+//	}
 
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
@@ -89,7 +123,7 @@ public class GraphUtils {
 	}
 
 	public static <T> int listDiff(List<T> list1, List<T> list2) {
-		//TODO: rewrite to something that doesn't require overriding hashCode in edge/node. comparable?
+		//TODO: move to some other utils class?
 		Set<T> intersect = new HashSet<>(list1);
 		intersect.retainAll(list2);
 

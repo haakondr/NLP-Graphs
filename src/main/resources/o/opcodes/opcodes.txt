@@ -1,0 +1,1 @@
+opcodes bytecode operand mix opcode rasp operands accesses memory-mapped fetched indirection alu wound-rotor pkt sqlite malbolge accumulator decrement instructions runlevel endianness

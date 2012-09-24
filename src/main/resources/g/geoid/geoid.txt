@@ -1,0 +1,1 @@
+geoid ellipsoid ecef geodetic wgs geopotential datum equipotential ellipsoids ellipsoidal spheroidal spheroid geodesy luminiferous datums developable photosphere brane deflection bouguer conformal

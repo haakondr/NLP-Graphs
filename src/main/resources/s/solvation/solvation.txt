@@ -1,0 +1,1 @@
+solvation desolvation electrostatic electrostatics waals hydration non-bonded lumo repulsive stacking entropic solvent pbsa enthalpy born knowledge-based dielectric energies repulsion foldx mfe

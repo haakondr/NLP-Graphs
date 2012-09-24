@@ -1,0 +1,1 @@
+quartet quartets neighbor-joining phyml unrooted neighbour-joining parsimony puzzling neighbor ml quadruplexes tetraplex quadruplex tetraplexes bootstrap distance-based proml maximum-likelihood bootstrapped neighbour phylip

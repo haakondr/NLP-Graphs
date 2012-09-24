@@ -1,0 +1,1 @@
+emission excitation emissions fluorescence nm emitted wavelength absorbance absorption fret cfp bandpass wavelengths scattering dichroic laser excited filter quenching eyfp yfp

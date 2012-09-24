@@ -1,0 +1,1 @@
+precision accuracy reproducibility reliability sensitivity comparability specificity recall repeatability consistency robustness performance efficiency resolution f-measure quality agreement concordance variability completeness signal-to-noise

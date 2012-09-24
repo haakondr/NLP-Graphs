@@ -1,0 +1,1 @@
+checkpoint checkpoints arrest cell-cycle mitosis segregation spindle mitotic anaphase metaphase meiotic cohesion stress-activated prometaphase atm repair cytokinesis s-phase exit ner division

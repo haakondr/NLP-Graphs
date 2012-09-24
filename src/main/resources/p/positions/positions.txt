@@ -1,0 +1,1 @@
+positions position locations nucleotides residues coordinates regions bases location substitutions codons sites nucleotide pairs residue exons introns pair numbering characters gaps

@@ -1,0 +1,1 @@
+transistor transistors diode tr1 0v resistor diodes valve vox ic2 r2 bipolar watt voltage lcd four-terminal rackmount circuits timer 40mhz inductor

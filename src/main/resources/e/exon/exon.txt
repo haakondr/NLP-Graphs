@@ -1,0 +1,1 @@
+exon exons intron splice exonic introns splicing acceptor intronic pre-mrna untranslated nagnag minigene exon-exon codon flanking exon-intron orf coding cds in-frame

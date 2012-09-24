@@ -1,0 +1,1 @@
+accession genbank id ids refseq identifier identifiers entries locuslink unigene accessions entrez databases database ncbi embl ensembl annotations gene name swiss-prot

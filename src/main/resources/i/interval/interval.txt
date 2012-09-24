@@ -1,0 +1,1 @@
+interval intervals qt period duration qrs delay window periods qtc survival confidence ms prolongation ci time msec lag distance pulse range

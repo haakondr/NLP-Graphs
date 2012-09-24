@@ -1,0 +1,1 @@
+telnet sftp smtp ftp vnc ssh nfs socks ifolder rsync webdav ssl mapi smb https cifs tftp whois chat scp imap

@@ -1,0 +1,1 @@
+variables variable covariates characteristics factors parameters measures confounders indicators predictors t-tests covariate categorical attributes t-test features statistical outcomes dichotomous measurements determinants

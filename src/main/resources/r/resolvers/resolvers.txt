@@ -1,0 +1,1 @@
+resolvers resolver blacklists dos hostname ocsp nameserver tsig magnifier brushless hostnames nameservers xspf srv proxomitron elevons lookups update whitelist mudang ptr

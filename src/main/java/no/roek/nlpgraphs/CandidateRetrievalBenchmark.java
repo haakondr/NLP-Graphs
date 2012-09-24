@@ -10,7 +10,7 @@ import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.XMLUtils;
-import no.roek.nlpgraphs.postprocessing.DocumentRetrievalService;
+import no.roek.nlpgraphs.search.CandidateRetrievalService;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
@@ -27,7 +27,7 @@ public class CandidateRetrievalBenchmark {
 		String annotationsDir = ConfigService.getAnnotationsDir();
 		int recall = ConfigService.getDocumentRecall();
 		Path trainDir = Paths.get(dataDir + ConfigService.getTrainDir());
-		DocumentRetrievalService drs = new DocumentRetrievalService(trainDir);
+		CandidateRetrievalService drs = new CandidateRetrievalService(trainDir);
 
 		double correct = 0, total = 0;
 		Path testDir = Paths.get(dataDir + ConfigService.getTestDir());

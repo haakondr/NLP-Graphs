@@ -1,0 +1,1 @@
+variable variables covariates covariate varying categorical ordinal dichotomous measures outcome confounders dummy coded predictors vdj measure factors differing similar regression parameter

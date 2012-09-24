@@ -1,0 +1,1 @@
+continuity comparability confidentiality anonymity integrity uniformity independence objectivity adequate consistency transparency equity interoperability balance fidelity homogeneity readability proper privacy pluripotency completeness

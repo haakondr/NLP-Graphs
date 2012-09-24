@@ -1,0 +1,1 @@
+goodness goodness-of-fit hosmer-lemeshow lemeshow chi-square significance correctness yates normality homogeneity kolmogorov-smirnov statistic chi adequacy robustness likelihood-ratio hardy-weinberg psychometric hosmer informativeness completeness

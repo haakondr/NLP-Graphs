@@ -1,0 +1,1 @@
+open closed filled unfilled opened grey dotted empty black pink dashed shaded gray solid magenta hollow purple colored red opens blue

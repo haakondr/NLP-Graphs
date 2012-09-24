@@ -1,0 +1,1 @@
+additive multiplicative synergistic epistatic svrmhc dominance linear non-additive recessive gaussian poisson additivity nonlinear uniform uncorrelated trait equal noise exponential normality covariance

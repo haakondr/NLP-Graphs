@@ -1,0 +1,1 @@
+admissions admission hospitalizations admitted visits hospitalization attendances deaths readmissions hospitalized wards consultations inpatient department beds stay referrals hospital ed discharges ward

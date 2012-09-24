@@ -1,0 +1,1 @@
+infix postfix epenthetic unary imperfective bra-ket self-adjoint ternary rpn infixes suffixes concatenation octal prefix short-hand endian suffix switchboard bnf s-complement shortline

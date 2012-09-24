@@ -1,0 +1,1 @@
+sinh cosh tanh arcsin arctan arccos cos ln arccot sqrt boldsymbol exp cot vartheta geq sgn hbar tfrac infty mu qquad

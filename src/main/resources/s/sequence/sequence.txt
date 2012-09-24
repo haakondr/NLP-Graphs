@@ -1,0 +1,1 @@
+sequence sequences regions motif region sequencing alignment est genome motifs contig alignments nucleotide contigs repeats consensus element shotgun assemblies spacer structural

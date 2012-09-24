@@ -1,0 +1,1 @@
+nominal categorical two-sided predetermined asymptotic significance uncorrected minimum user-defined dichotomous ordinal maximum calculate bonferroni-corrected numeric stringent one-sided approximate cut-off pre-specified t-tests

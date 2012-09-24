@@ -1,0 +1,1 @@
+residues residue amino nucleotides side-chains bases atoms positions substitution sidechains gly cysteines arg cysteine glu codons side-chain hydrophobic acids asp helices

@@ -1,0 +1,1 @@
+trap traps quadrupole trapping tof time-of-flight spectrometer landing esi ionization electrospray maldi lcq maldi-tof transposon bait flight tandem gene-trap ionisation sibr

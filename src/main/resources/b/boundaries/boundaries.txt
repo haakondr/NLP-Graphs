@@ -1,0 +1,1 @@
+boundaries boundary borders splice locations junctions location edges border breakpoints centroids introns limits exons junction organization coordinates lengths scope positions distinction

@@ -1,0 +1,1 @@
+spline splines polynomial loess smoothing lowess b-spline least-squares interpolation quadratic parabolic sigmoidal polynomials regression qspline cubic exponential cosine least-square non-linear linear

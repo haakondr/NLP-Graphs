@@ -1,0 +1,1 @@
+abundances abundance isoacceptors entropy compositions intensities heights rwco mobilities quantification aminoacylated half-lives aminoacylation anticodons intensity enrichment ratios likelihoods background-corrected mfv co-responses

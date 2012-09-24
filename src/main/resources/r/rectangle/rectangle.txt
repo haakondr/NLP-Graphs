@@ -1,0 +1,1 @@
+rectangle rectangles ovals circle bar triangle shading boxes oval arrow bars ellipse circles dotted dots box line diamonds sphere dashed diamond

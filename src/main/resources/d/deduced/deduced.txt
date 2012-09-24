@@ -1,0 +1,1 @@
+deduced translated inferred aligned protein-coding unrooted nonnatural aligning clustalw amino gc polyprotein infer aa mykiss concatenated reconstructed predicted mapped spanning single-letter

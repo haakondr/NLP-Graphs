@@ -1,0 +1,1 @@
+spots spot bands probes intensities pixels band arrays dots peaks probesets chips colors rectangles hybridizations slide gels background boxes slides microarrays

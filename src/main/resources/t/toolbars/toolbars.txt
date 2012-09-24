@@ -1,0 +1,1 @@
+toolbars toolbar scrollbars menus clicking hotkey dialogs widgets plugins konqueror dpkg one-click tabbed pop-up menu emacs right-click xmlhttprequest opml firmwares macros

@@ -1,0 +1,1 @@
+deviance chi-square goodness-of-fit chi-squared hosmer-lemeshow lemeshow covariances fit spline qspline df gauss aic pearson poisson f-test squared print-tip dissimilarity preference-based affinity

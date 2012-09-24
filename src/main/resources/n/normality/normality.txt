@@ -1,0 +1,1 @@
+normality linearity hardy-weinberg homogeneity hwe additivity independence hardy–weinberg assumptions stationarity neutrality assumption equality sphericity variances randomness multiplicative parametric proportionality equilibrium kolmogorov-smirnov

@@ -1,0 +1,1 @@
+median mean average medians interquartile shorter iqr minimum  median whiskers longer highest quartile log shortest geometric lowest foreground five-year shortened longest

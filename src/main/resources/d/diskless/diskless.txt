@@ -1,0 +1,1 @@
+diskless ews4800 upgradable iapx-86-based uniprocessor stand-alone decstation upgradeable unix-based eight-processor mainframe-class standalone next risc-based winserver drs6000 hardware-independent single-user vme sunpc dual-processor

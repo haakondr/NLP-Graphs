@@ -1,0 +1,1 @@
+brightness intensity pixel shades intensities pixels foreground dewlap mfi legend grayscale log-intensity δct light-dark rgb texture signal-to-noise naming luminance adobe colors

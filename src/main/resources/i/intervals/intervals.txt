@@ -1,0 +1,1 @@
+intervals interval periods bins windows period duration confidence pulses window cis distances ranges follow-up probabilities deviations p-values delay lengths durations limits

@@ -1,0 +1,1 @@
+ids identifiers id identifier locuslink mgc databank accession unigene build rzpd entries ensmart ftp refseq embl-ebi biomart swiss-prot names entrez annotation

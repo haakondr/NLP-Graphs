@@ -1,0 +1,1 @@
+object objects uml entity stimulus semantic schema attribute word centroid subject shape relational spot corba boundary dipole instance spatial attributes image

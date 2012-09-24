@@ -1,0 +1,1 @@
+gaussian convolution step-stool gaussians isotropic loess weibull smoothed beta-binomial exponential polynomial non-gaussian multinomial boltzmann fwhm sigmoidal evd lognormal power-law skewed log-normal

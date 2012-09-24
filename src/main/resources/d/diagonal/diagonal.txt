@@ -1,0 +1,1 @@
+diagonal horizontal vertical x-axis row gray dashed grey dotted line triangle bold black straight bars dot bar circle arrow eigenvalues boxes

@@ -1,0 +1,1 @@
+nodes node lymph vertices edges branches axillary graph lymphadenopathy arcs vertex metastases spleen hubs clades metastasis edge branch inguinal ln connections
