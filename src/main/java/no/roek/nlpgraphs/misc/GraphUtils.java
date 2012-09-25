@@ -23,7 +23,6 @@ public class GraphUtils {
 		HashMap<String, List<String[]>> adjacent = new HashMap<>();
 
 		for(String wordString : parsedTokens) {
-            System.out.println(wordString);
 			Node node = getNode(wordString, adjacent);
 			graph.addNode(node);
 		}
