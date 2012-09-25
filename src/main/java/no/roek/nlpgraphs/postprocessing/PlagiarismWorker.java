@@ -35,18 +35,17 @@ public class PlagiarismWorker extends Thread {
 	public void run() {
 		boolean running = true;
 		while(running) {
-			try {
-				Job job = queue.poll(20000, TimeUnit.SECONDS);
-				if(job.isLastInQueue()) {
-					running = false;
-					break;
-				}
-				List<PlagiarismReference> plagReferences = findPlagiarism(job);
-				writeResults(job.getFile().getFileName().toString(), plagReferences);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			Job job = queue.poll();
+			if(job.isLastInQueue()) {
+				running = false;
+				break;
 			}
+			List<PlagiarismReference> plagReferences = findPlagiarism(job);
+			writeResults(job.getFile().getFileName().toString(), plagReferences);
 		}
+		
+		System.out.println("Exiting app. Calculation done.");
+		System.exit(0);
 	}
 
 	public List<PlagiarismReference> findPlagiarism(Job job) {
