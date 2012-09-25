@@ -87,7 +87,7 @@ public class SentenceUtils {
 			}
 			if(wordBuilder.toString().trim().length()>0) {
 				words.add(new Word(wordBuilder.toString()));
-				sentences.add(new NLPSentence(sentenceNumber, offset, sentenceBuilder.toString(), words));
+				sentences.add(new NLPSentence(filename, sentenceNumber, offset, sentenceBuilder.toString(), words));
 				sentenceNumber++;
 			}
 			reader.close();
