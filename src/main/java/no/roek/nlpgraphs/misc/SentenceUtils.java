@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +36,10 @@ public class SentenceUtils {
 
 	}
 
-	public static List<NLPSentence> getSentences(String filename) {
+	public static List<NLPSentence> getSentences(String file) {
 		try {
-			FileInputStream fstream = new FileInputStream(filename);
+			String filename = Paths.get(file).getFileName().toString();
+			FileInputStream fstream = new FileInputStream(file);
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
