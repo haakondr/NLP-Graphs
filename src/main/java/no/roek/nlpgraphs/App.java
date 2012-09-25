@@ -8,12 +8,12 @@ import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
-import no.roek.nlpgraphs.search.DocumentRetrievalWorker;
+import no.roek.nlpgraphs.search.PerfectDocumentRetrievalWorker;
 import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
 public class App {
 
-	private static String parsedFilesDir, trainDir, testDir, dataDir;
+	private static String trainDir, testDir, dataDir;
 
 	public static void main(String[] args) throws InterruptedException {
 		dataDir = ConfigService.getDataDir();
@@ -21,7 +21,7 @@ public class App {
 		trainDir = ConfigService.getTrainDir();
 		
 		BlockingQueue<Job> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
-		new DocumentRetrievalWorker(documentRetrievalQueue, dataDir, parsedFilesDir, trainDir, testDir).start();
+		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
 		
 		BlockingQueue<Job> posTagQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 2; i++) {

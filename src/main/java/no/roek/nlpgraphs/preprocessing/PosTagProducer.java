@@ -49,12 +49,12 @@ public class PosTagProducer extends Thread {
 
 
 	public Job getPosTags(Job job) {
+		//TODO: this might not update correctly. might have to create a new object? alternatively a new attr "taggedTextPairs" or something
 		for(TextPair pair : job.getTextPairs()) {
 			NLPSentence taggedTestSentence = getMaltString(pair.getTestSentence());
 			NLPSentence taggedTrainSentence = getMaltString(pair.getTrainSentence());		
 			pair.setTestSentence(getMaltString(taggedTestSentence));
 			pair.setTrainSentence(getMaltString(taggedTrainSentence));
-			job.addTextPair(pair);
 		}
 
 		return job;
