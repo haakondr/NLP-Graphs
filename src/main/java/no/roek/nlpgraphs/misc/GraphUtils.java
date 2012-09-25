@@ -15,6 +15,7 @@ public class GraphUtils {
 
 	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
 		Graph graph = new Graph();
+		graph.setFilename(sentence.getFilename());
 		graph.setLength(sentence.getLength());
 		graph.setOffset(sentence.getStart());
 		graph.setOriginalText(sentence.getText());

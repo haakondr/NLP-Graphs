@@ -7,7 +7,7 @@ import edu.stanford.nlp.ling.Word;
 public class NLPSentence {
 	
 	private int number, start;
-	private String text;
+	private String text, filename;
 	private String[] postags;
 	private List<Word> words;
 	
@@ -22,6 +22,7 @@ public class NLPSentence {
 	}
 	
 	public NLPSentence(String filename, int number, int start, String text) {
+		this.filename = filename;
 		this.number = number;
 		this.start = start;
 		this.text = text;
@@ -61,5 +62,13 @@ public class NLPSentence {
 	
 	public void addWord(Word word) {
 		words.add(word);
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 }
