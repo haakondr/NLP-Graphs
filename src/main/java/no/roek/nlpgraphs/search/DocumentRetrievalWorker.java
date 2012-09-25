@@ -37,9 +37,13 @@ public class DocumentRetrievalWorker extends Thread {
 				queue.put(new Job(testFile.toPath().toString(), similarDocs.toArray(new String[0])));
 			}
 			
-			Job poisonPill = new Job("threads should terminate when this job is encountered");
-			poisonPill.setLastInQueue(true);
-			queue.put(poisonPill);
+			
+			for (int i = 0; i < 100; i++) {
+				Job poisonPill = new Job("threads should terminate when this job is encountered");
+				poisonPill.setLastInQueue(true);
+				queue.put(poisonPill);
+			}
+			
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
