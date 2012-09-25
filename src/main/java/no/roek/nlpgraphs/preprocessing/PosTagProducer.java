@@ -35,7 +35,7 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				Job job = queue.poll();
 				if(job.isLastInQueue()) {
 					running = false;
 					break;

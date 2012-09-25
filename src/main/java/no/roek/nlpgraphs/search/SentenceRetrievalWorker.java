@@ -7,22 +7,22 @@ import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class SentenceRetrievalWorker extends Thread {
-	
+
 	private BlockingQueue<Job> queue;
 	private BlockingQueue<Job> parseQueue;
-	
+
 	public SentenceRetrievalWorker(BlockingQueue<Job> queue, BlockingQueue<Job> parseQueue) {
 		this.queue = queue;
 		this.parseQueue = parseQueue;
 	}
-	
+
 	@Override
 	public void run() {
 		boolean running = true;
-		
+
 		while(running) {
 			try {
-				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				Job job = queue.poll();
 				if(job.isLastInQueue()) {
 					running = false;
 					break;
@@ -31,18 +31,15 @@ public class SentenceRetrievalWorker extends Thread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				running = false;
-			}catch (NullPointerException e) {
-				System.out.println(Thread.currentThread().getName()+" timed out after 2000 seconds with nothing from DocumentRetrievalWorker threads");
-				running = false;
 			}
 		}
 	}
-	
+
 	public Job getParseJob(Job job) {
 		for (String simDoc : job.getSimilarDocuments()) {
 			job.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFilename(), simDoc));
 		}
-		
+
 		return job;
 	}
 }
