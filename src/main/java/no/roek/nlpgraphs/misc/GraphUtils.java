@@ -113,14 +113,11 @@ public class GraphUtils {
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
 			for (String[] edge : adj.get(node.getId())){
-				try {
 				Node to = graph.getNode(edge[0]);
+				String toid = to.getId();
+				String id = node.getId();
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
-				}catch(NullPointerException e) {
-//					System.out.println("nullpointer in node "+ node.getId());
-//					System.out.println("edge: "+edge[0]);
-				}
 			}
 		}
 	}
