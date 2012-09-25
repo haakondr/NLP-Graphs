@@ -11,7 +11,7 @@ import no.roek.nlpgraphs.document.TextPair;
 public class Job {
 
 	private Path file;
-	private boolean isLastInQueue;
+	private boolean isLastInQueue = false;
 	private String[] similarDocs;
 	private List<TextPair> textPairs;
 	private List<GraphPair> graphPairs;
