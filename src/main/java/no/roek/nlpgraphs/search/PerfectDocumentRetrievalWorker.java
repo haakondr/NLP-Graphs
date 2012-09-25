@@ -1,13 +1,11 @@
 package no.roek.nlpgraphs.search;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import com.sun.xml.internal.ws.util.xml.XmlUtil;
 
 import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.document.PlagiarismReference;
