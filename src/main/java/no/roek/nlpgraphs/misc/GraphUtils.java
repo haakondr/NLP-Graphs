@@ -23,6 +23,7 @@ public class GraphUtils {
 		HashMap<String, List<String[]>> adjacent = new HashMap<>();
 
 		for(String wordString : parsedTokens) {
+            System.out.println(wordString);
 			Node node = getNode(wordString, adjacent);
 			graph.addNode(node);
 		}
@@ -52,7 +53,7 @@ public class GraphUtils {
 	}
 
 	private static boolean isRelationToIdNull(String rel) {
-		return rel.matches("[\\d]+_0");
+		return rel.equals("0");
 	}
 
 

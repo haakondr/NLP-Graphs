@@ -65,6 +65,7 @@ public class PosTagProducer extends Thread {
 		int i = 1;
 		for (TaggedWord token : taggedSentence) {
 			temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
+            i++;
 		}
 
 		return temp.toArray(new String[0]);
