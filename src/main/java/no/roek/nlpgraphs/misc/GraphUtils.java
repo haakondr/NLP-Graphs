@@ -38,6 +38,7 @@ public class GraphUtils {
 		String word = token[1];
 		String pos = token[4];
 		String rel = token[6];
+		System.out.println(rel);
 		String deprel = token[7];
 
 		if(!adjacent.containsKey(id)) {
