@@ -17,14 +17,12 @@ import no.roek.nlpgraphs.misc.XMLUtils;
 public class PerfectDocumentRetrievalWorker extends Thread {
 
 	private BlockingQueue<Job> queue;
-	private String testDir, dataDir, annotationsDir, trainDir;
-	private int documentRecall;
+	private String testDir, dataDir, annotationsDir;
 
 	public PerfectDocumentRetrievalWorker(BlockingQueue<Job> queue, String dataDir, String trainDir, String testDir) {
 		this.queue = queue;
 		this.testDir = testDir;
 		this.dataDir = dataDir;
-		this.documentRecall = 1;
 		annotationsDir = ConfigService.getAnnotationsDir();
 		trainDir = ConfigService.getTrainDir();
 	}
@@ -52,7 +50,7 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 	public List<String> getSimilarDocs(Path file) {
 		List<String> simDocs = new ArrayList<>();
 		
-		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(annotationsDir+file.getFileName().toString());
+		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(dataDir+annotationsDir+file.getFileName().toString());
 		for (PlagiarismReference plagiarismReference : plagRefs) {
 			simDocs.add(plagiarismReference.getSourceReference());
 		}
