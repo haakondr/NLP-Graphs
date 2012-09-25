@@ -41,7 +41,6 @@ public class App {
 		for (int i = 0; i < 7; i++) {
 			new PlagiarismWorker(distQueue).start();
 		}
-		//TODO: litt mer printing om progress. 
 		//TODO: print ut candidate retrieval success i run
 		//TODO: append results til en log istedenfor å skrive over
 		

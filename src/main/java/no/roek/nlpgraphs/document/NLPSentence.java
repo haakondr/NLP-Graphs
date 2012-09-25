@@ -11,17 +11,17 @@ public class NLPSentence {
 	private String[] postags;
 	private List<Word> words;
 	
-	public NLPSentence(int number, int start, String text, String[] postags) {
-		this(number, start, text);
+	public NLPSentence(String filename, int number, int start, String text, String[] postags) {
+		this(filename, number, start, text);
 		this.postags = postags;
 	}
 	
-	public NLPSentence(int number, int start, String text, List<Word> words) {
-		this(number, start, text);
+	public NLPSentence(String filename, int number, int start, String text, List<Word> words) {
+		this(filename, number, start, text);
 		this.words = words;
 	}
 	
-	public NLPSentence(int number, int start, String text) {
+	public NLPSentence(String filename, int number, int start, String text) {
 		this.number = number;
 		this.start = start;
 		this.text = text;

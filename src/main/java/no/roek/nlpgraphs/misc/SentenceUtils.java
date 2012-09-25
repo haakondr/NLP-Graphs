@@ -74,7 +74,7 @@ public class SentenceUtils {
 						previousWord = words.get(words.size()-1).word();
 					}
 					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
-						sentences.add(new NLPSentence(sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
+						sentences.add(new NLPSentence(filename, sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
 					}
 					createWord(wordBuilder, words, offset);
 					words = new ArrayList<Word>();
