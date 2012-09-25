@@ -52,7 +52,7 @@ public class GraphUtils {
 	}
 
 	private static boolean isRelationToIdNull(String rel) {
-		return rel.matches("0");
+		return rel.equals("0");
 	}
 
 
