@@ -11,13 +11,14 @@ import no.roek.nlpgraphs.document.TextPair;
 public class Job {
 
 	private Path file;
-	private boolean isLastInQueue = false;
+	private boolean isLastInQueue;
 	private String[] similarDocs;
 	private List<TextPair> textPairs;
 	private List<GraphPair> graphPairs;
 
 	
 	public Job(Path file) {
+		isLastInQueue = false;
 		this.file = file;
 		this.textPairs = new ArrayList<>();
 		this.graphPairs = new ArrayList<>();
