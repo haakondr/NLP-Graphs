@@ -43,6 +43,7 @@ public class CandidateRetrievalService {
 
 	public CandidateRetrievalService(Path dir) throws CorruptIndexException, IOException {
 		analyzer = new StandardAnalyzer(Version.LUCENE_36);
+		//TODO: create index only if it does not exist
 		createIndex(dir);
 	}
 

@@ -35,17 +35,21 @@ public class PlagiarismWorker extends Thread {
 	public void run() {
 		boolean running = true;
 		while(running) {
-			Job job = queue.poll();
-			if(job.isLastInQueue()) {
-				running = false;
-				break;
+			try {
+				Job job = queue.take();
+				if(job.isLastInQueue()) {
+					running = false;
+					break;
+				}
+				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+				System.out.println("done plagiarism search for file "+job.getFilename());
+				for (PlagiarismReference plagiarismReference : plagReferences) {
+					System.out.println("Found plagiarism in files "+ plagiarismReference.getSourceReference());
+				}
+				writeResults(job.getFile().getFileName().toString(), plagReferences);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			List<PlagiarismReference> plagReferences = findPlagiarism(job);
-			System.out.println("done plagiarism search for file "+job.getFilename());
-			for (PlagiarismReference plagiarismReference : plagReferences) {
-				System.out.println("Found plagiarism in files "+ plagiarismReference.getSourceReference());
-			}
-			writeResults(job.getFile().getFileName().toString(), plagReferences);
 		}
 		
 		System.out.println("Exiting app. Calculation done.");

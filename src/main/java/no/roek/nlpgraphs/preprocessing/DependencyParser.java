@@ -39,7 +39,7 @@ public class DependencyParser extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				Job job = queue.poll();
+				Job job = queue.take();
 				if(job.isLastInQueue()) {
 					running = false;
 					break;
