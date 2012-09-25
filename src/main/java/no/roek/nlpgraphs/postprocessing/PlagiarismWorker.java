@@ -41,6 +41,10 @@ public class PlagiarismWorker extends Thread {
 				break;
 			}
 			List<PlagiarismReference> plagReferences = findPlagiarism(job);
+			System.out.println("done plagiarism search for file "+job.getFilename());
+			for (PlagiarismReference plagiarismReference : plagReferences) {
+				System.out.println("Found plagiarism in files "+ plagiarismReference.getSourceReference());
+			}
 			writeResults(job.getFile().getFileName().toString(), plagReferences);
 		}
 		
