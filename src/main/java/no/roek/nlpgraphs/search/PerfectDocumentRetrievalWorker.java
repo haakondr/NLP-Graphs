@@ -1,6 +1,7 @@
 package no.roek.nlpgraphs.search;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 
 		try {
 			for (File testFile : Fileutils.getFiles(Paths.get(dataDir+testDir))) {
-				List<String> similarDocs = getSimilarDocs(testFile.toString());
+				List<String> similarDocs = getSimilarDocs(testFile.toPath());
 				queue.put(new Job(testFile.toPath().toString(), similarDocs.toArray(new String[0])));
 			}
 
@@ -48,10 +49,10 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 		}
 	}
 
-	public List<String> getSimilarDocs(String file) {
+	public List<String> getSimilarDocs(Path file) {
 		List<String> simDocs = new ArrayList<>();
 		
-		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(annotationsDir+file);
+		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(annotationsDir+file.getFileName().toString());
 		for (PlagiarismReference plagiarismReference : plagRefs) {
 			simDocs.add(plagiarismReference.getSourceReference());
 		}
