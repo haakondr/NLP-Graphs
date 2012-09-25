@@ -118,8 +118,8 @@ public class GraphUtils {
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 				}catch(NullPointerException e) {
-					System.out.println("nullpointer in node "+ node.getId());
-					System.out.println("edge: "+edge[0]);
+//					System.out.println("nullpointer in node "+ node.getId());
+//					System.out.println("edge: "+edge[0]);
 				}
 			}
 		}
