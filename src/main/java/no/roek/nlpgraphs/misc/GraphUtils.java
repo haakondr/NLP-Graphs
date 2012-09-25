@@ -23,7 +23,9 @@ public class GraphUtils {
 		HashMap<String, List<String[]>> adjacent = new HashMap<>();
 
 		for(String wordString : parsedTokens) {
-			graph.addNode(getNode(wordString, adjacent));
+			Node node = getNode(wordString, adjacent);
+			graph.addNode(node);
+			graph.getEdges().put(node.getId(), new ArrayList<Edge>());
 		}
 		
 		addEdges(graph, adjacent);
@@ -111,13 +113,14 @@ public class GraphUtils {
 
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
-			if(!graph.getAdjacent().containsKey(node.getId())) {
-				graph.getAdjacent().put(node.getId(), new ArrayList<Edge>());
-			}
 			for (String[] edge : adj.get(node.getId())){
 				Node to = graph.getNode(edge[0]);
-				graph.getAdjacent().get(node.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
-				graph.getAdjacent().get(to.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
+			
+				graph.getEdges().get(node.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
+
+				graph.getEdges().get(to.getId());
+				
+				//				graph.getEdges().get(to.getId()).add(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 			}
 		}
 	}
