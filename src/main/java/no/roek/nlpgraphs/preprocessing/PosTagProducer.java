@@ -51,16 +51,14 @@ public class PosTagProducer extends Thread {
 	public Job getPosTags(Job job) {
 		//TODO: this might not update correctly. might have to create a new object? alternatively a new attr "taggedTextPairs" or something
 		for(TextPair pair : job.getTextPairs()) {
-			NLPSentence taggedTestSentence = getMaltString(pair.getTestSentence());
-			NLPSentence taggedTrainSentence = getMaltString(pair.getTrainSentence());		
-			pair.setTestSentence(getMaltString(taggedTestSentence));
-			pair.setTrainSentence(getMaltString(taggedTrainSentence));
+			pair.getTestSentence().setPostags(getMaltString(pair.getTestSentence()));
+			pair.getTrainSentence().setPostags(getMaltString(pair.getTrainSentence()));
 		}
 
 		return job;
 	}
 
-	public NLPSentence getMaltString(NLPSentence sentence) {
+	public String[] getMaltString(NLPSentence sentence) {
 		List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
 
 		List<String> temp = new ArrayList<>();
@@ -69,9 +67,7 @@ public class PosTagProducer extends Thread {
 			temp.add(sentence.getNumber()+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
 		}
 
-		sentence.setPostaggedTokens(temp.toArray(new String[0]));
-
-		return sentence;
+		return temp.toArray(new String[0]);
 	}
 
 	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
