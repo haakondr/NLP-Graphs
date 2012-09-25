@@ -68,8 +68,6 @@ public class DependencyParser extends Thread {
 	public Graph getGraph(NLPSentence sentence) {
 		try {
 			String[] parsedTokens = maltService.parseTokens(sentence.getPostags());
-			System.out.println("sentence length: "+ sentence.getLength()+ " rel "+parsedTokens[6]);
-			
 			return GraphUtils.getGraph(parsedTokens, sentence);
 		} catch (MaltChainedException e) {
 			e.printStackTrace();
