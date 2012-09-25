@@ -68,7 +68,6 @@ public class Graph {
 	}
 
 	public Node getNode(String id) {
-        System.out.println(id);
 		//TODO: rewrite to linkedhashmap or something, so iteration isnt needed?
 		for (Node node : nodes) {
 			if(node.getId().equals(id)) {

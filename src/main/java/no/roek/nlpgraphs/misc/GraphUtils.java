@@ -114,7 +114,6 @@ public class GraphUtils {
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
 		for (Node node: graph.getNodes()) {
 			for (String[] edge : adj.get(node.getId())){
-                System.out.println(node.getId() + " to " + edge[0]);
 				Node to = graph.getNode(edge[0]);
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
