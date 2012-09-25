@@ -69,7 +69,10 @@ public class DependencyParser extends Thread {
 		try {
 			String[] parsedTokens = maltService.parseTokens(sentence.getPostags());
 			parsedTokens[6] = sentence.getNumber()+"_"+parsedTokens[6];
-			System.out.println(parsedTokens);
+			for (String string : parsedTokens) {
+				System.out.print(string+"\t");
+			}
+			System.out.println();
 			
 			return GraphUtils.getGraph(parsedTokens, sentence);
 		} catch (MaltChainedException e) {
