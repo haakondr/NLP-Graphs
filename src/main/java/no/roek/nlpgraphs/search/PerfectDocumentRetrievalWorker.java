@@ -49,8 +49,9 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 
 	public List<String> getSimilarDocs(Path file) {
 		List<String> simDocs = new ArrayList<>();
+		String annotationsFile = file.getFileName().toString().replace(".txt", ".xml");
 		
-		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(dataDir+annotationsDir+file.getFileName().toString());
+		List<PlagiarismReference> plagRefs = XMLUtils.getPlagiarismReferences(dataDir+annotationsDir+annotationsFile);
 		for (PlagiarismReference plagiarismReference : plagRefs) {
 			simDocs.add(plagiarismReference.getSourceReference());
 		}
