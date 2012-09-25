@@ -1,0 +1,1 @@
+regions region sequences areas segments portions segment loci sequence positions parts repeats stretches residues domains portion area exons orfs locations nucleotides

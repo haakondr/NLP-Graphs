@@ -1,0 +1,1 @@
+binomial poisson beta-binomial hypergeometric multinomial logistic gaussian conditional bb chi-square logit log-normal kolmogorov-smirnov asymptotic boltzmann approximate lognormal k-s wilcoxon chi-squared p-values

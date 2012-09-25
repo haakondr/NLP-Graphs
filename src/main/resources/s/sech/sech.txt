@@ -1,0 +1,1 @@
+sech erfc erf cov tanh lcm sgn diag tr cin adj cosh ei eff pf cn arccot pq pbso sn mse

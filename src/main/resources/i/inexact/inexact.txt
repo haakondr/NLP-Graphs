@@ -1,0 +1,1 @@
+inexact near-perfect sequence-similarity blastx sequence–structure blastn tag-to-gene perfect error-prone imperfect blastp profile-based tblastx top-ranking approximate emotif wildcard heuristic top-scoring substring fuzzy

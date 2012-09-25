@@ -1,0 +1,1 @@
+inversions duplications translocations deletions rearrangements transpositions aberrations insertions breakpoints inversion aneuploidy indels breaks chromosomes crossovers syntenic mesostigma aneuploidies amplifications losses transversions

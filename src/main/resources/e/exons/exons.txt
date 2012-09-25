@@ -1,0 +1,1 @@
+exons exon introns intron orfs splice splicing coding nucleotides utrs cds spliced transcripts alternatively exonic untranslated cdss intronic intergenic cdnas protein-coding

@@ -1,0 +1,1 @@
+uplink downlink ku-band mbit mirchi luma narrowband high-gain uhf topex always-on colocation low-gain xscale gbit vhf multiplexed telemetry x-band subcarrier communications

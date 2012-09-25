@@ -1,0 +1,1 @@
+intron introns exon exons intronic splice exonic splicing flanking coding intergenic untranslated acceptor spliced upstream exon-intron orf utr pre-mrna codon transcript

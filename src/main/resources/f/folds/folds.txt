@@ -1,0 +1,1 @@
+folds scop fold superfamilies cath conformations domains topologies families folding architectures superfamily structures folded conformation structure classes sheba pfam topology tim

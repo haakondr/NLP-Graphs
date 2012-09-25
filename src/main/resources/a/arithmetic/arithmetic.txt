@@ -1,0 +1,1 @@
+arithmetic geometric mean percentiles algebraic interquartile visuospatial medians least-square back-transformed qspline means median μt three-point standard lowess sems attentional logarithm euclidean

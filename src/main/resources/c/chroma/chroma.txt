@@ -1,0 +1,1 @@
+chroma chrominance luma luminance cb narrowband yuv rgb brightness mjpeg theora s-video pixel ycbcr sdtv tristimulus multiplexed color modulated textcolor saturation

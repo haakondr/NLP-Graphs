@@ -1,0 +1,1 @@
+checkmate rook endgame rooks pawn castling pawns endgames knight forking fianchetto zugzwang stalemate squires kingside castled helpmate vonones knights tablebase fruela

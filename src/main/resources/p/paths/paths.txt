@@ -1,0 +1,1 @@
+paths path edges trails trajectories topologies routes trajectory vertices distances arcs connections distance nodes roads pathways subgraph relations graph substrings branches

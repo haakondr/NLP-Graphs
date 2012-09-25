@@ -1,0 +1,1 @@
+codon codons stop atg aug start uaa uag residue tga uga trna agg tag taa synonymous aag valine substitution in-frame acg

@@ -1,0 +1,1 @@
+pressure pressures mmhg tension systolic diastolic bp flow ventilation volume saturation oxygen dioxide peep arterial cmh sbp velocity elastance breathing occlusion

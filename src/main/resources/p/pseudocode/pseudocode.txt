@@ -1,0 +1,1 @@
+pseudocode boyer-moore non-recursive casteljau recursive fft luhn kruskal lindenmayer dijkstra z-machine eval earley rabin-karp cyk quicksort smith-waterman hirschberg ansatz deflate minimax

@@ -1,0 +1,1 @@
+borrowers lenders borrower mortgages issuers repayments customers investors consumers lender loans mortgage repayment homeowners liabilities banks buyers depositors tenants borrowing creditors

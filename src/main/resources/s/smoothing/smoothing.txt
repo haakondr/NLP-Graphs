@@ -1,0 +1,1 @@
+smoothing smoothers smoother spline regression normalization smoothed splines loess interpolation polynomial lowess fitting kernel gaussian fit filtering penalized kriging nonlinear cubic

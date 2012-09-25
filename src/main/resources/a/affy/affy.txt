@@ -1,0 +1,1 @@
+affy limma bioconductor gcrma lasergene epiinfo rma randomforest dnastar sigmastat pmonly emboss phylip staden bioperl ncss mathematica jmp spss s-plus smac

@@ -1,0 +1,1 @@
+variates cres subsamples ss spacings checkerboard pins guessing usages e-boxes epc-n dsrbds realizations ordination jitter slhr boxplots cva hexanucleotides synmuv rep

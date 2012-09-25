@@ -1,0 +1,1 @@
+rho rank-order spearman product-moment pearson intraclass correlation rank-based rank pearson’s spearman’s hpi intra-class kendall item-total nonparametric non-parametric inter-item cronbach coefficient intra-cluster

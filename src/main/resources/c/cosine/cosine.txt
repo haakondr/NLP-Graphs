@@ -1,0 +1,1 @@
+cosine least-squares parabolic sigmoidal polynomial least-square euclidean quadratic lowess power-law sine spline loess exponential euclidian pearson non-linear hyperbolic wavelet nonlinear p-v

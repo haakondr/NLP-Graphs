@@ -1,0 +1,1 @@
+chi chi-square chi-squared log-rank kruskal-wallis mcnemar mann-whitney mann–whitney wilcoxon wilcoxon-mann-whitney kolmogorov-smirnov wald one-way univariate contingency pearson fisher mann student spearman two-tailed

@@ -1,0 +1,1 @@
+decoys decoy conformations near-native rmsd native-like rmsds ensemble binders misfolded heptamers non-native structures testable performers rosetta ribozymes native conformers conformation ensembles

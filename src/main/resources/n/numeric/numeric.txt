@@ -1,0 +1,1 @@
+numeric numerical ordinal alphanumeric five-point likert categorical likert-type binary agi metagene seven-point dichotomous graphic ndb symbolic summated nominal four-point borg integer

@@ -10,6 +10,7 @@ public class NLPSentence {
 	private String text;
 	private String[] postags;
 	private List<Word> words;
+	private String[] postaggedTokens;
 	
 	public NLPSentence(int number, int start, String text, String[] postags) {
 		this(number, start, text);
@@ -61,5 +62,13 @@ public class NLPSentence {
 	
 	public void addWord(Word word) {
 		words.add(word);
+	}
+
+	public String[] getPostaggedTokens() {
+		return postaggedTokens;
+	}
+
+	public void setPostaggedTokens(String[] postaggedTokens) {
+		this.postaggedTokens = postaggedTokens;
 	}
 }

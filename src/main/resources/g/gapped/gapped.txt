@@ -1,0 +1,1 @@
+gapped ungapped dalilite nicked target-template high-scoring needleman–wunsch smith–waterman clustalx clustal homstrad amps forked clustalw highest-scoring mavid mlagan blastz all-against-all pairwise praline

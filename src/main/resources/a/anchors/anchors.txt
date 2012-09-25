@@ -1,0 +1,1 @@
+anchors anchor anchored myristoyl α-helical glycosylphosphatidylinositol tmhmm signalp anchoring vrs integrators segments dialign messengers polytope α-helices regions targetp alpha-helical overgos attachment

@@ -1,0 +1,1 @@
+parsimony neighbor-joining ml bayesian bootstrap maximum-likelihood unrooted nj paup likelihood neighbour-joining trees tree mp upgma phylogenetic phyml neighbor joining phylip maximum

@@ -1,0 +1,1 @@
+alleles allele genotypes haplotypes loci genotype locus mutations polymorphisms mutation haplotype snps variants mutants polymorphism variant phenotypes hla homozygous heterozygosity phenotype

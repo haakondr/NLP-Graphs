@@ -1,0 +1,1 @@
+hashed unencrypted cleartext passwords case-sensitive plaintext lookup corbel man-in-the-middle login decrypt one-time us-ascii encrypted keepass password usernames cached isam kickstart look-up

@@ -1,0 +1,1 @@
+phi zeta dihedral omega pi torsion psi theta epsilon tau glycosidic varvec lambda gsts prob restraints sigma rho frac     total angles

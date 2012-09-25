@@ -1,0 +1,1 @@
+codons codon stop atg uaa aug tga uga trna agg uag start aag cga in-frame aac taa gga aga agc caa

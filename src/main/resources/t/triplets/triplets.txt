@@ -1,0 +1,1 @@
+triplets triplet codons pairs uag k-mers nucleotides quadruplets bases positions twins codon subsequences readthrough doublets bps substrings occurrences stretches identities discordant

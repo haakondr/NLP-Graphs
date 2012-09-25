@@ -1,0 +1,1 @@
+true false real positives correct false-positive fp tp fn incorrect valid genuine negatives tn apparent infer exact overall spurious meaningful causal

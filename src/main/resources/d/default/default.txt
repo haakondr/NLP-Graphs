@@ -1,0 +1,1 @@
+default e-value stringent blast clustalw psi-blast blastp heuristic user-defined alignment arbitrary query output search conservative cutoff searches blastx ncbi blastn alignments

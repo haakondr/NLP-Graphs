@@ -1,0 +1,1 @@
+paired unpaired two-sample mann-whitney wilcoxon two-tailed student t-test t-tests mann–whitney two-sided chi-square one-tailed one-sample kruskal-wallis nonparametric anova non-parametric welch tests one-way

@@ -1,0 +1,1 @@
+databases database entries annotations ncbi annotation pubmed searched searches accession identifiers ids genbank records retrieved tools id search searching uniprot resources

@@ -1,0 +1,1 @@
+uniqueness correctness portability homogeneity completeness robustness interoperability integrity consistency distinctiveness optimality suitability specificity authenticity coherence uniformity psychometric convergence privacy fairness relevance

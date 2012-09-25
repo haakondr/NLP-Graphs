@@ -1,0 +1,1 @@
+reads contigs ests shotgun scaffolds assemblies contig bacs wgs sequencing sequences est bac pets assembled singletons traces assembly clones bases gaps

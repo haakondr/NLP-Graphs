@@ -1,0 +1,1 @@
+stop codons codon termination nonsense in-frame aug start uga uaa uag frameshift atg readthrough quit tga frameshifts amber discontinue taa downstream

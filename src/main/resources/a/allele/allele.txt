@@ -1,0 +1,1 @@
+allele alleles genotype mutation genotypes haplotype polymorphism locus homozygotes haplotypes mutations homozygous polymorphisms allelic variant snp heterozygotes heterozygous snps mutants homozygote

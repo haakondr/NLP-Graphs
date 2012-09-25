@@ -1,0 +1,1 @@
+entities entity objects attributes concepts ontologies documents modules relations phenomena texts features organizations tfs subtypes classes sentences organization organisations agencies tfbss

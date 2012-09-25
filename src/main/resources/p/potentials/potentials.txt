@@ -1,0 +1,1 @@
+potentials currents potential evoked spikes epscs recordings aps amplitude mv voltage bursts voltages eeg spike depolarization firing epsps amplitudes pulses trains

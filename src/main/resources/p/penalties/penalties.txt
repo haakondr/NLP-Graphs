@@ -1,0 +1,1 @@
+penalties penalty sanctions gaps blosum cost muscle alignment sparsity gap clustalw avid matrices costs jtt pam lengths pair-rule rewards affine closing

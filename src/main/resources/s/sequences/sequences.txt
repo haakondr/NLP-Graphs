@@ -1,0 +1,1 @@
+sequences sequence regions region elements ests genomes segments motifs contigs exons orfs entries element cdnas alignments copies reads transcripts repeats sequencing

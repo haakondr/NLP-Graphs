@@ -1,0 +1,1 @@
+dihedral torsion noe planarity restraints glycosidic angles     total phi bond main-chain carbonyl torsional atoms rdc oxygens exocyclic angle atom noes pseudo

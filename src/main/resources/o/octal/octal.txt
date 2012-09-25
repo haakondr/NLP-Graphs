@@ -1,0 +1,1 @@
+octal duodecimal hexadecimal vigesimal sexagesimal decimal ternary s-complement hindu-arabic dozenal place-value radix six-digit four-digit bcd numeric unary dialed binary hex digit

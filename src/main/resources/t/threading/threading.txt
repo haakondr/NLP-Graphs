@@ -1,0 +1,1 @@
+threading amps fold-recognition sequence–structure target-template initio psipred psiblast clustalw homstrad ffas sequence-based sequence-structure homology-based avid structure-based protein-structure knowledge-based ab modeling hhpred

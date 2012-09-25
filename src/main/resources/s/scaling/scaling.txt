@@ -1,0 +1,1 @@
+scaling normalization scaled allometric qspline exponent lowess weighting quantile scale loess filtering nonlinear affine gaussian kernel exponents transformations correction fit kinetic

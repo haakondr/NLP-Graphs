@@ -1,0 +1,1 @@
+skewness shapiro-wilk kolmogorov-smirnov kurtosis non-gaussian skew levene heteroscedasticity log-transformation k-s residuals z-scores overdispersion cronbach categorical normality m-values dispersion cooperativity diff randomness

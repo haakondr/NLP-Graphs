@@ -1,0 +1,1 @@
+accuracies accuracy performances performance classifiers cross-validation error svm sensitivities classifier prediction precision leave-one-out loocv f-measure mae knn algorithms k-nn hyperplane percentages

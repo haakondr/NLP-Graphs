@@ -1,0 +1,1 @@
+decidable undecidable solvable unsolvable co-np np-complete context-sensitive calculable recursively np-hard turing-complete intuitionistic zfc reducible nondeterministic thue unsatisfiable context-free computable tarski expressible

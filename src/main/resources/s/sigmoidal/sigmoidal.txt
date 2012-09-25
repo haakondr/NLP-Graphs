@@ -1,0 +1,1 @@
+sigmoidal sigmoid bell-shaped hyperbolic exponential parabolic polynomial nonlinear michaelis–menten least-squares non-linear best-fit dose–response monotonic dose-response p-v arrhenius cosine u-shaped nonmonotonic stress-strain

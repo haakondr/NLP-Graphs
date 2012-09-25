@@ -1,0 +1,1 @@
+modem modems facsimile scsi winfax ethernet fax printer telex rs-232 messaging telephony serial e-mail computer x25 interface pc delrina transceiver isdn

@@ -1,0 +1,1 @@
+mean average median means averages geometric  mean sd maximum arithmetic low lowest lower highest absolute deviation maximal minimum normalized medians log

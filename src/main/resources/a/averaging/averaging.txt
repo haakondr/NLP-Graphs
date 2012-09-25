@@ -1,0 +1,1 @@
+averaging averages averaged summing average smoothing normalization multiplying subtracting lag histogram distances rma normalizing calculating plotting resampling convolution deviation filtering moving

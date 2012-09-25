@@ -1,0 +1,1 @@
+ephemeris ephemerides topex epodunk ionospheric geosynchronous longitudes sun-synchronous hipparcos astrometry uplink vendémiaire lageos occultations syncom ekran precession geostationary landsat always-on meteosat

@@ -1,0 +1,1 @@
+neighbor neighbour neighbor-joining neighbors parsimony knn neighbours neighbour-joining nearest-neighbor maximum-likelihood bayesian proml ml upgma k-nearest paup mega trees bootstrapped quartet centroid

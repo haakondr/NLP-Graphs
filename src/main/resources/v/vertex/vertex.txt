@@ -1,0 +1,1 @@
+vertex vertices node edge clique undirected nodes edges graph subgraph sub-graph rectangle subgraphs digraph arcs peak-list diagonal betweenness triangle neighbors corner

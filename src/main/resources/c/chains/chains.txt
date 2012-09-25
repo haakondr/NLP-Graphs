@@ -1,0 +1,1 @@
+chains chain moieties atoms moiety side-chains acids residues residue polypeptide hydrophobic backbone polar charged tails aromatic strands helices proteoglycans carbons aliphatic

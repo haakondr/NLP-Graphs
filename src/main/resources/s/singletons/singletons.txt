@@ -1,0 +1,1 @@
+singletons contigs singleton singlets ests tcs assemblies reads unigenes orestes contig duplicates discordant births fpc stillbirths fgas lib assembled siblings subfunctionalization

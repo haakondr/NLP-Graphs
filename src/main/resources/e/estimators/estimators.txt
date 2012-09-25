@@ -1,0 +1,1 @@
+estimators estimator estimation estimate estimates smoothers smoother estimations kriging method smoothing rank-based inference variance classifier t-statistic fitting semivariogram parameter eigenvectors weighting

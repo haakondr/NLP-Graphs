@@ -1,0 +1,1 @@
+shapes shape symbols morphology shaped sizes rectangles minicircles histograms boxes contours tones circles geometry dots morphologies stimuli colors spacing shades orientations

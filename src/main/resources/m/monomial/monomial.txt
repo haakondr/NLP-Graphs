@@ -1,0 +1,1 @@
+monomial tridiagonal circulant skew-symmetric hessenberg hermitian schauder positive-definite lexicographic toeplitz diagonalizable wronskian vandermonde riccati quintic euler-lagrange jacobian codimension idempotent polynomial semi-definite

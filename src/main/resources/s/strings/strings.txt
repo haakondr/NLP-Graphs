@@ -1,0 +1,1 @@
+strings string alphabet stretches words symbols phrases pseudowords doublets characters subsequence tuples keywords integers dashes stretch word iupac palindromes suffixes letters

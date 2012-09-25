@@ -1,0 +1,1 @@
+singular eigenvalues svd eigenvalue eigen sse eigenvector diagonal eigenvectors loadings orthogonal saddle eqn soms dayhoff gnm blosum dissimilarity variances n-dimensional mai

@@ -1,0 +1,1 @@
+distances distance lengths probabilities divergence coefficients correlations spacing euclidean dissimilarity divergences similarity sizes coordinates p-values frequencies deviations intervals angles proximity similarities

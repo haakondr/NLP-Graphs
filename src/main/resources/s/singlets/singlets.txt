@@ -1,0 +1,1 @@
+singlets fpc singletons unigenes contigs sequencher minimus assemblies phrap contig assembler  number assembled lib marchantia transfrags nb scaffolds pede ests bac-end

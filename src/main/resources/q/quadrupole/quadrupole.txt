@@ -1,0 +1,1 @@
+quadrupole electrospray esi time-of-flight tof ionization maldi lcq ionisation desorption micromass seldi maldi-tof spectrometer quantum bruker finnigan trap spectrometry mass reflex

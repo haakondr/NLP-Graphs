@@ -1,0 +1,1 @@
+unsolvable np-hard undecidable np-complete decidable well-posed solvable tractable unsolved nikoli sturm-liouville principal-agent many-body knapsack intractable insurmountable co-np unanswerable algorithmically exptime two-body

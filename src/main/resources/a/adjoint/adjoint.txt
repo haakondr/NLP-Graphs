@@ -1,0 +1,1 @@
+adjoint adjoints contravariant covariant pushforward self-adjoint invertible surjective jacobian fredholm bilinear hermitian morphism functor inverse laplacian spinor transpose coproduct sheaf functors

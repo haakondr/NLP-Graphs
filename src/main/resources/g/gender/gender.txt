@@ -1,0 +1,1 @@
+gender sex race ethnicity age socioeconomic parity marital income socio-economic racial demographic ethnic occupation education employment demographics bmi ses smoking covariates

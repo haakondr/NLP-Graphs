@@ -1,0 +1,1 @@
+geodetic enu ecef geocentric geoid ellipsoid gps heliocentric datum geophysical utm longitude hydrographic ecliptic wgs meteorological gravimetric geographic anthropometric convert astrometric

@@ -1,0 +1,1 @@
+identifier identifiers ids id accession database entries locuslink name symbol annotations unigene entrez databank databases names entry ncbi annotation refseq swissprot

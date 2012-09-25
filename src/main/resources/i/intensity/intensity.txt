@@ -1,0 +1,1 @@
+intensity intensities pixel fluorescence spot absorbance foreground subtracted normalized pixels amplitude ratios log brightness density signal signals value densities magnitude emission

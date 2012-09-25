@@ -1,0 +1,1 @@
+bank banks banking swiss-prot ddbj genbank databank trembl genebank dbsnp uniprot uniprotkb genpept pdb swissprot geneid collection repository locuslink refseq embl

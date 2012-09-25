@@ -1,0 +1,1 @@
+erf erfc cov sinc eff sech lcm diag cn dr dn adj sn sgn tanh arctan arccot pf argmax tf cin

@@ -1,0 +1,1 @@
+writable rewritable recordable bootable read-only non-volatile eeprom paged cd-rw worm cd-r battery-backed single-sided kb network-attached nvram read-write magneto-optical single-layer megabytes dvd-rw

@@ -1,0 +1,1 @@
+operons operon regulon tus promoters orthologs regulons tfbss genomes orfs co-regulated cis-regulatory pseudogenes loci mrnas subtilis uber-operons tfbs coelicolor homologs intergenic

@@ -1,0 +1,1 @@
+densities density intensities abundance prevalences sizes counts intensity loads frequencies distributions load count parasitaemia carcasses numbers prevalence lengths gametocyte populations weights

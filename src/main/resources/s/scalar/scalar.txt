@@ -1,0 +1,1 @@
+scalar dipolar dimensionless dihedral topological rdc integer noe noesy mises jth vicinal preference-based lumped physicochemical h-h non-negative lagrange isotropic nanogram pymol

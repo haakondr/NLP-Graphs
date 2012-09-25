@@ -1,0 +1,1 @@
+parametric non-parametric nonparametric kruskal-wallis two-tailed one-tailed mann-whitney wilcoxon two-sided two-sample npl anova t-test lod chi-square rank-sum multipoint univariate normality two-point kolmogorov-smirnov

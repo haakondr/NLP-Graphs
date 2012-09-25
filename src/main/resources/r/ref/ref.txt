@@ -1,0 +1,1 @@
+ref referent race gender  yes  no female  male marital  female  white  married age married sex male employed reference year schooling hispanic

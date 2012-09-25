@@ -1,0 +1,1 @@
+byte bytes operand digit micro-instruction megabytes operands poke half-word pixel kilobytes accumulator instruction incremented digits integer numeric word-oriented indirection program megabyte

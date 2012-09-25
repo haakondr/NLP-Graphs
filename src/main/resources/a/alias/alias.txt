@@ -1,0 +1,1 @@
+alias hugo aliases locusid hgnc locuslink synonym non-gene official symbol unigene egf-like pseudoword hyperlinked synonyms nonalcoholic entrezgene well-supported non-alcoholic ids swissprot

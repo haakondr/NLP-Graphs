@@ -1,0 +1,1 @@
+region regions segment sequences portion segments area domain fragment domains sequence portions areas motif fragments repeats nucleotides stretch stretches exons part

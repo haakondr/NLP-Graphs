@@ -1,0 +1,1 @@
+atoms atom bonds backbone residues protons residue oxygens hydrogen hydrogens bonding bond carbonyl dihedral cα side-chain carbons nitrogens hydroxyl angles resonances

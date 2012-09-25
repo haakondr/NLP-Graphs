@@ -1,0 +1,1 @@
+hubs hub fyi paralogs nodes party inparalogs connectivity connections scale-free neighbors betweenness non-interface ppis ppi modules sub-network disordered centrality interactome residues

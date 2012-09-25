@@ -1,0 +1,1 @@
+width widths height size depth length diameter amplitude bandwidth thickness radius sizes fwhm kernel centered window circumference shape spacing amplitudes ms

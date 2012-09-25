@@ -1,0 +1,1 @@
+entries databases database identifiers accession annotations ids entry swiss-prot identifier refseq uniprot records id annotation hits references locuslink entrez swissprot trembl

@@ -1,0 +1,1 @@
+splines spline smoothers smoothing polynomial loess polynomials bdim regression kernels t-distribution least-squares smoother semivariogram t-statistics fitting b-spline interpolation parabolic kernel cubic

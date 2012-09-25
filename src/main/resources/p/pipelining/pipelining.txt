@@ -1,0 +1,1 @@
+pipelining multithreading pipelined out-of-order caches alus componentry cpus microarchitecture multiprocessing simd emulations handshaking nx thel speedstep put z-buffer turion architectures caching

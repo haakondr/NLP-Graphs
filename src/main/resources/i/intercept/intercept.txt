@@ -1,0 +1,1 @@
+intercept intercepts slope slopes best-fit quadratic regression y-intercept covariance coefficients regressions error steepness fitting coefficient fit fsiq residuals least-squares squared random-effects

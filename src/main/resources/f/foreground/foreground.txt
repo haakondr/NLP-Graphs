@@ -1,0 +1,1 @@
+foreground background-subtracted background-corrected pixel subtracted spot pixels intensities subtracting intensity background pm-mm rfu luminance itraq median probe-level normalize spots brightness normalized

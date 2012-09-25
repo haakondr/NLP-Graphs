@@ -1,0 +1,1 @@
+constants constant energies kinetics affinities equations equation coefficient dissociation kinetic parameters coefficients affinity efficiencies parameter curves kd equilibrium efficiency max stoichiometry

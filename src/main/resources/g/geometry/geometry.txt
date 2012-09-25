@@ -1,0 +1,1 @@
+geometry geometries conformation shape configuration arrangement conformations structure angles radius stacking diameter orientation symmetry diameters coordinates topology spacing structures architecture energies

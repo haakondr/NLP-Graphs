@@ -1,0 +1,1 @@
+assemblies assembly contigs reads assembled shotgun ests contig singlets singletons scaffolds sequences wgs genome ucsc est alignments libraries whole-genome assembler bacs

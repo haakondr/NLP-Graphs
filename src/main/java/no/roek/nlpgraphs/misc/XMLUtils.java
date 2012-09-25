@@ -6,13 +6,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.PlagiarismReference;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-
-
-import no.roek.nlpgraphs.document.PlagiarismReference;
 
 public class XMLUtils {
 

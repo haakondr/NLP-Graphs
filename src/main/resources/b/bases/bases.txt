@@ -1,0 +1,1 @@
+bases nucleotides base residues guanine cytosine adenine strands nucleobases base-pairs purines positions residue nucleotide adenines mismatches codons exons stretches pyrimidines thymine

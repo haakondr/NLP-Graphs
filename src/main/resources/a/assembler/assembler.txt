@@ -1,0 +1,1 @@
+assembler minimus contigs singlets assemblies phrap retardation pairscfg assembly sequencher sankoff sbc ace assembled contig context-free scaffold unigenes pasadena trimming phred

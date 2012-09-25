@@ -1,0 +1,1 @@
+segments segment regions fragments region portions sequences helices exons blocks lengths stretches portion contigs windows domains orfs repeats ends loci bases

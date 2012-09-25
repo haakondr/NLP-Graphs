@@ -1,0 +1,1 @@
+isotropic anisotropic gaussian fwhm in-plane non-homogeneous exponential uniform infinite convolution viscoelastic cylindrical homogenous kernel asymptotic parabolic mtl cubic polynomial finite three-fourths

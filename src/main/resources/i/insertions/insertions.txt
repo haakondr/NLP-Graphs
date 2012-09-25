@@ -1,0 +1,1 @@
+insertions insertion deletions duplications integrations indels elements transpositions inversions transposition transposon rearrangements mutations transposable transposons translocations retroelements introns mismatches retrotransposons ltrs

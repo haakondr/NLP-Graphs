@@ -1,0 +1,1 @@
+mutant mutants wild-type mutation strain knockout null deletion mutations heterozygous variant homozygous mutated allele wt alleles gene loss-of-function knock-out ko phenotype

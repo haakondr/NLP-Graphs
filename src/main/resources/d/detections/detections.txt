@@ -1,0 +1,1 @@
+detections negatives rejections atrazine identifications zeros positives assignments fungicides paraquat glyphosate dicamba hits identification pces quadruplet oraquick fn roundup detection false-negative

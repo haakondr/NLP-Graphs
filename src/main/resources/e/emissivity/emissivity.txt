@@ -1,0 +1,1 @@
+emissivity albedo coercivity reflectance reflectivity insolation diffusivity resistivity etalon conductivities timebase conductivity bolometric equilibration xis permittivity transmittance blackbody burnup vswr density

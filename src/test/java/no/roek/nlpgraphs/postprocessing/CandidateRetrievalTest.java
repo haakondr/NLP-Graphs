@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.postprocessing.DocumentRetrievalService;
+import no.roek.nlpgraphs.search.CandidateRetrievalService;
 
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.queryParser.ParseException;
@@ -18,12 +18,12 @@ import org.junit.Test;
 
 public class CandidateRetrievalTest {
 
-	private DocumentRetrievalService drs;
+	private CandidateRetrievalService drs;
 	private String queryDoc;
 
 	@Before
 	public void setup() throws CorruptIndexException, IOException {
-		drs = new DocumentRetrievalService(Paths.get("src/test/resources/documents"));
+		drs = new CandidateRetrievalService(Paths.get("src/test/resources/documents"));
 		queryDoc = "src/test/resources/documents/source-document01193.txt";
 	}
 

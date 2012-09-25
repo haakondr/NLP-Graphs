@@ -1,0 +1,1 @@
+quartiles quartile quintiles quintile tertiles tertile interquartile deciles percentiles percentile decile medians whiskers bmi strata income inter-quartile quadrants category iqr quantile

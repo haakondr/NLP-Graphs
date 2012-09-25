@@ -1,0 +1,1 @@
+quadrature newton-cotes sideband low-pass lowpass gaussian interpolation cosine amplitude atrac hyperbolic sinusoidal chebyshev subcarrier multilevel fsk logarithmic hyperbola trigonometric deflate approximation

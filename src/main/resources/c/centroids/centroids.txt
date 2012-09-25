@@ -1,0 +1,1 @@
+centroids centroid polygons geocoded boundaries prototypes geocoding roadway zip zcta residence pam parcel distances semivariograms roads census boundary memberships k-means wcnes

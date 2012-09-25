@@ -1,0 +1,1 @@
+smoothers smoother smoothing splines estimators pl-em print-tip regression smoothed kriging moderated estimator semivariogram geostatistical empirical bayes fit rank-based glmm fitting kullback-leibler

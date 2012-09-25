@@ -1,0 +1,1 @@
+covariance variance variance-covariance variances jacobian autocorrelation eigenvalues heritability covariances vcv intercept loadings blosum anova gaussian ancova poisson correlation squared intraclass eigenvectors

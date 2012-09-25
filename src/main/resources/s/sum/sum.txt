@@ -1,0 +1,1 @@
+sum sums rank variance wilcoxon squared summation non-parametric probability log-likelihood weighted mann-whitney summing averages number test pearson deviation deviations kruskal-wallis p-value
