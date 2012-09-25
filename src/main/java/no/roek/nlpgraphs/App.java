@@ -3,11 +3,9 @@ package no.roek.nlpgraphs;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import no.roek.nlpgraphs.jobs.ParseJob;
-import no.roek.nlpgraphs.jobs.PlagJob;
-import no.roek.nlpgraphs.jobs.PostagJob;
-import no.roek.nlpgraphs.jobs.SimilarityJob;
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 import no.roek.nlpgraphs.search.DocumentRetrievalWorker;
@@ -22,24 +20,30 @@ public class App {
 		testDir = ConfigService.getTestDir();
 		trainDir = ConfigService.getTrainDir();
 		
-		BlockingQueue<PlagJob> documentRetrievalQueue = new LinkedBlockingQueue<>();
+		BlockingQueue<Job> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
 		new DocumentRetrievalWorker(documentRetrievalQueue, dataDir, parsedFilesDir, trainDir, testDir).start();
 		
-		BlockingQueue<PostagJob> posTagQueue = new LinkedBlockingQueue<>();
-		new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
-		
-		BlockingQueue<ParseJob> parseQueue  = new LinkedBlockingQueue<>();
-		for (int i = 0; i < 3; i++) {
-			new PosTagProducer(posTagQueue, parseQueue,  "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
+		BlockingQueue<Job> posTagQueue = new LinkedBlockingQueue<>(100);
+		for (int i = 0; i < 2; i++) {
+			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
+		}
+				
+		BlockingQueue<Job> parseQueue  = new LinkedBlockingQueue<>(100);
+		for (int i = 0; i < 7; i++) {
+			new PosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
 		}
 		
-		BlockingQueue<SimilarityJob> distQueue = new LinkedBlockingQueue<>();
-		for (int i = 0; i < 3; i++) {
+		BlockingQueue<Job> distQueue = new LinkedBlockingQueue<>(100);
+		for (int i = 0; i < 7; i++) {
 			new DependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
 		}
 		
-		//TODO: lag maltparser threads
-		//TODO: lag plagiarismworker threads
+		for (int i = 0; i < 7; i++) {
+			new PlagiarismWorker(distQueue).start();
+		}
+		//TODO: litt mer printing om progress. 
+		//TODO: print ut candidate retrieval success i run
+		//TODO: append results til en log istedenfor å skrive over
 		
 	}
 

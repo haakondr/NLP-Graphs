@@ -6,22 +6,21 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
-import no.roek.nlpgraphs.jobs.ParseJob;
-import no.roek.nlpgraphs.jobs.PostagJob;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer extends Thread {
 
-	private final BlockingQueue<PostagJob> queue;
-	private final BlockingQueue<ParseJob> parseQueue;
+	private final BlockingQueue<Job> queue;
+	private final BlockingQueue<Job> parseQueue;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<PostagJob> queue, BlockingQueue<ParseJob> parseQueue, String taggerParams){
+	public PosTagProducer(BlockingQueue<Job> queue, BlockingQueue<Job> parseQueue, String taggerParams){
 		this.queue = queue;
 		this.parseQueue = parseQueue;
 		try {
@@ -36,7 +35,11 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				PostagJob job = queue.poll(2000, TimeUnit.SECONDS);
+				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				if(job.isLastInQueue()) {
+					running = false;
+					break;
+				}
 				parseQueue.put(getPosTags(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -45,18 +48,16 @@ public class PosTagProducer extends Thread {
 	}
 
 
-	public ParseJob getPosTags(PostagJob job) {
-		ParseJob parseJob = new ParseJob(job.getFile().toString());
-		
+	public Job getPosTags(Job job) {
 		for(TextPair pair : job.getTextPairs()) {
 			NLPSentence taggedTestSentence = getMaltString(pair.getTestSentence());
 			NLPSentence taggedTrainSentence = getMaltString(pair.getTrainSentence());		
 			pair.setTestSentence(getMaltString(taggedTestSentence));
 			pair.setTrainSentence(getMaltString(taggedTrainSentence));
-			parseJob.addTextPair(pair);
+			job.addTextPair(pair);
 		}
 
-		return parseJob;
+		return job;
 	}
 
 	public NLPSentence getMaltString(NLPSentence sentence) {

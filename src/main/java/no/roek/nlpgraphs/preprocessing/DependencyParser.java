@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.graph.Graph;
-import no.roek.nlpgraphs.jobs.ParseJob;
-import no.roek.nlpgraphs.jobs.SimilarityJob;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.maltparser.MaltParserService;
@@ -20,11 +19,11 @@ import org.maltparser.core.exception.MaltChainedException;
 
 public class DependencyParser extends Thread {
 
-	private final BlockingQueue<ParseJob> queue;
-	private final BlockingQueue<SimilarityJob> distQueue;
+	private final BlockingQueue<Job> queue;
+	private final BlockingQueue<Job> distQueue;
 	private MaltParserService maltService;
 
-	public DependencyParser(BlockingQueue<ParseJob> queue, BlockingQueue<SimilarityJob> distQueue, String maltParams) {
+	public DependencyParser(BlockingQueue<Job> queue, BlockingQueue<Job> distQueue, String maltParams) {
 		this.queue = queue;
 		this.distQueue = distQueue;
 		try {
@@ -37,30 +36,35 @@ public class DependencyParser extends Thread {
 
 	@Override
 	public void run() {
-		boolean run = true;
-		while(run) {
+		boolean running = true;
+		while(running) {
 			try {
-				ParseJob parseJob = queue.poll(2000, TimeUnit.SECONDS);
-				distQueue.put(consume(parseJob));
+				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				if(job.isLastInQueue()) {
+					running = false;
+					break;
+				}
+				distQueue.put(consume(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				System.out.println("Consumer timed out after 10000 seconds with nothing from producer threads");
-				run = false;
+				running = false;
 			}
 		}
 
 	}
 	
-	public SimilarityJob consume(ParseJob job) {
+	public Job consume(Job job) {
 		List<GraphPair> graphPairs = new ArrayList<>();
 		for (TextPair pair : job.getTextPairs()) {
 			Graph test = getGraph(pair.getTestSentence());
 			Graph train = getGraph(pair.getTrainSentence());
 			graphPairs.add(new GraphPair(test, train));
 		}
-
-		return new SimilarityJob(job.getTestFile(), graphPairs);
+		job.setGraphPairs(graphPairs);
+		
+		return job;
 	}
 	
 	public Graph getGraph(NLPSentence sentence) {

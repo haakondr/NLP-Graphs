@@ -8,14 +8,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
-import no.roek.nlpgraphs.jobs.PlagJob;
-import no.roek.nlpgraphs.jobs.SimilarityJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -23,11 +21,11 @@ import org.jdom2.output.XMLOutputter;
 
 public class PlagiarismWorker extends Thread {
 	
-	private BlockingQueue<SimilarityJob> queue;
+	private BlockingQueue<Job> queue;
 	private String resultsDir;
 	private double plagiarismThreshold;
 
-	public PlagiarismWorker(BlockingQueue<SimilarityJob> queue) {
+	public PlagiarismWorker(BlockingQueue<Job> queue) {
 		this.queue = queue;
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
@@ -35,10 +33,14 @@ public class PlagiarismWorker extends Thread {
 
 	@Override
 	public void run() {
-		boolean run = true;
-		while(run) {
+		boolean running = true;
+		while(running) {
 			try {
-				SimilarityJob job = queue.poll(2000, TimeUnit.SECONDS);
+				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				if(job.isLastInQueue()) {
+					running = false;
+					break;
+				}
 				List<PlagiarismReference> plagReferences = findPlagiarism(job);
 				writeResults(job.getFile().getFileName().toString(), plagReferences);
 			} catch (InterruptedException e) {
@@ -47,7 +49,7 @@ public class PlagiarismWorker extends Thread {
 		}
 	}
 
-	public List<PlagiarismReference> findPlagiarism(SimilarityJob job) {
+	public List<PlagiarismReference> findPlagiarism(Job job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		
 		for(GraphPair pair : job.getGraphPairs()) {

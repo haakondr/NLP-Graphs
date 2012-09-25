@@ -3,16 +3,15 @@ package no.roek.nlpgraphs.search;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.jobs.PlagJob;
-import no.roek.nlpgraphs.jobs.PostagJob;
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class SentenceRetrievalWorker extends Thread {
 	
-	private BlockingQueue<PlagJob> queue;
-	private BlockingQueue<PostagJob> parseQueue;
+	private BlockingQueue<Job> queue;
+	private BlockingQueue<Job> parseQueue;
 	
-	public SentenceRetrievalWorker(BlockingQueue<PlagJob> queue, BlockingQueue<PostagJob> parseQueue) {
+	public SentenceRetrievalWorker(BlockingQueue<Job> queue, BlockingQueue<Job> parseQueue) {
 		this.queue = queue;
 		this.parseQueue = parseQueue;
 	}
@@ -23,7 +22,11 @@ public class SentenceRetrievalWorker extends Thread {
 		
 		while(running) {
 			try {
-				PlagJob job = queue.poll(2000, TimeUnit.SECONDS);
+				Job job = queue.poll(20000, TimeUnit.SECONDS);
+				if(job.isLastInQueue()) {
+					running = false;
+					break;
+				}
 				parseQueue.put(getParseJob(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -35,12 +38,11 @@ public class SentenceRetrievalWorker extends Thread {
 		}
 	}
 	
-	public PostagJob getParseJob(PlagJob job) {
-		PostagJob parseJob = new PostagJob(job.getFile());
+	public Job getParseJob(Job job) {
 		for (String simDoc : job.getSimilarDocuments()) {
-			parseJob.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFile(), simDoc));
+			job.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFilename(), simDoc));
 		}
 		
-		return parseJob;
+		return job;
 	}
 }

@@ -6,18 +6,18 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.jobs.PlagJob;
+import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 
 public class DocumentRetrievalWorker extends Thread {
 
-	private BlockingQueue<PlagJob> queue;
+	private BlockingQueue<Job> queue;
 	private String testDir, dataDir;
 	private CandidateRetrievalService drs;
 	private int documentRecall;
-	
-	public DocumentRetrievalWorker(BlockingQueue<PlagJob> queue, String dataDir, String parsedDataDir, String trainDir, String testDir) {
+
+	public DocumentRetrievalWorker(BlockingQueue<Job> queue, String dataDir, String parsedDataDir, String trainDir, String testDir) {
 		this.queue = queue;
 		this.testDir = testDir;
 		this.dataDir = dataDir;
@@ -28,17 +28,20 @@ public class DocumentRetrievalWorker extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void run() {
-		for (File testFile : Fileutils.getFiles(Paths.get(dataDir+testDir))) {
-			try {
+		try {
+			for (File testFile : Fileutils.getFiles(Paths.get(dataDir+testDir))) {
 				List<String> similarDocs = drs.getSimilarDocuments(testFile.toString(), documentRecall);
-				queue.put(new PlagJob(testFile.toPath(), similarDocs.toArray(new String[0])));
-			} catch (IOException | InterruptedException e) {
-				e.printStackTrace();
+				queue.put(new Job(testFile.toPath().toString(), similarDocs.toArray(new String[0])));
 			}
+			
+			Job poisonPill = new Job("threads should terminate when this job is encountered");
+			poisonPill.setLastInQueue(true);
+			queue.put(poisonPill);
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
-
 }
