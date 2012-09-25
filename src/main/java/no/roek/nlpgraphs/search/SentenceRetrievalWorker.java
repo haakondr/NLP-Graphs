@@ -37,7 +37,7 @@ public class SentenceRetrievalWorker extends Thread {
 
 	public Job getParseJob(Job job) {
 		for (String simDoc : job.getSimilarDocuments()) {
-			job.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFilename(), simDoc));
+			job.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFile().toString(), simDoc));
 		}
 
 		return job;
