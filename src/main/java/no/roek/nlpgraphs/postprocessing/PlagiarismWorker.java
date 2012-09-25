@@ -69,38 +69,6 @@ public class PlagiarismWorker extends Thread {
 		return plagReferences;
 	}
 
-	//	public List<PlagiarismReference> findPlagiarism(String file, String[] simDocs) {
-	//		System.out.println(Thread.currentThread().getName()+": finding plagiarism cases for file "+file);
-	//		List<PlagiarismReference> references = new ArrayList<>();
-	//
-	//		for (String simDoc : simDocs) {
-	//			for (GraphPair graphPair : findPlagiarisedSentences(parsedData+testDir+file, parsedData+trainDir+simDoc)) {
-	//				references.add(getPlagiarismReference(graphPair));
-	//			}
-	//		}
-	//
-	//		return references;
-	//	}
-
-	//	public List<GraphPair> findPlagiarisedSentences(String testFile, String trainFile) {
-	//		List<GraphPair> similarSentences = new ArrayList<>();
-	//		List<Graph> testSentences = GraphUtils.getGraphs(testFile);
-	//		List<Graph> trainSentences = GraphUtils.getGraphs(trainFile);
-	//
-	//		for (Graph testSentence : testSentences) {
-	//			for (Graph trainSentence : trainSentences) {
-	//				GraphEditDistance ged = new GraphEditDistance(testSentence, trainSentence);
-	//				double dist = ged.getDistance();
-	//
-	//				if(dist < plagiarismThreshold) {
-	//					similarSentences.add(new GraphPair(testSentence, trainSentence, dist));
-	//				}
-	//			}
-	//		}
-	//
-	//		return similarSentences;
-	//	}
-
 	public PlagiarismReference getPlagiarismReference(GraphPair pair) {
 		Graph test = pair.getSuspiciousGraph();
 		Graph train = pair.getSourceGraph();
