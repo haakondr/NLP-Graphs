@@ -37,12 +37,13 @@ public class App {
 		
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
 
+		System.out.println(posThreads);
 		for (int i = 0; i < posThreads; i++) {
 			new PosTagProducer(queue, chunks.get(i)).start();
 		}
 
 		int maltThreads = ConfigService.getMaltParserThreadCount();
-		
+		System.out.println(maltThreads);
 		for (int i = 0; i < maltThreads; i++) {
 			new DependencyParser(queue, ConfigService.getMaltParams()).start();
 		}
