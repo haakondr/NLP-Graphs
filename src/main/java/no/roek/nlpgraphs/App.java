@@ -50,14 +50,14 @@ public class App {
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		int j = 0;
-		for (int i = 0; i < posThreads; i++) {
+		for (int i = 0; i < testChunks.length; i++) {
 			j++;
 			PosTagProducer produer = new PosTagProducer(queue, testChunks[i], progressPrinter);
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
 
-		for (int i = 0; i < posThreads; i++) {
+		for (int i = 0; i < trainChunks.length; i++) {
 			j++;
 			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i], progressPrinter);
 			produer.setName("POSTagProducer-"+j);
