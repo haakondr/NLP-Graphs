@@ -9,6 +9,7 @@ import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.LiveDependencyParser;
@@ -40,14 +41,15 @@ public class App {
 
 	public static void preprocess(String dir) {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		File[][] testChunks = Fileutils.getChunks(Fileutils.getFiles(dataDir+dir), posThreads);
-		
+		File[] files = Fileutils.getFiles(dataDir+dir);
+		File[][] testChunks = Fileutils.getChunks(files, posThreads);
+		ProgressPrinter progressPrinter = new ProgressPrinter(files.length);
 		
 		System.out.println("preprocessing dir "+dataDir+dir+" with "+posThreads+" pos tagger threads");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		for (int i = 0; i < posThreads; i++) {
-			PosTagProducer produer = new PosTagProducer(queue, testChunks[i]);
+			PosTagProducer produer = new PosTagProducer(queue, testChunks[i], progressPrinter);
 			produer.setName("POSTagProducer-"+i);
 			produer.start();
 		}

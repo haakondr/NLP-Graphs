@@ -14,6 +14,7 @@ import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
@@ -23,10 +24,12 @@ public class PosTagProducer extends Thread {
 	private final BlockingQueue<ParseJob> queue;
 	private MaxentTagger tagger;
 	private File[] files;
+	private ProgressPrinter progressPrinter;
 
-	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files){
+	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files, ProgressPrinter progressPrinter){
 		this.queue = queue;
 		this.files = files;
+		this.progressPrinter = progressPrinter;
 
 		try {
 			this.tagger = new MaxentTagger(ConfigService.getPOSTaggerParams());
@@ -46,7 +49,7 @@ public class PosTagProducer extends Thread {
 						queue.put(parseJob);
 					}
 					jobs = null;
-					System.out.println(Thread.currentThread().getName()+" done pos-tagging file "+file.getName()+". currently "+queue.size()+ " files in queue.");
+					progressPrinter.printProgressbar();
 				}
 
 				for (int i = 0; i < 100; i++) {
