@@ -16,10 +16,11 @@ import org.maltparser.core.exception.MaltChainedException;
 public class DependencyParser extends Thread{
 	private final BlockingQueue<ParseJob> queue;
 	private MaltParserService maltService;
-	private String parsedFilesDir;
+	private String parsedFilesDir, subDir;
 
-	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams) {
+	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams, String subDir) {
 		this.queue = queue;
+		this.subDir = subDir;
 		this.parsedFilesDir = ConfigService.getParsedFilesDir();
 		try {
 			this.maltService = new MaltParserService();
@@ -76,6 +77,6 @@ public class DependencyParser extends Thread{
 			e.printStackTrace();
 		}
 
-		Fileutils.writeToFile(parsedFilesDir+posfile.getParsedFilename(), out.toString());
+		Fileutils.writeToFile(parsedFilesDir+subDir+posfile.getParsedFilename(), out.toString());
 	}
 }
