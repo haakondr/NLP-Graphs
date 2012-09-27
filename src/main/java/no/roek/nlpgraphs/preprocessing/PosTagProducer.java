@@ -22,10 +22,12 @@ public class PosTagProducer extends Thread {
 
 	private final BlockingQueue<ParseJob> queue;
 	private MaxentTagger tagger;
-	
-	public PosTagProducer(BlockingQueue<ParseJob> queue){
+	private File[] files;
+
+	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files){
 		this.queue = queue;
-		
+		this.files = files;
+
 		try {
 			this.tagger = new MaxentTagger(ConfigService.getPOSTaggerParams());
 		} catch (ClassNotFoundException | IOException e) {
@@ -38,20 +40,19 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				File[] files = Fileutils.getFiles(ConfigService.getDataDir());
-				
-				int fileCount = files.length;
-				for (int i = 0; i < files.length; i++) {
-					List<ParseJob> jobs = tagFile(files[i]);
-					for (int j = 0; j < jobs.size(); j++) {
-						if(i == fileCount) {
-							if(j==jobs.size()) {
-								jobs.get(i).setLastInQueue(true);
-							}
-						}
-						queue.put(jobs.get(i));
+				for (File file : files) {
+					List<ParseJob> jobs = tagFile(file);
+					for (ParseJob parseJob : jobs) {
+						queue.put(parseJob);
 					}
 				}
+				
+				for (int i = 0; i < 100; i++) {
+					ParseJob poisonPill = new ParseJob("threads should terminate when this job is encountered");
+					poisonPill.setLastInQueue(true);
+					queue.put(poisonPill);
+				}
+				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -65,7 +66,7 @@ public class PosTagProducer extends Thread {
 		int i = 1;
 		for (TaggedWord token : taggedSentence) {
 			temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
-            i++;
+			i++;
 		}
 
 		return temp.toArray(new String[0]);
@@ -73,12 +74,12 @@ public class PosTagProducer extends Thread {
 
 	public List<ParseJob> tagFile(File file) {
 		List<ParseJob> parseJobs = new ArrayList<>();
-		
+
 		for (NLPSentence sentence : SentenceUtils.getSentences(file.toString())) {
-				ParseJob parseJob = new ParseJob(file.toPath());
-				sentence.setPostags(getPosTagString(sentence));
-				parseJob.setSentence(sentence);
-				parseJobs.add(parseJob);
+			ParseJob parseJob = new ParseJob(file.toPath());
+			sentence.setPostags(getPosTagString(sentence));
+			parseJob.setSentence(sentence);
+			parseJobs.add(parseJob);
 		} 
 
 		return parseJobs;
