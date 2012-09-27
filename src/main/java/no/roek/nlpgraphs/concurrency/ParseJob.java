@@ -50,4 +50,8 @@ public class ParseJob {
 		String outfilename = file.getFileName().toString().replace(".txt", "");
 		return outfilename+"/"+outfilename+"_"+sentence.getNumber();
 	}
+	
+	public String getParentDir() {
+		return file.getParent().getFileName().toString()+"/";
+	}
 }

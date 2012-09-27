@@ -1,7 +1,6 @@
 package no.roek.nlpgraphs;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -30,8 +29,7 @@ public class App {
 		if(args.length > 0) {
 			if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
 				System.out.println("Starting preprocessing");
-				preprocess(trainDir);
-				preprocess(testDir);
+				preprocess();
 			}
 		}else {
 			System.out.println("Starting plagiarism search");
@@ -39,25 +37,38 @@ public class App {
 		}
 	}
 
-	public static void preprocess(String dir) {
+	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		File[] files = Fileutils.getFiles(dataDir+dir);
-		File[][] testChunks = Fileutils.getChunks(files, posThreads);
-		ProgressPrinter progressPrinter = new ProgressPrinter(files.length);
+		File[] testFiles = Fileutils.getFiles(dataDir+testDir);
+		File[] trainFiles = Fileutils.getFiles(dataDir+trainDir);
 		
-		System.out.println("preprocessing dir "+dataDir+dir+" with "+posThreads+" pos tagger threads");
+		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
+		File[][] trainChunks = Fileutils.getChunks(trainFiles, posThreads / 2);
+		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length + trainFiles.length);
+		
+		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
+		int j = 0;
 		for (int i = 0; i < posThreads; i++) {
+			j++;
 			PosTagProducer produer = new PosTagProducer(queue, testChunks[i], progressPrinter);
-			produer.setName("POSTagProducer-"+i);
+			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
 
+		for (int i = 0; i < posThreads; i++) {
+			j++;
+			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i], progressPrinter);
+			produer.setName("POSTagProducer-"+j);
+			produer.start();
+		}
+		
+		
 		int maltThreads = ConfigService.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
-			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams(), dir);
+			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams());
 			dependencyParser.setName("DependencyParser-"+i);
 			dependencyParser.start();
 		}
