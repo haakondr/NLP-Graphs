@@ -29,8 +29,8 @@ public class App {
 		if(args.length > 0) {
 			if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
 				System.out.println("Starting preprocessing");
-				preprocess(dataDir+trainDir);
-				preprocess(dataDir+testDir);
+				preprocess(trainDir);
+				preprocess(testDir);
 			}
 		}else {
 			System.out.println("Starting plagiarism search");
@@ -40,11 +40,11 @@ public class App {
 
 	public static void preprocess(String dir) {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		File[][] testChunks = Fileutils.getChunks(Fileutils.getFiles(dir), posThreads);
+		File[][] testChunks = Fileutils.getChunks(Fileutils.getFiles(dataDir+dir), posThreads);
 		
 		
-		System.out.println("preprocessing dir "+dir+" with "+posThreads+" pos tagger threads");
-		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
+		System.out.println("preprocessing dir "+dataDir+dir+" with "+posThreads+" pos tagger threads");
+		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		for (int i = 0; i < posThreads; i++) {
 			PosTagProducer produer = new PosTagProducer(queue, testChunks[i]);
@@ -55,7 +55,7 @@ public class App {
 		int maltThreads = ConfigService.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
-			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams());
+			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams(), dir);
 			dependencyParser.setName("DependencyParser-"+i);
 			dependencyParser.start();
 		}
