@@ -44,7 +44,7 @@ public class App {
 		
 		
 		System.out.println("preprocessing dir "+dir+" with "+posThreads+" pos tagger threads");
-		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
+		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		for (int i = 0; i < posThreads; i++) {
 			PosTagProducer produer = new PosTagProducer(queue, testChunks[i]);
