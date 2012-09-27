@@ -22,10 +22,15 @@ public class App {
 	private static String trainDir, testDir, dataDir;
 
 	public static void main(String[] args) throws InterruptedException {
+		dataDir = ConfigService.getDataDir();
+		trainDir = ConfigService.getTrainDir();
+		testDir = ConfigService.getTestDir();
+		
 		if(args.length > 0) {
 			if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
 				System.out.println("Starting preprocessing");
-				preprocess();
+				preprocess(dataDir+trainDir);
+				preprocess(dataDir+testDir);
 			}
 		}else {
 			System.out.println("Starting plagiarism search");
@@ -33,15 +38,16 @@ public class App {
 		}
 	}
 
-	public static void preprocess() {
+	public static void preprocess(String dir) {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		File[][] chunks = Fileutils.getChunks(Fileutils.getFiles(ConfigService.getDataDir()), posThreads);
+		File[][] testChunks = Fileutils.getChunks(Fileutils.getFiles(dir), posThreads);
 		
-		System.out.println("preprocessing with "+posThreads+" pos tagger threads");
+		
+		System.out.println("preprocessing dir "+dir+" with "+posThreads+" pos tagger threads");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
 
 		for (int i = 0; i < posThreads; i++) {
-			PosTagProducer produer = new PosTagProducer(queue, chunks[i]);
+			PosTagProducer produer = new PosTagProducer(queue, testChunks[i]);
 			produer.setName("POSTagProducer-"+i);
 			produer.start();
 		}
@@ -57,9 +63,6 @@ public class App {
 
 	public static void postProcess() {
 		//TODO: rewrite so parsed data is retrieved from file
-		dataDir = ConfigService.getDataDir();
-		testDir = ConfigService.getTestDir();
-		trainDir = ConfigService.getTrainDir();
 
 		BlockingQueue<Job> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
 		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
