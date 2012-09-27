@@ -45,6 +45,7 @@ public class PosTagProducer extends Thread {
 					for (ParseJob parseJob : jobs) {
 						queue.put(parseJob);
 					}
+					jobs = null;
 					System.out.println(Thread.currentThread().getName()+" done pos-tagging file "+file.getName()+". currently "+queue.size()+ " files in queue.");
 				}
 
