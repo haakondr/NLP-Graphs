@@ -77,6 +77,6 @@ public class DependencyParser extends Thread{
 		}
 		
 		Fileutils.writeToFile(parsedFilesDir+posfile.getParsedFilename(), out.toString());
-		System.out.println("Done dependency parsing file "+posfile.getFilename());
+		System.out.println("Done dependency parsing file "+posfile.getFilename()+".txt");
 	}
 }
