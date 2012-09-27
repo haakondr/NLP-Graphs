@@ -99,8 +99,8 @@ public class Fileutils {
 		return out.toArray(new DocumentFile[0]);
 	}
 
-	public static DocumentFile[][] getChunks(DocumentFile[] files, int n) {
-		List<DocumentFile[]> chunks = new ArrayList<>();
+	public static File[][] getChunks(File[] files, int n) {
+		List<File[]> chunks = new ArrayList<>();
 
 		int fileCount = files.length;
 		int chunksize = fileCount / n;
@@ -115,10 +115,9 @@ public class Fileutils {
 			}
 		}
 
-		return chunks.toArray(new DocumentFile[0][0]);
+		return chunks.toArray(new File[0][0]);
 	}
 
-	//TODO: rewrite with generics
 	public static Path[][] getChunks(Path[] files, int n) {
 		List<Path[]> chunks = new ArrayList<>();
 
@@ -138,25 +137,25 @@ public class Fileutils {
 		return chunks.toArray(new Path[0][0]);
 	}
 
-	public static <T> List<T[]> getChunks(T[] files, int n) {
-		List<T[]> chunks = new ArrayList<>();
-
-		int fileCount = files.length;
-		int chunksize = fileCount / n;
-		int i = 0;
-
-		while(i < fileCount) {
-			if(i+chunksize*2 <= fileCount) {
-				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
-				i += chunksize;
-			}else{
-				chunks.add(Arrays.copyOfRange(files, i, fileCount));
-				i = fileCount;
-			}
-		}
-
-		return chunks;
-	}
+//	public static <T> List<T[]> getChunks(T[] files, int n) {
+//		List<T[]> chunks = new ArrayList<>();
+//
+//		int fileCount = files.length;
+//		int chunksize = fileCount / n;
+//		int i = 0;
+//
+//		while(i < fileCount) {
+//			if(i+chunksize*2 <= fileCount) {
+//				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
+//				i += chunksize;
+//			}else{
+//				chunks.add(Arrays.copyOfRange(files, i, fileCount));
+//				i = fileCount;
+//			}
+//		}
+//
+//		return chunks;
+//	}
 
 	public static String getText(Path path) {
 

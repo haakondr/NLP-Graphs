@@ -35,11 +35,12 @@ public class DependencyParser extends Thread{
 		while(running) {
 			try {
 				ParseJob job = queue.take();
-				System.out.println("Starting dependency parsing file "+job.getFilename()+" sentence #"+job.getSentence().getNumber()+". jobs in queue: "+queue.size());
 				if(job.isLastInQueue()) {
 					running = false;
 					break;
 				}
+				
+				System.out.println("Starting dependency parsing file "+job.getFilename()+" sentence #"+job.getSentence().getNumber()+". jobs in queue: "+queue.size());
 				consume(job);
 
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {

@@ -22,9 +22,11 @@ public class App {
 	private static String trainDir, testDir, dataDir;
 
 	public static void main(String[] args) throws InterruptedException {
-		if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
-			System.out.println("Starting preprocessing");
-			preprocess();
+		if(args.length > 0) {
+			if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
+				System.out.println("Starting preprocessing");
+				preprocess();
+			}
 		}else {
 			System.out.println("Starting plagiarism search");
 			postProcess();
@@ -33,12 +35,12 @@ public class App {
 
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		List<File[]> chunks = Fileutils.getChunks(Fileutils.getFiles(ConfigService.getDataDir()), posThreads);
-		
+		File[][] chunks = Fileutils.getChunks(Fileutils.getFiles(ConfigService.getDataDir()), posThreads);
+
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
 
 		for (int i = 0; i < posThreads; i++) {
-			new PosTagProducer(queue, chunks.get(i)).start();
+			new PosTagProducer(queue, chunks[i]).start();
 		}
 
 		int maltThreads = ConfigService.getMaltParserThreadCount();
@@ -46,31 +48,31 @@ public class App {
 			new DependencyParser(queue, ConfigService.getMaltParams()).start();
 		}
 	}
-	
+
 	public static void postProcess() {
 		//TODO: rewrite so parsed data is retrieved from file
 		dataDir = ConfigService.getDataDir();
 		testDir = ConfigService.getTestDir();
 		trainDir = ConfigService.getTrainDir();
-		
+
 		BlockingQueue<Job> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
 		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
-		
+
 		BlockingQueue<Job> posTagQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 2; i++) {
 			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
 		}
-				
+
 		BlockingQueue<Job> parseQueue  = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
 			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
 		}
-		
+
 		BlockingQueue<Job> distQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
 			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
 		}
-		
+
 		for (int i = 0; i < 7; i++) {
 			new PlagiarismWorker(distQueue).start();
 		}
