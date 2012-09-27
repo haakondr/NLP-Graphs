@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +18,7 @@ import no.roek.nlpgraphs.document.DocumentFile;
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {
-		createFileIfNotExist(filename);
+		createParentFolderIfNotExist(filename);
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
@@ -33,7 +34,7 @@ public class Fileutils {
 	}
 
 	public static void writeToFile(String filename, String text) {
-		createFileIfNotExist(filename);
+		createParentFolderIfNotExist(filename);
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
@@ -44,7 +45,7 @@ public class Fileutils {
 		}
 	}
 
-	public static void createFileIfNotExist(String filename) {
+	public static void createParentFolderIfNotExist(String filename) {
 		File f = new File(filename);
 		File parent = f.getParentFile();
 
@@ -57,6 +58,10 @@ public class Fileutils {
 
 	public static File[] getFiles(Path dir) {
 		return dir.toFile().listFiles();
+	}
+	
+	public static File[] getFiles(String dir) {
+		return Paths.get(dir).toFile().listFiles();
 	}
 
 	public static List<DocumentFile> getFileList(Path dir, Path baseDir) {
@@ -72,6 +77,10 @@ public class Fileutils {
 		return tasks;
 	}
 
+	public static DocumentFile[] getFileList(String dir) {
+		return getFileList(Paths.get(dir));
+	}
+	
 	public static DocumentFile[] getFileList(Path dir) {
 		return getFileList(dir, dir).toArray(new DocumentFile[0]);
 	}

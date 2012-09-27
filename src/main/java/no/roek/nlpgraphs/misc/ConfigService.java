@@ -49,8 +49,24 @@ public class ConfigService {
 	public static int getDocumentRecall() {
 		return Integer.parseInt(getProperty("DOCUMENT_RECALL"));
 	}
-	
+
 	public static int getPlagiarismThreshold() {
 		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
+	}
+	
+	public static String getMaltParams() {
+		return getProperty("MALT_PARAMS");
+	}
+	
+	public static String getPOSTaggerParams() {
+		return getProperty("POSTAGGER_PARAMS");
+	}
+	
+	public static int getPOSTaggerThreadCount() {
+		return Integer.parseInt(getProperty("POSTAGGER_THREADS"));
+	}
+	
+	public static int getMaltParserThreadCount() {
+		return Integer.parseInt(getProperty("MALTPARSER_THREADS"));
 	}
 }
