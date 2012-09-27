@@ -9,7 +9,7 @@ public class ProgressPrinter {
 	}
 	
 	
-	private int getPercent() {
+	private synchronized int getPercent() {
 		return (current * 100) / total;
 	}
 	
@@ -29,7 +29,7 @@ public class ProgressPrinter {
 	        }
 	    }
 
-	    bar.append("]   " + percent + "%     ");
+	    bar.append("]   " + percent + "%     files done: "+current+"/"+total);
 	    System.out.print("\r" + bar.toString());
 	}
 }
