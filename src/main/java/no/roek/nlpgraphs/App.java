@@ -1,14 +1,12 @@
 package no.roek.nlpgraphs;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.Job;
 import no.roek.nlpgraphs.concurrency.ParseJob;
-import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
@@ -25,8 +23,10 @@ public class App {
 
 	public static void main(String[] args) throws InterruptedException {
 		if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
+			System.out.println("Starting preprocessing");
 			preprocess();
 		}else {
+			System.out.println("Starting plagiarism search");
 			postProcess();
 		}
 	}
@@ -37,19 +37,18 @@ public class App {
 		
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
 
-		System.out.println(posThreads);
 		for (int i = 0; i < posThreads; i++) {
 			new PosTagProducer(queue, chunks.get(i)).start();
 		}
 
 		int maltThreads = ConfigService.getMaltParserThreadCount();
-		System.out.println(maltThreads);
 		for (int i = 0; i < maltThreads; i++) {
 			new DependencyParser(queue, ConfigService.getMaltParams()).start();
 		}
 	}
 	
 	public static void postProcess() {
+		//TODO: rewrite so parsed data is retrieved from file
 		dataDir = ConfigService.getDataDir();
 		testDir = ConfigService.getTestDir();
 		trainDir = ConfigService.getTrainDir();
