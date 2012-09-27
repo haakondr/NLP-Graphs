@@ -35,6 +35,7 @@ public class App {
 
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
+		System.out.println("preprocessing with "+posThreads+" pos tagger threads");
 		File[][] chunks = Fileutils.getChunks(Fileutils.getFiles(ConfigService.getDataDir()), posThreads);
 
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
