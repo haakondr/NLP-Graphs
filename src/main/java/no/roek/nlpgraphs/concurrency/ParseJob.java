@@ -47,6 +47,7 @@ public class ParseJob {
 	}
 	
 	public String getParsedFilename() {
-		return file.getFileName()+"/"+file.getFileName()+"_"+sentence.getNumber();
+		String outfilename = file.getFileName().toString().replace(".txt", "");
+		return outfilename+"/"+outfilename+"_"+sentence.getNumber();
 	}
 }
