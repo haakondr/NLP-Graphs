@@ -39,7 +39,6 @@ public class DependencyParser extends Thread{
 					running = false;
 					break;
 				}
-				
 				System.out.println("Starting dependency parsing file "+job.getFilename()+" sentence #"+job.getSentence().getNumber()+". jobs in queue: "+queue.size());
 				consume(job);
 
@@ -77,7 +76,7 @@ public class DependencyParser extends Thread{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		Fileutils.writeToFile(parsedFilesDir+posfile.getParsedFilename(), out.toString());
 		System.out.println("Done dependency parsing file "+posfile.getFilename()+".txt");
 	}
