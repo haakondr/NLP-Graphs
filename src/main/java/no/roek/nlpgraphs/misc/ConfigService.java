@@ -53,4 +53,12 @@ public class ConfigService {
 	public static int getPlagiarismThreshold() {
 		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
 	}
+	
+	public static String getMaltParams() {
+		return getProperty("MALT_PARAMS");
+	}
+	
+	public static String getPOSTaggerParams() {
+		return getProperty("POSTAGGER_PARAMS");
+	}
 }

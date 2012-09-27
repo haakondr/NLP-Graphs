@@ -1,5 +1,6 @@
 package no.roek.nlpgraphs.preprocessing;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,24 +8,26 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagProducer extends Thread {
 
-	private final BlockingQueue<Job> queue;
-	private final BlockingQueue<Job> parseQueue;
+	private final BlockingQueue<ParseJob> queue;
 	private MaxentTagger tagger;
-
-	public PosTagProducer(BlockingQueue<Job> queue, BlockingQueue<Job> parseQueue, String taggerParams){
+	
+	public PosTagProducer(BlockingQueue<ParseJob> queue){
 		this.queue = queue;
-		this.parseQueue = parseQueue;
+		
 		try {
-			this.tagger = new MaxentTagger(taggerParams);
+			this.tagger = new MaxentTagger(ConfigService.getPOSTaggerParams());
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -35,30 +38,27 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				Job job = queue.take();
-				if(job.isLastInQueue()) {
-					running = false;
-					break;
+				File[] files = Fileutils.getFiles(ConfigService.getDataDir());
+				
+				int fileCount = files.length;
+				for (int i = 0; i < files.length; i++) {
+					List<ParseJob> jobs = tagFile(files[i]);
+					for (int j = 0; j < jobs.size(); j++) {
+						if(i == fileCount) {
+							if(j==jobs.size()) {
+								jobs.get(i).setLastInQueue(true);
+							}
+						}
+						queue.put(jobs.get(i));
+					}
 				}
-				parseQueue.put(getPosTags(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-
-	public Job getPosTags(Job job) {
-		//TODO: this might not update correctly. might have to create a new object? alternatively a new attr "taggedTextPairs" or something
-		for(TextPair pair : job.getTextPairs()) {
-			pair.getTestSentence().setPostags(getMaltString(pair.getTestSentence()));
-			pair.getTrainSentence().setPostags(getMaltString(pair.getTrainSentence()));
-		}
-
-		return job;
-	}
-
-	public String[] getMaltString(NLPSentence sentence) {
+	public String[] getPosTagString(NLPSentence sentence) {
 		List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
 
 		List<String> temp = new ArrayList<>();
@@ -71,28 +71,16 @@ public class PosTagProducer extends Thread {
 		return temp.toArray(new String[0]);
 	}
 
-//	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
-//		file.setLastInQueue(isLastInQueue);
-//		file.setSentences(SentenceUtils.getSentences(file.getPath().toString()));
-//
-//		int sentenceNumber = 1;
-//		for (NLPSentence sentence : file.getSentences()) {
-//			try {
-//				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
-//				List<String> temp = new ArrayList<>();
-//
-//				int i = 1;
-//				for (TaggedWord token : taggedSentence) {
-//					temp.add(i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
-//					i++;
-//				}
-//				sentenceNumber++;
-//				sentence.setPostags(temp.toArray(new String[0]));
-//			}catch (IndexOutOfBoundsException e) {
-//				e.printStackTrace();
-//			}
-//		} 
-//
-//		return file;
-//	}
+	public List<ParseJob> tagFile(File file) {
+		List<ParseJob> parseJobs = new ArrayList<>();
+		
+		for (NLPSentence sentence : SentenceUtils.getSentences(file.toString())) {
+				ParseJob parseJob = new ParseJob(file.toPath());
+				sentence.setPostags(getPosTagString(sentence));
+				parseJob.setSentence(sentence);
+				parseJobs.add(parseJob);
+		} 
+
+		return parseJobs;
+	}
 }

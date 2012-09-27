@@ -1,13 +1,18 @@
 package no.roek.nlpgraphs;
 
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
-import no.roek.nlpgraphs.preprocessing.PosTagProducer;
+import no.roek.nlpgraphs.preprocessing.LiveDependencyParser;
+import no.roek.nlpgraphs.preprocessing.LivePosTagProducer;
 import no.roek.nlpgraphs.search.PerfectDocumentRetrievalWorker;
 import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
@@ -30,12 +35,12 @@ public class App {
 				
 		BlockingQueue<Job> parseQueue  = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
-			new PosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
+			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
 		}
 		
 		BlockingQueue<Job> distQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
-			new DependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
+			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
 		}
 		
 		for (int i = 0; i < 7; i++) {
@@ -46,7 +51,26 @@ public class App {
 		
 	}
 
-	
+	public static void preprocess() {
+		String parsedFilesDir = ConfigService.getParsedFilesDir();
+		
+		//TODO: rewrite to consider subfolders?
+		DocumentFile[] files = Fileutils.getFileList(dataDir);
+		
+		
+		
+		
+		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
+		
+		for (int i = 0; i < 5; i++) {
+//			new PosTagProducer(queue).start();
+		}
+		
+		for (int i = 0; i < 5; i++) {
+			new DependencyParser(queue, ConfigService.getMaltParams()).start();
+		}
+		
+	}
 //	public static Thread preprocess(String input) {
 //		BlockingQueue<DocumentFile> queue = new LinkedBlockingQueue<DocumentFile>(10);
 //		DocumentFile[] files = Fileutils.getUnparsedFiles(Paths.get(input), parsedFilesDir);

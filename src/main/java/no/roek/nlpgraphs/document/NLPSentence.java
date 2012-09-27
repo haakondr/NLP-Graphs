@@ -2,6 +2,10 @@ package no.roek.nlpgraphs.document;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import edu.stanford.nlp.ling.Word;
 
 public class NLPSentence {
@@ -70,5 +74,15 @@ public class NLPSentence {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	public JSONObject toJson() throws JSONException {
+		JSONObject jsonSentence = new JSONObject();
+		jsonSentence.put("sentenceNumber", number);
+		jsonSentence.put("originalText", text);
+		jsonSentence.put("offset", start);
+		jsonSentence.put("length", getLength());
+
+		return jsonSentence;
 	}
 }
