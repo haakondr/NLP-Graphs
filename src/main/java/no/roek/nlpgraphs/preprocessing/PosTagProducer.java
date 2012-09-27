@@ -45,14 +45,16 @@ public class PosTagProducer extends Thread {
 					for (ParseJob parseJob : jobs) {
 						queue.put(parseJob);
 					}
+					
+					System.out.println(Thread.currentThread().getName()+" done pos-tagging file "+ file.getName());
 				}
-				
+
 				for (int i = 0; i < 100; i++) {
 					ParseJob poisonPill = new ParseJob("threads should terminate when this job is encountered");
 					poisonPill.setLastInQueue(true);
 					queue.put(poisonPill);
 				}
-				
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

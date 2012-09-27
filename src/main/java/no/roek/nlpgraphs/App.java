@@ -35,18 +35,23 @@ public class App {
 
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		System.out.println("preprocessing with "+posThreads+" pos tagger threads");
 		File[][] chunks = Fileutils.getChunks(Fileutils.getFiles(ConfigService.getDataDir()), posThreads);
-
+		
+		System.out.println("preprocessing with "+posThreads+" pos tagger threads");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(100);
 
 		for (int i = 0; i < posThreads; i++) {
-			new PosTagProducer(queue, chunks[i]).start();
+			PosTagProducer produer = new PosTagProducer(queue, chunks[i]);
+			produer.setName("POSTagProducer-"+i);
+			produer.start();
 		}
 
 		int maltThreads = ConfigService.getMaltParserThreadCount();
+		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
-			new DependencyParser(queue, ConfigService.getMaltParams()).start();
+			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams());
+			dependencyParser.setName("DependencyParser-"+i);
+			dependencyParser.start();
 		}
 	}
 
