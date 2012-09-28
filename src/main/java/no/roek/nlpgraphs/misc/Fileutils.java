@@ -18,7 +18,7 @@ import no.roek.nlpgraphs.document.DocumentFile;
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {
-		createParentFolderIfNotExist(filename);
+		createParentFolders(filename);
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
@@ -34,7 +34,7 @@ public class Fileutils {
 	}
 
 	public static void writeToFile(String filename, String text) {
-		createParentFolderIfNotExist(filename);
+		createParentFolders(filename);
 
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
@@ -45,22 +45,9 @@ public class Fileutils {
 		}
 	}
 
-	public static void createParentFolderIfNotExist(String filename) {
-		//TODO: make tests
-		File f = new File(filename);
-		File parent = f.getParentFile();
-
-		if(!(parent == null)) {
-			if(!parent.exists()) {
-				parent.mkdirs();
-			}
-		}
-		
-		if(parent.getParentFile() == null) {
-			createParentFolderIfNotExist(parent.toString());
-		}
+	public static void createParentFolders(String filename) {
+		new File(filename).getParentFile().mkdirs();
 	}
-
 	
 	public static File[] getFiles(Path dir) {
 		return dir.toFile().listFiles();

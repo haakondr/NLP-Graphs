@@ -5,30 +5,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.document.GraphPair;
-import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismReference;
-import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
 
-public class PlagiarismWorker extends Thread {
+public class LivePlagiarismWorker extends Thread {
 
 	private BlockingQueue<PlagiarismJob> queue;
 	private String resultsDir;
 	private double plagiarismThreshold;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue) {
+	public LivePlagiarismWorker(BlockingQueue<PlagiarismJob> queue) {
 		this.queue = queue;
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
@@ -59,46 +55,28 @@ public class PlagiarismWorker extends Thread {
 		System.exit(0);
 	}
 
-	
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
-		
-		for(TextPair pair : job.getTextPairs()) {
-			//TODO: if parsed file does not exist, parse the file and print info to user that file does not exist.
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename());
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename());
-			
-			GraphEditDistance ged = new GraphEditDistance(test, train);
-			double dist = ged.getDistance();
-			if(dist < plagiarismThreshold) {
-				plagReferences.add(getPlagiarismReference(pair, dist));
+
+		for(GraphPair pair : job.getGraphPairs()) {
+			GraphEditDistance ged = new GraphEditDistance(pair.getSuspiciousGraph(), pair.getSourceGraph());
+			if(ged.getDistance() < plagiarismThreshold) {
+				plagReferences.add(getPlagiarismReference(pair));
 			}
 		}
-		
+
 		return plagReferences;
 	}
-//	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
-//		List<PlagiarismReference> plagReferences = new ArrayList<>();
-//
-//		for(GraphPair pair : job.getGraphPairs()) {
-//			GraphEditDistance ged = new GraphEditDistance(pair.getSuspiciousGraph(), pair.getSourceGraph());
-//			if(ged.getDistance() < plagiarismThreshold) {
-//				plagReferences.add(getPlagiarismReference(pair));
-//			}
-//		}
-//
-//		return plagReferences;
-//	}
 
-	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity) {
-		NLPSentence test = pair.getTestSentence();
-		NLPSentence train = pair.getTrainSentence();
-		String offset = Integer.toString(test.getStart());
+	public PlagiarismReference getPlagiarismReference(GraphPair pair) {
+		Graph test = pair.getSuspiciousGraph();
+		Graph train = pair.getSourceGraph();
+		String offset = Integer.toString(test.getOffset());
 		String length = Integer.toString(test.getLength());
 		String sourceReference = train.getFilename();
-		String sourceOffset = Integer.toString(train.getStart());
+		String sourceOffset = Integer.toString(train.getOffset());
 		String sourceLength = Integer.toString(train.getLength());
-		return new PlagiarismReference(offset, length, sourceReference, sourceOffset, sourceLength, similarity);
+		return new PlagiarismReference(offset, length, sourceReference, sourceOffset, sourceLength, pair.getSimilarity());
 	}
 
 	public void writeResults(String file, List<PlagiarismReference> plagiarisms) {

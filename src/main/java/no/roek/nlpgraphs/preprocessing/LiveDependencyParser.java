@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.NLPSentence;
@@ -20,11 +20,11 @@ import org.maltparser.core.exception.MaltChainedException;
 
 public class LiveDependencyParser extends Thread {
 
-	private final BlockingQueue<Job> queue;
-	private final BlockingQueue<Job> distQueue;
+	private final BlockingQueue<PlagiarismJob> queue;
+	private final BlockingQueue<PlagiarismJob> distQueue;
 	private MaltParserService maltService;
 
-	public LiveDependencyParser(BlockingQueue<Job> queue, BlockingQueue<Job> distQueue, String maltParams) {
+	public LiveDependencyParser(BlockingQueue<PlagiarismJob> queue, BlockingQueue<PlagiarismJob> distQueue, String maltParams) {
 		this.queue = queue;
 		this.distQueue = distQueue;
 		try {
@@ -40,7 +40,7 @@ public class LiveDependencyParser extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				Job job = queue.take();
+				PlagiarismJob job = queue.take();
 				if(job.isLastInQueue()) {
 					running = false;
 					break;
@@ -54,7 +54,7 @@ public class LiveDependencyParser extends Thread {
 
 	}
 
-	public Job consume(Job job) {
+	public PlagiarismJob consume(PlagiarismJob job) {
 		List<GraphPair> graphPairs = new ArrayList<>();
 		for (TextPair pair : job.getTextPairs()) {
 			Graph test = getGraph(pair.getTestSentence());

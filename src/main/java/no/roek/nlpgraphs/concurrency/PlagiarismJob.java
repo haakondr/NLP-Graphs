@@ -8,7 +8,7 @@ import java.util.List;
 import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.TextPair;
 
-public class Job {
+public class PlagiarismJob {
 
 	private Path file;
 	private boolean isLastInQueue;
@@ -17,19 +17,19 @@ public class Job {
 	private List<GraphPair> graphPairs;
 
 	
-	public Job(Path file) {
+	public PlagiarismJob(Path file) {
 		isLastInQueue = false;
 		this.file = file;
 		this.textPairs = new ArrayList<>();
 		this.graphPairs = new ArrayList<>();
 	}
 	
-	public Job(String filename) {
+	public PlagiarismJob(String filename) {
 		this(Paths.get(filename));
 	}
 	
 	
-	public Job(String filename, String[] similarDocs) {
+	public PlagiarismJob(String filename, String[] similarDocs) {
 		this(filename);
 		this.similarDocs = similarDocs;
 	}

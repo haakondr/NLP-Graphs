@@ -1,5 +1,7 @@
 package no.roek.nlpgraphs.document;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.json.JSONException;
@@ -70,6 +72,13 @@ public class NLPSentence {
 
 	public String getFilename() {
 		return filename;
+	}
+	
+	public String getRelativePath() {
+		Path file = Paths.get(filename);
+		String outfilename = file.getFileName().toString().replace(".txt", "");
+		String parentDir = file.getParent().getFileName().toString();
+		return parentDir+"/"+outfilename+"/"+outfilename+"_"+number;
 	}
 
 	public void setFilename(String filename) {

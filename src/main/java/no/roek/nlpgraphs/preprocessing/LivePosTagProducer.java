@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
@@ -16,11 +16,11 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class LivePosTagProducer extends Thread {
 
-	private final BlockingQueue<Job> queue;
-	private final BlockingQueue<Job> parseQueue;
+	private final BlockingQueue<PlagiarismJob> queue;
+	private final BlockingQueue<PlagiarismJob> parseQueue;
 	private MaxentTagger tagger;
 
-	public LivePosTagProducer(BlockingQueue<Job> queue, BlockingQueue<Job> parseQueue, String taggerParams){
+	public LivePosTagProducer(BlockingQueue<PlagiarismJob> queue, BlockingQueue<PlagiarismJob> parseQueue, String taggerParams){
 		this.queue = queue;
 		this.parseQueue = parseQueue;
 		try {
@@ -35,7 +35,7 @@ public class LivePosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				Job job = queue.take();
+				PlagiarismJob job = queue.take();
 				if(job.isLastInQueue()) {
 					running = false;
 					break;
@@ -48,7 +48,7 @@ public class LivePosTagProducer extends Thread {
 	}
 
 
-	public Job getPosTags(Job job) {
+	public PlagiarismJob getPosTags(PlagiarismJob job) {
 		//TODO: this might not update correctly. might have to create a new object? alternatively a new attr "taggedTextPairs" or something
 		for(TextPair pair : job.getTextPairs()) {
 			pair.getTestSentence().setPostags(getMaltString(pair.getTestSentence()));
