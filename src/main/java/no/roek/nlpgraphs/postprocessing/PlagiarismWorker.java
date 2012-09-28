@@ -93,12 +93,13 @@ public class PlagiarismWorker extends Thread {
 	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity) {
 		NLPSentence test = pair.getTestSentence();
 		NLPSentence train = pair.getTrainSentence();
+		String filename = test.getFilename();
 		String offset = Integer.toString(test.getStart());
 		String length = Integer.toString(test.getLength());
 		String sourceReference = train.getFilename();
 		String sourceOffset = Integer.toString(train.getStart());
 		String sourceLength = Integer.toString(train.getLength());
-		return new PlagiarismReference(offset, length, sourceReference, sourceOffset, sourceLength, similarity);
+		return new PlagiarismReference(filename, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
 
 	public void writeResults(String file, List<PlagiarismReference> plagiarisms) {

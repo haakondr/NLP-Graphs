@@ -1,1 +1,0 @@
-trimmed trimming phred clustalx mlagan blastz clustalw trim aligned dialign amps clustal filtered fasta sliced reads contig mavid magic-spp t-coffee threading

@@ -1,1 +1,0 @@
-unaligned clustalx clustalw contiguous clustal ungapped aligned mavid repeat-masked dangling bioedit macvector colinear mlagan t-coffee misaligned nephron mafft align overhanging homologous

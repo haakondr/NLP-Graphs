@@ -1,1 +1,0 @@
-megahertz kilohertz gigahertz hertz kilovolts ghz kilobits gigabytes megabytes thz megabits milliseconds khz nanometers thousandths nanoseconds milliwatts terahertz hz baseband picoseconds

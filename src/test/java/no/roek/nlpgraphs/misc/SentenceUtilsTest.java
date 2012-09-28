@@ -56,4 +56,14 @@ public class SentenceUtilsTest {
 		assertEquals(91, s1.getStart() + s1.getLength());
 		assertEquals(1803, sentences.get(14).getStart());
 	}
+	
+	@Test
+	public void testOffset2() {
+		List<NLPSentence> sentences = SentenceUtils.getSentences("src/test/resources/documents/suspicious-document00014.txt");
+		NLPSentence sentence = sentences.get(7);
+		System.out.println(sentence.getText());
+		assertEquals(8, sentence.getNumber());
+		assertEquals(1385, sentence.getStart());
+		
+	}
 }

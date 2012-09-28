@@ -1,1 +1,0 @@
-idempotent semiring invertible commutative non-commutative homotopic toeplitz diagonalizable surjective positive-definite bijective tridiagonal injective associative vandermonde frobenius semigroup unital monic distributive multiplication

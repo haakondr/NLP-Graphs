@@ -1,1 +1,0 @@
-tanh sinh cosh arctan erf sech erfc arcsin mu cot cos eff arccot csc sinc boldsymbol cov varphi sgn tr np

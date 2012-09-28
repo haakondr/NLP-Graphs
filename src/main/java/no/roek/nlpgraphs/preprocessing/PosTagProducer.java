@@ -44,6 +44,8 @@ public class PosTagProducer extends Thread {
 		while(running) {
 			try {
 				for (File file : files) {
+					file.getParentFile().mkdirs();
+					
 					List<ParseJob> jobs = tagFile(file);
 					for (ParseJob parseJob : jobs) {
 						queue.put(parseJob);

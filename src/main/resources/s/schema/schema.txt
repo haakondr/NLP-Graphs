@@ -1,1 +1,0 @@
-schema xml relational tables mysql loaders oracle interface database metadata format queries files backend file architecture repository perl warehouse framework server

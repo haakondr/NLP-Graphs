@@ -1,1 +1,0 @@
-clarity readability simplicity transparency comparability brevity portability consistency robustness sake interpretability accountability completeness ease comprehension precision reproducibility openness convenience flexibility reliability

@@ -1,1 +1,0 @@
-trait traits qtl inheritance recessive qtls eqtl phenotypic polygenic phenotypes autosomal heritability alleles locus genetic loci microsatellite penetrance mendelian disorder deafness

@@ -24,10 +24,13 @@ public class XMLUtils {
 			is = new FileInputStream(annotationFile);
 			Document document = builder.build(is);
 			Element root = document.getRootElement();
+			String filename = root.getAttribute("reference").getValue();
+			
 			List<Element> elements = root.getChildren("feature");
 			for (int i = 0; i < elements.size(); i++) {
 				Element row = elements.get(i);
 				if(row.getAttribute("name").getValue().equals("plagiarism") || row.getAttribute("name").getValue().equals("detected-plagiarism")) {
+					
 					String type = row.getAttributeValue("type");
 					String obfuscation = row.getAttributeValue("obfuscation");
 					String language = row.getAttributeValue("this_language");
@@ -38,7 +41,7 @@ public class XMLUtils {
 					String sourceOffset = row.getAttributeValue("source_offset");
 					String sourceLength = row.getAttributeValue("source_length");
 					
-					plagiarisms.add(new PlagiarismReference(type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
+					plagiarisms.add(new PlagiarismReference(filename, type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
 					return plagiarisms;
 				}
 			}

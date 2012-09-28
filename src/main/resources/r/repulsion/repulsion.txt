@@ -1,1 +1,0 @@
-repulsion repulsions repulsive electrostatic attraction interactions clashes hindrance solvation interaction radii pathfinding stacking clash energies contacts short-range waals stabilization hydrodynamic compaction
