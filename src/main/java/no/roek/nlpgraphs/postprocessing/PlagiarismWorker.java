@@ -64,6 +64,7 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		
 		for(TextPair pair : job.getTextPairs()) {
+			//TODO: if parsed file does not exist, parse the file and print info to user that file does not exist.
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename());
 			
