@@ -121,7 +121,7 @@ public class PlagiarismWorker extends Thread {
 
 		XMLOutputter outputter = new XMLOutputter();
 		try {
-			Fileutils.createParentFolderIfNotExist(resultsDir+file);
+			Fileutils.createParentFolders(resultsDir+file);
 			FileWriter writer = new FileWriter(resultsDir+file);
 			outputter.output(doc, writer);
 			writer.close();
