@@ -33,7 +33,7 @@ public class Fileutils {
 		}
 	}
 
-	public static void writeToFile(String filename, String text) {
+	public synchronized static void writeToFile(String filename, String text) {
 		createParentFolders(filename);
 
 		try {
@@ -45,7 +45,7 @@ public class Fileutils {
 		}
 	}
 
-	public static void createParentFolders(String filename) {
+	public synchronized static void createParentFolders(String filename) {
 		new File(filename).getParentFile().mkdirs();
 	}
 	

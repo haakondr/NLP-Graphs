@@ -26,12 +26,12 @@ public class SentenceUtilsTest {
 		List<Word> words = s1.getWords();
 		
 		assertEquals("My", words.get(0).word());
-		assertEquals(1, words.get(0).beginPosition());
-		assertEquals(3, words.get(0).endPosition());
+		assertEquals(0, words.get(0).beginPosition());
+		assertEquals(2, words.get(0).endPosition());
 		
 		assertEquals("name", words.get(1).word());
-		assertEquals(3, words.get(1).beginPosition());
-		assertEquals(8, words.get(1).endPosition());
+		assertEquals(2, words.get(1).beginPosition());
+		assertEquals(7, words.get(1).endPosition());
 		
 		int sum=0, charactersInText = 0, textLength=0;
 		for (NLPSentence s : sentences) {
@@ -42,9 +42,12 @@ public class SentenceUtilsTest {
 			}
 		}
 		
+		// each sentence has a whitespace after, except the last one.
+		textLength += sentences.size() - 1;
+		
 		assertEquals(25, sum);
 		assertEquals(82, charactersInText);
-		assertEquals(100, textLength);
+		assertEquals(103, textLength);
 	}
 	
 	@Test
@@ -53,6 +56,7 @@ public class SentenceUtilsTest {
 		NLPSentence s1 = sentences.get(0);
 		assertEquals(0, s1.getStart());
 		assertEquals(92, sentences.get(1).getStart());
+		
 		assertEquals(91, s1.getStart() + s1.getLength());
 		assertEquals(1803, sentences.get(14).getStart());
 	}
@@ -61,9 +65,8 @@ public class SentenceUtilsTest {
 	public void testOffset2() {
 		List<NLPSentence> sentences = SentenceUtils.getSentences("src/test/resources/documents/suspicious-document00014.txt");
 		NLPSentence sentence = sentences.get(7);
-		System.out.println(sentence.getText());
 		assertEquals(8, sentence.getNumber());
-		assertEquals(1385, sentence.getStart());
-		
+//		assertEquals(1385, sentences.get(6).getStart() + sentences.get(6).getLength());
+		assertEquals(1386, sentence.getStart());
 	}
 }
