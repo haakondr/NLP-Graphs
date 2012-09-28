@@ -46,7 +46,6 @@ public class Fileutils {
 	}
 
 	public static void createParentFolderIfNotExist(String filename) {
-		//TODO: make tests
 		File f = new File(filename);
 		File parent = f.getParentFile();
 
