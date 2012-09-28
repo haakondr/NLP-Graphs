@@ -46,6 +46,7 @@ public class Fileutils {
 	}
 
 	public static void createParentFolderIfNotExist(String filename) {
+		//TODO: make tests
 		File f = new File(filename);
 		File parent = f.getParentFile();
 
@@ -53,6 +54,10 @@ public class Fileutils {
 			if(!parent.exists()) {
 				parent.mkdirs();
 			}
+		}
+		
+		if(parent.getParentFile() == null) {
+			createParentFolderIfNotExist(parent.toString());
 		}
 	}
 
