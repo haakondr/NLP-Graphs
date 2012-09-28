@@ -1,1 +1,0 @@
-frame frames in-frame codon orf frameshift reading codons out-of-frame stop aug fused start upstream downstream window frameshifts uaa frame-shift polyprotein uga

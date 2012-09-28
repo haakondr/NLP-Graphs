@@ -1,1 +1,0 @@
-visits visit consultations clinic admissions clinics services appointments outpatient appointment consultation department attendance hospitalizations sessions care meetings referrals office referral interviews

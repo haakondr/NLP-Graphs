@@ -1,1 +1,0 @@
-path paths trajectory edge distance edges distances pathlength trajectories shortest direction segment length vertices graph road branch perpendicular substring route window

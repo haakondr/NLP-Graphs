@@ -1,1 +1,0 @@
-resolver resolvers nameserver hostname tsig srv doubly-fed nis dns lookups dnsbl dnssec hostnames cctld update wins sparql time-of-flight domainkeys forwarder txt

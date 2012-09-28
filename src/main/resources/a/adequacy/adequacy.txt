@@ -1,1 +1,0 @@
-adequacy appropriateness correctness effectiveness suitability quality usefulness completeness relevance safety inadequacy feasibility acceptability efficacy reliability validity impact representativeness consistency reproducibility goodness

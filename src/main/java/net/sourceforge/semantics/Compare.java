@@ -28,11 +28,11 @@ StringTokenizer ta = new StringTokenizer(a,"~!@#$%^&*()_-=+`[]{}:\"\\|;'<>?,./ "
 StringTokenizer tb = new StringTokenizer(b,"~!@#$%^&*()_-=+`[]{}:\"\\|;'<>?,./ ");	
 
 if (ta.countTokens()==1){
-	File f = new File("./resources/WORDS/"+Character.toString(a.charAt(0))+"/"+a+"/"+a+".txt");
+	File f = new File("src/main/resources/WORDS/"+Character.toString(a.charAt(0))+"/"+a+"/"+a+".txt");
 	if(!f.exists()) {return -1;}
 }
 if (tb.countTokens()==1){
-	File f = new File("./resources/WORDS/"+Character.toString(b.charAt(0))+"/"+b+"/"+b+".txt");
+	File f = new File("src/main/resources/WORDS/"+Character.toString(b.charAt(0))+"/"+b+"/"+b+".txt");
 	if(!f.exists()) {return -1;}	
 }
 	
@@ -77,7 +77,7 @@ try{
 
 private String read(String g){
 	try {
-	String filename = "./resources/WORDS/"+Character.toString(g.charAt(0))+"/"+g+"/"+g+".txt";
+	String filename = "src/main/resources/WORDS/"+Character.toString(g.charAt(0))+"/"+g+"/"+g+".txt";
 	File f = new File(filename);
 	if(f.exists()) {
 		

@@ -1,1 +1,0 @@
-geometries geometry conformations energies stereochemistry conformation b-form structures orientations arrangement topologies conformers samplings h-bonding charmm b-dna enthalpy rai depths parameters intercalation

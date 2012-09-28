@@ -1,1 +1,0 @@
-negations tautology disjunction unsatisfiable literals dulcian connectives vdash tressure neg negation vee conjuncts binyan conjunctive moralising datatypes satisfiable eyecatch lor truth-value

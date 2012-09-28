@@ -71,12 +71,13 @@ public class LivePlagiarismWorker extends Thread {
 	public PlagiarismReference getPlagiarismReference(GraphPair pair) {
 		Graph test = pair.getSuspiciousGraph();
 		Graph train = pair.getSourceGraph();
+		String filename = test.getFilename();
 		String offset = Integer.toString(test.getOffset());
 		String length = Integer.toString(test.getLength());
 		String sourceReference = train.getFilename();
 		String sourceOffset = Integer.toString(train.getOffset());
 		String sourceLength = Integer.toString(train.getLength());
-		return new PlagiarismReference(offset, length, sourceReference, sourceOffset, sourceLength, pair.getSimilarity());
+		return new PlagiarismReference(filename, offset, length, sourceReference, sourceOffset, sourceLength, pair.getSimilarity());
 	}
 
 	public void writeResults(String file, List<PlagiarismReference> plagiarisms) {

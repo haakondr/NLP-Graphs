@@ -1,1 +1,0 @@
-mappings mapping annotations spa chca identifiers des assignments blat annotation ids assignment matches mapped tissueinfo alignments databases entries classifications prosite match

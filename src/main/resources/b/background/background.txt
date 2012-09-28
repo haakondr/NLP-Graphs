@@ -1,1 +1,0 @@
-background backgrounds spot pixel foreground noise spots subtracted normalized mice intensities pixels normalization color intensity fluorescence shading rectangles strain blank corrected

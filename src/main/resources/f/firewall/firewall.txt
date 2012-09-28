@@ -1,1 +1,0 @@
-firewall firewalls nat router anti-virus antivirus anti-spyware vpn routers traversal dhcp server proxy packet anti-spam modem udp ftp openbsd configure freebsd

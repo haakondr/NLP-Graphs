@@ -1,1 +1,0 @@
-polyhedra polyhedron polygons polytopes octahedron tetrahedron icosidodecahedron cuboctahedron polygon dodecahedron polytope tessellations vertices solids convex duals tessellation triangles pentagons symmetries icosahedron
