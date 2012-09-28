@@ -32,7 +32,7 @@ public class SentenceUtils {
 
 	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
 		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
-		return cmp.getResult() > 0.01;
+		return cmp.getResult() > 0.06;
 	}
 
 	public static List<NLPSentence> getSentences(String file) {
@@ -51,7 +51,7 @@ public class SentenceUtils {
 			while((character = reader.read()) != -1) {
 				char c = (char) character;
 
-//				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder, offset);
+				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder, offset);
 
 				if(isWordDelimiter(c)) {
 					wordBuilder = createWord(wordBuilder, words, offset);
@@ -66,7 +66,9 @@ public class SentenceUtils {
 						sentenceBuilder.append(" ");
 					}
 				}
+				
 
+				offset++;
 				if(isSentenceDelimiter(c)) {
 					String previousWord;
 					if(words.size()== 0) {
@@ -83,9 +85,9 @@ public class SentenceUtils {
 					sentenceBuilder = new StringBuilder();
 					wordBuilder = new StringBuilder();
 					sentenceNumber++;
-					sentenceStart = offset;
+					sentenceStart = offset +1;
 				}
-				offset++;
+	
 			}
 			if(wordBuilder.toString().trim().length()>0) {
 				words.add(new Word(wordBuilder.toString()));
@@ -101,15 +103,15 @@ public class SentenceUtils {
 		}
 		return null;
 	}
-	
-//	private static StringBuilder stripWhitespaceBeforeText(StringBuilder sentenceBuilder, int currentOffset) {
-//		if(sentenceBuilder.toString().length() > 0) {
-//			if(sentenceBuilder.toString().trim().length() == 0) {
-//				return new StringBuilder();
-//			}
-//		}
-//		return sentenceBuilder;
-//	}
+
+	private static StringBuilder stripWhitespaceBeforeText(StringBuilder sentenceBuilder, int currentOffset) {
+		if(sentenceBuilder.toString().length() > 0) {
+			if(sentenceBuilder.toString().trim().length() == 0) {
+				return new StringBuilder();
+			}
+		}
+		return sentenceBuilder;
+	}
 
 	private static StringBuilder createWord(StringBuilder wordBuilder, List<Word> words, int offset) {
 		if(wordBuilder.toString().trim().length() > 0) {
@@ -141,9 +143,9 @@ public class SentenceUtils {
 	private static boolean isWordWithPunctation(String s) {
 		return s.equalsIgnoreCase("Mr") || s.equalsIgnoreCase("Mrs") || s.equalsIgnoreCase("ca");
 	}
-	
-	
+
+
 	public static boolean isAlmostEqual(int a, int b) {
-		return Math.abs(a-b)< 3;
+		return Math.abs(a-b)< 10;
 	}
 }
