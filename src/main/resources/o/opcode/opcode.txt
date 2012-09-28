@@ -1,1 +1,0 @@
-opcode mov microcode operand instruction opcodes operands microprogram hl eax multi-byte cidr significand subnet incremented accumulator byte bytes nrzi un- instructions

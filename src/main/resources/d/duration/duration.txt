@@ -1,1 +1,0 @@
-duration durations periods onset period interval length time latency timing intervals severity stay initiation episode prolongation qt pulses amplitude episodes lifespan

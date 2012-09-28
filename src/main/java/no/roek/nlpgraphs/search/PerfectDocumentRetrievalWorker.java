@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 
-import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
@@ -16,10 +16,10 @@ import no.roek.nlpgraphs.misc.XMLUtils;
 
 public class PerfectDocumentRetrievalWorker extends Thread {
 
-	private BlockingQueue<Job> queue;
+	private BlockingQueue<PlagiarismJob> queue;
 	private String testDir, dataDir, annotationsDir;
 
-	public PerfectDocumentRetrievalWorker(BlockingQueue<Job> queue, String dataDir, String trainDir, String testDir) {
+	public PerfectDocumentRetrievalWorker(BlockingQueue<PlagiarismJob> queue, String dataDir, String trainDir, String testDir) {
 		this.queue = queue;
 		this.testDir = testDir;
 		this.dataDir = dataDir;
@@ -34,11 +34,11 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 		try {
 			for (File testFile : Fileutils.getFiles(Paths.get(dataDir+testDir))) {
 				List<String> similarDocs = getSimilarDocs(testFile.toPath());
-				queue.put(new Job(testFile.toPath().toString(), similarDocs.toArray(new String[0])));
+				queue.put(new PlagiarismJob(testFile.toPath().toString(), similarDocs.toArray(new String[0])));
 			}
 
 			for (int i = 0; i < 100; i++) {
-				Job poisonPill = new Job("threads should terminate when this job is encountered");
+				PlagiarismJob poisonPill = new PlagiarismJob("threads should terminate when this job is encountered");
 				poisonPill.setLastInQueue(true);
 				queue.put(poisonPill);
 			}

@@ -1,1 +1,0 @@
-ellipse ellipses rectangle ellipsoid sphere circle oval rectangles shading spheres circles diamonds stars cylinder ovals triangle bar hexagon polynomials dotted isotherm

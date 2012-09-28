@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
@@ -77,20 +77,20 @@ public class App {
 	public static void postProcess() {
 		//TODO: rewrite so parsed data is retrieved from file
 
-		BlockingQueue<Job> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
+		BlockingQueue<PlagiarismJob> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
 		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
 
-		BlockingQueue<Job> posTagQueue = new LinkedBlockingQueue<>(100);
+		BlockingQueue<PlagiarismJob> posTagQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 2; i++) {
 			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
 		}
 
-		BlockingQueue<Job> parseQueue  = new LinkedBlockingQueue<>(100);
+		BlockingQueue<PlagiarismJob> parseQueue  = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
 			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
 		}
 
-		BlockingQueue<Job> distQueue = new LinkedBlockingQueue<>(100);
+		BlockingQueue<PlagiarismJob> distQueue = new LinkedBlockingQueue<>(100);
 		for (int i = 0; i < 7; i++) {
 			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
 		}

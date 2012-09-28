@@ -1,1 +1,0 @@
-extents extent cline affinities efficiencies degrees severities repartition provenance clines shades baselines sensitivities topography resolutions sharpness specificities amount numbers proportions brightness

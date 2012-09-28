@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.concurrency.Job;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
@@ -44,6 +44,8 @@ public class PosTagProducer extends Thread {
 		while(running) {
 			try {
 				for (File file : files) {
+					file.getParentFile().mkdirs();
+					
 					List<ParseJob> jobs = tagFile(file);
 					for (ParseJob parseJob : jobs) {
 						queue.put(parseJob);

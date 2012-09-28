@@ -1,1 +1,0 @@
-error errors bias misclassification deviation deviations biases accuracy uncertainty variance variability noise accuracies coefficient probability squared confounding distance fdr variances intercept

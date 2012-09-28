@@ -1,1 +1,0 @@
-delimited tab-delimited ascii csv gff excel html fasta comma spreadsheet tab tabular tiff uploading jpeg fasta-formatted word xml postscript plain-text cel

@@ -26,14 +26,13 @@ public class SentenceUtils {
 				}
 			}
 		}
-		
+
 		return textPairs;
 	}
-	
+
 	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
 		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
-		return cmp.getResult() > 0.3;
-
+		return cmp.getResult() > 0.06;
 	}
 
 	public static List<NLPSentence> getSentences(String file) {
@@ -48,11 +47,11 @@ public class SentenceUtils {
 			List<NLPSentence> sentences = new ArrayList<NLPSentence>();
 			List<Word> words = new ArrayList<>();
 
-			int character = 1, offset = 1, sentenceNumber = 1, sentenceStart = 0;
+			int character = 1, offset = 0, sentenceNumber = 1, sentenceStart = 0;
 			while((character = reader.read()) != -1) {
 				char c = (char) character;
 
-				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder);
+				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder, offset);
 
 				if(isWordDelimiter(c)) {
 					wordBuilder = createWord(wordBuilder, words, offset);
@@ -67,7 +66,9 @@ public class SentenceUtils {
 						sentenceBuilder.append(" ");
 					}
 				}
+				
 
+				offset++;
 				if(isSentenceDelimiter(c)) {
 					String previousWord;
 					if(words.size()== 0) {
@@ -76,20 +77,22 @@ public class SentenceUtils {
 						previousWord = words.get(words.size()-1).word();
 					}
 					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
-						sentences.add(new NLPSentence(filename, sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
+						int sentenceLength = offset - sentenceStart;
+						sentences.add(new NLPSentence(filename, sentenceNumber, sentenceStart, sentenceLength, sentenceBuilder.toString(), words));
 					}
 					createWord(wordBuilder, words, offset);
 					words = new ArrayList<Word>();
 					sentenceBuilder = new StringBuilder();
 					wordBuilder = new StringBuilder();
 					sentenceNumber++;
-					sentenceStart = offset+1;
+					sentenceStart = offset +1;
 				}
-				offset++;
+	
 			}
 			if(wordBuilder.toString().trim().length()>0) {
 				words.add(new Word(wordBuilder.toString()));
-				sentences.add(new NLPSentence(filename, sentenceNumber, offset, sentenceBuilder.toString(), words));
+				int sentenceLength = offset - sentenceStart;
+				sentences.add(new NLPSentence(filename, sentenceNumber, offset, sentenceLength, sentenceBuilder.toString(), words));
 				sentenceNumber++;
 			}
 			reader.close();
@@ -101,9 +104,11 @@ public class SentenceUtils {
 		return null;
 	}
 
-	private static StringBuilder stripWhitespaceBeforeText(StringBuilder sentenceBuilder) {
-		if(sentenceBuilder.toString().trim().length() == 0) {
-			return new StringBuilder();
+	private static StringBuilder stripWhitespaceBeforeText(StringBuilder sentenceBuilder, int currentOffset) {
+		if(sentenceBuilder.toString().length() > 0) {
+			if(sentenceBuilder.toString().trim().length() == 0) {
+				return new StringBuilder();
+			}
 		}
 		return sentenceBuilder;
 	}
@@ -137,5 +142,10 @@ public class SentenceUtils {
 
 	private static boolean isWordWithPunctation(String s) {
 		return s.equalsIgnoreCase("Mr") || s.equalsIgnoreCase("Mrs") || s.equalsIgnoreCase("ca");
+	}
+
+
+	public static boolean isAlmostEqual(int a, int b) {
+		return Math.abs(a-b)< 10;
 	}
 }

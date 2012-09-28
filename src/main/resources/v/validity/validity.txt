@@ -1,1 +1,0 @@
-validity reliability consistency applicability reproducibility usefulness test-retest utility psychometric feasibility accuracy appropriateness relevance robustness effectiveness validation responsiveness acceptability correlations generalizability comparability
