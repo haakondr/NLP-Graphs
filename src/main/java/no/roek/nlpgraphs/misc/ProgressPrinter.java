@@ -3,11 +3,9 @@ package no.roek.nlpgraphs.misc;
 public class ProgressPrinter {
 	
 	private int total, current;
-	private long startTime;
 	
 	public ProgressPrinter(int total) {
 		this.total = total;
-		startTime = System.currentTimeMillis();
 	}
 	
 	
@@ -30,8 +28,7 @@ public class ProgressPrinter {
 	            bar.append(" ");
 	        }
 	    }
-	    long timeSpent = System.currentTimeMillis() - startTime;
-	    bar.append("]   " + percent + "%     files done: "+current+"/"+total+". Time spent: "+timeSpent);
+	    bar.append("]   " + percent + "%     files done: "+current+"/"+total);
 	    System.out.print("\r" + bar.toString());
 	}
 }

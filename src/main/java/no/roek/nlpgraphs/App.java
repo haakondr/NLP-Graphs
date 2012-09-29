@@ -1,6 +1,9 @@
 package no.roek.nlpgraphs;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -25,27 +28,53 @@ public class App {
 		dataDir = ConfigService.getDataDir();
 		trainDir = ConfigService.getTrainDir();
 		testDir = ConfigService.getTestDir();
-		
-		if(args.length > 0) {
-			if(args[0].equals("--preprocess") || args[0].equals("-pp")) {
-				System.out.println("Starting preprocessing");
-				preprocess();
-			}
+
+		if(shouldPreprocess()) {
+			System.out.println("Starting preprocessing");
+			preprocess();
 		}else {
 			System.out.println("Starting plagiarism search");
 			postProcess();
 		}
 	}
 
+	public static boolean shouldPreprocess() {
+		System.out.println("Would you like to preprocess the data first? [yes/no/exit]");
+		BufferedReader bi = new BufferedReader(new InputStreamReader(System.in));
+		String line;
+		try {
+			while ((line = bi.readLine()) != null) {
+				if(line.equalsIgnoreCase("Y") || line.equalsIgnoreCase("yes")) {
+					return true;
+				}else if(line.equalsIgnoreCase("N") || line.equalsIgnoreCase("no")) {
+					return false;
+				}else if(line.equalsIgnoreCase("EXIT")) {
+					System.out.println("Exiting app");
+					System.exit(0);
+				}else {
+					System.out.println("Invalid answer. [Y/N/EXIT] is allowed.");
+					return shouldPreprocess();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Exiting app");
+		System.exit(0);
+		return false;
+	}
+
+
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
 		File[] testFiles = Fileutils.getFiles(dataDir+testDir);
 		File[] trainFiles = Fileutils.getFiles(dataDir+trainDir);
-		
+
 		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
 		File[][] trainChunks = Fileutils.getChunks(trainFiles, posThreads / 2);
 		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length + trainFiles.length);
-		
+
 		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
@@ -63,8 +92,8 @@ public class App {
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
-		
-		
+
+
 		int maltThreads = ConfigService.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
