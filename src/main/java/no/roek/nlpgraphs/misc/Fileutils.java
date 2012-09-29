@@ -40,12 +40,13 @@ public class Fileutils {
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename), Charset.forName("UTF-8"))){
 			writer.write(text);
 			writer.close();
+			System.gc();
 		}catch ( IOException ioe ) {
 			ioe.printStackTrace();
 		}
 	}
 
-	public synchronized static void createParentFolders(String filename) {
+	public static void createParentFolders(String filename) {
 		new File(filename).getParentFile().mkdirs();
 	}
 	
