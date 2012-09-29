@@ -52,14 +52,14 @@ public class App {
 		int j = 0;
 		for (int i = 0; i < testChunks.length; i++) {
 			j++;
-			PosTagProducer produer = new PosTagProducer(queue, testChunks[i], progressPrinter);
+			PosTagProducer produer = new PosTagProducer(queue, testChunks[i]);
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
 
 		for (int i = 0; i < trainChunks.length; i++) {
 			j++;
-			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i], progressPrinter);
+			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i);
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
@@ -68,7 +68,7 @@ public class App {
 		int maltThreads = ConfigService.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
-			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams());
+			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams(), progressPrinter);
 			dependencyParser.setName("DependencyParser-"+i);
 			dependencyParser.start();
 		}

@@ -6,6 +6,7 @@ import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.misc.ProgressPrinter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,10 +18,13 @@ public class DependencyParser extends Thread{
 	private final BlockingQueue<ParseJob> queue;
 	private MaltParserService maltService;
 	private String parsedFilesDir;
-
-	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams) {
+	private ProgressPrinter progressPrinter;
+	
+	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams, ProgressPrinter progressPrinter) {
 		this.queue = queue;
 		this.parsedFilesDir = ConfigService.getParsedFilesDir();
+		this.progressPrinter = progressPrinter;
+		
 		try {
 			this.maltService = new MaltParserService();
 			maltService.initializeParserModel(maltParams);
@@ -40,6 +44,7 @@ public class DependencyParser extends Thread{
 					break;
 				}
 				consume(job);
+				progressPrinter.printProgressbar();
 
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
 				e.printStackTrace();

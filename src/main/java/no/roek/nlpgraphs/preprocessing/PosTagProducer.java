@@ -24,12 +24,10 @@ public class PosTagProducer extends Thread {
 	private final BlockingQueue<ParseJob> queue;
 	private MaxentTagger tagger;
 	private File[] files;
-	private ProgressPrinter progressPrinter;
 
-	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files, ProgressPrinter progressPrinter){
+	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files){
 		this.queue = queue;
 		this.files = files;
-		this.progressPrinter = progressPrinter;
 
 		try {
 			this.tagger = new MaxentTagger(ConfigService.getPOSTaggerParams());
@@ -48,7 +46,6 @@ public class PosTagProducer extends Thread {
 
 					ParseJob parseJob = tagFile(file);
 					queue.put(parseJob);
-//					progressPrinter.printProgressbar();
 				}
 
 				for (int i = 0; i < 100; i++) {
