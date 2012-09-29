@@ -3,9 +3,11 @@ package no.roek.nlpgraphs.misc;
 public class ProgressPrinter {
 	
 	private int total, current;
+	private long startTime;
 	
 	public ProgressPrinter(int total) {
 		this.total = total;
+		startTime = System.currentTimeMillis();
 	}
 	
 	
