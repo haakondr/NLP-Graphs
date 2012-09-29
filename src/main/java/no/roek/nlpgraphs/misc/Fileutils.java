@@ -40,7 +40,6 @@ public class Fileutils {
 		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename), Charset.forName("UTF-8"))){
 			writer.write(text);
 			writer.close();
-			System.gc();
 		}catch ( IOException ioe ) {
 			ioe.printStackTrace();
 		}
