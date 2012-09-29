@@ -11,11 +11,12 @@ public class ParseJob {
 
 	private Path file;
 	private boolean isLastInQueue;
-	private NLPSentence sentence;
+	private List<NLPSentence> sentences;
 	
 	
 	public ParseJob(Path file) {
 		this.file = file;
+		this.sentences = new ArrayList<>();
 	}
 	
 	public ParseJob(String file) {
@@ -38,19 +39,14 @@ public class ParseJob {
 		return file.getFileName().toString();
 	}
 
-	public NLPSentence getSentence() {
-		return sentence;
+	public List<NLPSentence> getSentences() {
+		return sentences;
+	}
+	
+	public void addSentence(NLPSentence sentence) {
+		sentences.add(sentence);
 	}
 
-	public void setSentence(NLPSentence sentence) {
-		this.sentence = sentence;
-	}
-	
-	public String getParsedFilename() {
-		String outfilename = file.getFileName().toString().replace(".txt", "");
-		return outfilename+"/"+outfilename+"_"+sentence.getNumber();
-	}
-	
 	public String getParentDir() {
 		return file.getParent().getFileName().toString()+"/";
 	}

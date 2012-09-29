@@ -54,28 +54,32 @@ public class DependencyParser extends Thread{
 		try {
 			out.put("filename", posfile.getFilename());
 
-			NLPSentence sentence = posfile.getSentence();
-			String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
+			JSONArray jsonSentences = new JSONArray();
+			for (NLPSentence sentence : posfile.getSentences()) {
+				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
 
-			JSONObject jsonSentence = sentence.toJson();
-			JSONArray jsonTokens = new JSONArray();
-			for (String parsedToken : parsedSentences) {
-				String[] token = parsedToken.split("\t");
+				JSONObject jsonSentence = sentence.toJson();
+				JSONArray jsonTokens = new JSONArray();
+				for (String parsedToken : parsedSentences) {
+					String[] token = parsedToken.split("\t");
 
-				JSONObject jsonToken = new JSONObject();
-				jsonToken.put("id", token[0]);
-				jsonToken.put("word", token[1]);
-				jsonToken.put("pos", token[4]);
-				jsonToken.put("rel", token[6]);
-				jsonToken.put("deprel", token[7]);
-				jsonTokens.put(jsonToken);
+					JSONObject jsonToken = new JSONObject();
+					jsonToken.put("id", token[0]);
+					jsonToken.put("word", token[1]);
+					jsonToken.put("pos", token[4]);
+					jsonToken.put("rel", token[6]);
+					jsonToken.put("deprel", token[7]);
+					jsonTokens.put(jsonToken);
+				}
+				jsonSentence.put("tokens", jsonTokens);
+				jsonSentences.put(jsonSentence);
 			}
-			jsonSentence.put("tokens", jsonTokens);
-			out.put("sentence", jsonSentence);
+
+			out.put("sentences", jsonSentences);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		Fileutils.writeToFile(parsedFilesDir+posfile.getParentDir()+posfile.getParsedFilename(), out.toString());
+		Fileutils.writeToFile(parsedFilesDir+posfile.getParentDir()+posfile.getFilename(), out.toString());
 	}
 }

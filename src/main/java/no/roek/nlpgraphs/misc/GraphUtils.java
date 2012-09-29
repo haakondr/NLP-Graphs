@@ -66,36 +66,42 @@ public class GraphUtils {
 	}
 
 
-//	public static List<Graph> getGraphsFromFile(String filename) {
-//		List<Graph> graphs = new ArrayList<>();
-//		try {
-//			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
-//
-//			JsonParser jsonParser = new JsonParser();
-//			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-//			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-//				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
-//			}
-//
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//
-//		return graphs;
-//	}
-
-	public static Graph getGraphFromFile(String filename) {
+	public static List<Graph> getGraphsFromFile(String filename) {
+		List<Graph> graphs = new ArrayList<>();
 		try {
 			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+
 			JsonParser jsonParser = new JsonParser();
-			JsonObject jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
-			return parseGraph(jsonSentence, filename);
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+			}
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return null;
 		}
-		
-		return null;
+
+		return graphs;
+	}
+
+//	public static Graph getGraphFromFile(String filename) {
+//		try {
+//			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+//			JsonParser jsonParser = new JsonParser();
+//			JsonObject jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
+//			return parseGraph(jsonSentence, filename);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return null;
+//	}
+	
+	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		//TODO: do something if outofboundsexception? this SHOULD work, given the parsed files exist.. could parse live in such cases
+		List<Graph> graphs = getGraphsFromFile(filename);
+		return graphs.get(sentenceNumber+1);
 	}
 	
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
