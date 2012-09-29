@@ -59,7 +59,7 @@ public class App {
 
 		for (int i = 0; i < trainChunks.length; i++) {
 			j++;
-			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i);
+			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i]);
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
