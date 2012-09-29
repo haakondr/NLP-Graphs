@@ -65,8 +65,8 @@ public class PlagiarismWorker extends Thread {
 		
 		for(TextPair pair : job.getTextPairs()) {
 			//TODO: if parsed file does not exist, parse the file and print info to user that file does not exist.
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename());
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename());
+			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
+			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
 			
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();

@@ -45,13 +45,10 @@ public class PosTagProducer extends Thread {
 			try {
 				for (File file : files) {
 					file.getParentFile().mkdirs();
-					
-					List<ParseJob> jobs = tagFile(file);
-					for (ParseJob parseJob : jobs) {
-						queue.put(parseJob);
-					}
-					jobs = null;
-					progressPrinter.printProgressbar();
+
+					ParseJob parseJob = tagFile(file);
+					queue.put(parseJob);
+//					progressPrinter.printProgressbar();
 				}
 
 				for (int i = 0; i < 100; i++) {
@@ -79,16 +76,14 @@ public class PosTagProducer extends Thread {
 		return temp.toArray(new String[0]);
 	}
 
-	public List<ParseJob> tagFile(File file) {
-		List<ParseJob> parseJobs = new ArrayList<>();
+	public ParseJob tagFile(File file) {
+		ParseJob parseJob = new ParseJob(file.toPath());
 
 		for (NLPSentence sentence : SentenceUtils.getSentences(file.toString())) {
-			ParseJob parseJob = new ParseJob(file.toPath());
 			sentence.setPostags(getPosTagString(sentence));
-			parseJob.setSentence(sentence);
-			parseJobs.add(parseJob);
+			parseJob.addSentence(sentence);
 		} 
 
-		return parseJobs;
+		return parseJob;
 	}
 }
