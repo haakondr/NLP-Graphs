@@ -70,15 +70,12 @@ public class App {
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
 		
-		File[] testFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
-		File[] trainFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
+		File[] testFiles = Fileutils.getUnparsedFiles(dataDir, parsedFilesDir);
 		
-		
-		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
-		File[][] trainChunks = Fileutils.getChunks(trainFiles, posThreads / 2);
-		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length + trainFiles.length);
+		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads);
+		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length);
 
-		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads, with "+testFiles.length+" testfiles and "+trainFiles.length+" trainfiles");
+		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads, with "+testFiles.length+" files");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		int j = 0;
@@ -88,14 +85,6 @@ public class App {
 			produer.setName("POSTagProducer-"+j);
 			produer.start();
 		}
-
-		for (int i = 0; i < trainChunks.length; i++) {
-			j++;
-			PosTagProducer produer = new PosTagProducer(queue, trainChunks[i]);
-			produer.setName("POSTagProducer-"+j);
-			produer.start();
-		}
-
 
 		int maltThreads = ConfigService.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
