@@ -71,7 +71,7 @@ public class App {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
 		
 		File[] testFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
-		File[] trainFiles = Fileutils.getFiles(dataDir+testDir);
+		File[] trainFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
 		
 		
 		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
