@@ -82,7 +82,6 @@ public class Fileutils {
 		List<File> out = new ArrayList<File>();
 		for (File file : files) {
 			File outFile = new File(outDir+Paths.get(dir).relativize(file.toPath()));
-			System.out.println("outfile: "+outFile.toString());
 			if(!outFile.exists()) {
 				out.add(file);
 			}
