@@ -41,6 +41,7 @@ public class DependencyParser extends Thread{
 				ParseJob job = queue.take();
 				if(job.isLastInQueue()) {
 					running = false;
+					System.out.println("Stopping "+Thread.currentThread().getName()+" because all files are (should be) parsed.");
 					break;
 				}
 				consume(job);

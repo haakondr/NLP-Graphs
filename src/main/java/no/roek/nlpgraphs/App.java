@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
@@ -22,12 +22,13 @@ import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
 public class App {
 
-	private static String trainDir, testDir, dataDir;
+	private static String trainDir, testDir, dataDir, parsedFilesDir;
 
 	public static void main(String[] args) throws InterruptedException {
 		dataDir = ConfigService.getDataDir();
 		trainDir = ConfigService.getTrainDir();
 		testDir = ConfigService.getTestDir();
+		parsedFilesDir = ConfigService.getParsedFilesDir();
 
 		if(shouldPreprocess()) {
 			System.out.println("Starting preprocessing");
@@ -39,7 +40,7 @@ public class App {
 	}
 
 	public static boolean shouldPreprocess() {
-		System.out.println("Would you like to preprocess the data first? [yes/no/exit]");
+		System.out.println("Would you like to preprocess the data first? This should be done on first run. [yes/no/exit]");
 		BufferedReader bi = new BufferedReader(new InputStreamReader(System.in));
 		String line;
 		try {
@@ -68,9 +69,10 @@ public class App {
 
 	public static void preprocess() {
 		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		File[] testFiles = Fileutils.getFiles(dataDir+testDir);
-		File[] trainFiles = Fileutils.getFiles(dataDir+trainDir);
-
+		
+		File[] testFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
+		File[] trainFiles = Fileutils.getFiles(dataDir+testDir);
+		
 		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
 		File[][] trainChunks = Fileutils.getChunks(trainFiles, posThreads / 2);
 		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length + trainFiles.length);

@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.document.TextPair;

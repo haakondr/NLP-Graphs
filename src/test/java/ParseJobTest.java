@@ -1,8 +1,7 @@
 import static org.junit.Assert.assertEquals;
+import no.roek.nlpgraphs.concurrency.ParseJob;
 
 import org.junit.Test;
-
-import no.roek.nlpgraphs.concurrency.ParseJob;
 
 
 public class ParseJobTest {

@@ -9,16 +9,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-
-
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 public class GraphUtils {
 

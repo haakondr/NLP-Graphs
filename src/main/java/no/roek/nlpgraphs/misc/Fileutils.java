@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import no.roek.nlpgraphs.document.DocumentFile;
-
 
 public class Fileutils {
 
@@ -57,12 +55,12 @@ public class Fileutils {
 		return Paths.get(dir).toFile().listFiles();
 	}
 
-	public static List<DocumentFile> getFileList(Path dir, Path baseDir) {
-		List<DocumentFile> tasks = new ArrayList<DocumentFile>();
+	public static List<File> getFileList(Path dir, Path baseDir) {
+		List<File> tasks = new ArrayList<File>();
 
 		for (File file : getFiles(dir)) {
 			if(file.isFile() && file.getName().endsWith(".txt")) {
-				tasks.add(new DocumentFile(file.toPath(), baseDir));
+				tasks.add(file);
 			}else if(file.isDirectory()) {
 				tasks.addAll(getFileList(file.toPath(), baseDir));
 			}
@@ -70,26 +68,26 @@ public class Fileutils {
 		return tasks;
 	}
 
-	public static DocumentFile[] getFileList(String dir) {
+	public static File[] getFileList(String dir) {
 		return getFileList(Paths.get(dir));
 	}
 	
-	public static DocumentFile[] getFileList(Path dir) {
-		return getFileList(dir, dir).toArray(new DocumentFile[0]);
+	public static File[] getFileList(Path dir) {
+		return getFileList(dir, dir).toArray(new File[0]);
 	}
 
 
-	public static DocumentFile[] getUnparsedFiles(Path dir, String outDir) {
-		DocumentFile[] files = getFileList(dir);
-		List<DocumentFile> out = new ArrayList<DocumentFile>();
-		for (DocumentFile file : files) {
-			File outFile = new File(outDir+file.getRelPath());
+	public static File[] getUnparsedFiles(String dir, String outDir) {
+		File[] files = getFileList(dir);
+		List<File> out = new ArrayList<File>();
+		for (File file : files) {
+			File outFile = new File(outDir+file.toPath().relativize(Paths.get(dir)));
 			if(!outFile.exists()) {
 				out.add(file);
 			}
 		}
 
-		return out.toArray(new DocumentFile[0]);
+		return out.toArray(new File[0]);
 	}
 
 	public static File[][] getChunks(File[] files, int n) {

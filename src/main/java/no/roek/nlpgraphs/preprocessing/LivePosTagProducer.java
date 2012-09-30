@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.document.DocumentFile;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
-import no.roek.nlpgraphs.misc.SentenceUtils;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 

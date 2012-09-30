@@ -6,10 +6,8 @@ import java.util.List;
 
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
-import org.joda.time.chrono.IslamicChronology;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import edu.stanford.nlp.ling.Word;
 

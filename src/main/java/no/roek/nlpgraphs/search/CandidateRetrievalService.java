@@ -1,6 +1,7 @@
 package no.roek.nlpgraphs.search;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.roek.nlpgraphs.document.DocumentFile;
+import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -36,7 +37,7 @@ public class CandidateRetrievalService {
 	private Directory index;
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
-	private DocumentFile[] documents;
+	private File[] documents;
 	private StandardAnalyzer analyzer;
 	private static final String INDEX_DIR = "lucene/";
 	private Map<String, Integer> documentDict = new HashMap<>();
@@ -55,14 +56,10 @@ public class CandidateRetrievalService {
 		writer = new IndexWriter(index, indexWriterConfig);
 		documents = Fileutils.getFileList(dir);
 		int i = 0;
-		for (DocumentFile file: documents) {
-			Document doc = getDocument(file.getPath());
+		for (File file: documents) {
+			Document doc = getDocument(file.toPath());
 			writer.addDocument(doc);
 			this.documentDict.put(doc.get("filename"), i);
-			if(documentDict.get(file.getRelPath().toString()) == null) {
-				System.out.println(file.getRelPath().toString());
-			}
-			
 			i++;
 		}
 		writer.close();
@@ -75,33 +72,6 @@ public class CandidateRetrievalService {
 		return doc;
 	}
 
-//	public List<String> getSimilarDocuments(String filename, int recall) throws IOException {
-//		String queryText = Fileutils.getText(Paths.get(filename));
-//		IndexReader ir = IndexReader.open(index);
-//		IndexSearcher is = new IndexSearcher(ir);
-//		List<String> simDocs = new ArrayList<String>();
-//
-//		TopScoreDocCollector collector = TopScoreDocCollector.create(recall, true);
-//		Query query;
-//		try {
-//			query = new QueryParser(Version.LUCENE_36, "text", analyzer).parse(QueryParser.escape(queryText));
-//			is.search(query, collector);
-//			ScoreDoc[] hits = collector.topDocs().scoreDocs;
-//
-//
-//			for (ScoreDoc scoreDoc : hits) {
-//				Document doc = is.doc(scoreDoc.doc);
-//				simDocs.add(doc.get("filename"));
-//			}
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		return simDocs;
-//	}
-
-
 		public List<String> getSimilarDocuments(String filename, int recall) throws CorruptIndexException, IOException {
 			IndexReader ir = IndexReader.open(index);
 			IndexSearcher is = new IndexSearcher(ir);
@@ -110,9 +80,10 @@ public class CandidateRetrievalService {
 			mlt.setFieldNames(new String[] {"text"});
 			Reader reader = new BufferedReader(new FileReader(filename));
 			Query query = mlt.like(reader, "text");
-			
+		
 			ScoreDoc[] hits = is.search(query, recall).scoreDocs;
-	
+			is.close();
+			
 			List<String> simDocs = new ArrayList<String>();
 			for (ScoreDoc scoreDoc : hits) {
 				Document doc = is.doc(scoreDoc.doc);
