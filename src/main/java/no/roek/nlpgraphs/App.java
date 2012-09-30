@@ -73,11 +73,12 @@ public class App {
 		File[] testFiles = Fileutils.getUnparsedFiles(dataDir+testDir, parsedFilesDir);
 		File[] trainFiles = Fileutils.getFiles(dataDir+testDir);
 		
+		
 		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads / 2);
 		File[][] trainChunks = Fileutils.getChunks(trainFiles, posThreads / 2);
 		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length + trainFiles.length);
 
-		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads");
+		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads, with "+testFiles.length+" testfiles and "+trainFiles.length+" trainfiles");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		int j = 0;
