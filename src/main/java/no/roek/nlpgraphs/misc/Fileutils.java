@@ -79,6 +79,7 @@ public class Fileutils {
 
 	public static File[] getUnparsedFiles(String dir, String outDir) {
 		File[] files = getFileList(dir);
+		System.out.println("files in dir "+dir+ " = "+files.length);
 		List<File> out = new ArrayList<File>();
 		for (File file : files) {
 			File outFile = new File(outDir+file.toPath().relativize(Paths.get(dir)));
