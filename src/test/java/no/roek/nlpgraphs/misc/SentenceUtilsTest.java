@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.search.SentenceUtils;
 
 import org.junit.Test;
 

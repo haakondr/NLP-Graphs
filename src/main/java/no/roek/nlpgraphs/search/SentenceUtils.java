@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.misc;
+package no.roek.nlpgraphs.search;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

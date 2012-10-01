@@ -8,7 +8,7 @@ import java.util.List;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.SentenceUtils;
+import no.roek.nlpgraphs.search.SentenceUtils;
 
 import org.junit.Test;
 

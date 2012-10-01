@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.misc.SentenceUtils;
+import no.roek.nlpgraphs.search.SentenceUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -15,6 +15,7 @@ import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.misc.ProgressPrinter;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -25,11 +26,13 @@ public class PlagiarismWorker extends Thread {
 	private BlockingQueue<PlagiarismJob> queue;
 	private String resultsDir;
 	private double plagiarismThreshold;
+	private ProgressPrinter progressPrinter;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue) {
+	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ProgressPrinter progressPrinter) {
 		this.queue = queue;
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
+		this.progressPrinter = progressPrinter;
 	}
 
 	@Override
@@ -42,11 +45,8 @@ public class PlagiarismWorker extends Thread {
 					running = false;
 				}else {
 					List<PlagiarismReference> plagReferences = findPlagiarism(job);
-					System.out.println("done plagiarism search for file "+job.getFilename());
-					for (PlagiarismReference plagiarismReference : plagReferences) {
-						System.out.println("Found plagiarism in files "+ plagiarismReference.getSourceReference());
-					}
 					writeResults(job.getFile().getFileName().toString(), plagReferences);
+					progressPrinter.printProgressbar();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -62,7 +62,6 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		
 		for(TextPair pair : job.getTextPairs()) {
-			//TODO: if parsed file does not exist, parse the file and print info to user that file does not exist.
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
 			
@@ -75,18 +74,6 @@ public class PlagiarismWorker extends Thread {
 		
 		return plagReferences;
 	}
-//	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
-//		List<PlagiarismReference> plagReferences = new ArrayList<>();
-//
-//		for(GraphPair pair : job.getGraphPairs()) {
-//			GraphEditDistance ged = new GraphEditDistance(pair.getSuspiciousGraph(), pair.getSourceGraph());
-//			if(ged.getDistance() < plagiarismThreshold) {
-//				plagReferences.add(getPlagiarismReference(pair));
-//			}
-//		}
-//
-//		return plagReferences;
-//	}
 
 	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity) {
 		NLPSentence test = pair.getTestSentence();

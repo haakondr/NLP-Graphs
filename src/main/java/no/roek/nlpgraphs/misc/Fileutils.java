@@ -54,6 +54,10 @@ public class Fileutils {
 	public static File[] getFiles(String dir) {
 		return Paths.get(dir).toFile().listFiles();
 	}
+	
+	public static int getFileCount(String dir) {
+		return new File(dir).list().length;
+	}
 
 	public static List<File> getFileList(Path dir, Path baseDir) {
 		List<File> tasks = new ArrayList<File>();

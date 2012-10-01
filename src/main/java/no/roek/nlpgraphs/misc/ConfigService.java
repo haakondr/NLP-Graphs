@@ -69,4 +69,12 @@ public class ConfigService {
 	public static int getMaltParserThreadCount() {
 		return Integer.parseInt(getProperty("MALTPARSER_THREADS"));
 	}
+	
+	public static int getPlagiarismThreads() {
+		return Integer.parseInt(getProperty("PLAGIARISM_SEARCHER_THREADS"));
+	}
+	
+	public static int getSentenceRetrievalThreads() {
+		return Integer.parseInt(getProperty("SENTENCE_RETRIEVAL_THREADS"));
+	}
 }
