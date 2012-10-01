@@ -38,15 +38,16 @@ public class DependencyParser extends Thread{
 		boolean running = true;
 		while(running) {
 			try {
-				ParseJob job = queue.take();
-				if(job.isLastInQueue()) {
+				if(progressPrinter.isDone()) {
 					running = false;
-					System.out.println("Stopping "+Thread.currentThread().getName()+" because all files are (should be) parsed.");
+					System.out.println("Stopping "+Thread.currentThread().getName()+" because all files are parsed.");
 					break;
 				}
+				
+				ParseJob job = queue.take();
 				ParseUtils.dependencyParse(job, parsedFilesDir, maltService);
+				
 				progressPrinter.printProgressbar();
-
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
 				e.printStackTrace();
 				running = false;

@@ -31,4 +31,8 @@ public class ProgressPrinter {
 	    bar.append("]   " + percent + "%     files done: "+current+"/"+total);
 	    System.out.print("\r" + bar.toString());
 	}
+	
+	public synchronized boolean isDone() {
+		return current >= total;
+	}
 }
