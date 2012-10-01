@@ -96,7 +96,7 @@ public class App {
 
 	public static void postProcess() {
 		BlockingQueue<SentenceRetrievalJob> documentRetrievalQueue = new LinkedBlockingQueue<>(10);
-		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir);
+		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
 		
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		
@@ -111,32 +111,4 @@ public class App {
 			new PlagiarismWorker(plagQueue, progressPrinter).start();
 		}
 	}
-	
-//	public static void postProcess() {
-//		//TODO: rewrite so parsed data is retrieved from file
-//
-//		BlockingQueue<PlagiarismJob> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
-//		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
-//
-//		BlockingQueue<PlagiarismJob> posTagQueue = new LinkedBlockingQueue<>(100);
-//		for (int i = 0; i < 2; i++) {
-//			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
-//		}
-//
-//		BlockingQueue<PlagiarismJob> parseQueue  = new LinkedBlockingQueue<>(100);
-//		for (int i = 0; i < 7; i++) {
-//			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
-//		}
-//
-//		BlockingQueue<PlagiarismJob> distQueue = new LinkedBlockingQueue<>(100);
-//		for (int i = 0; i < 7; i++) {
-//			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
-//		}
-//
-//		for (int i = 0; i < 7; i++) {
-//			new PlagiarismWorker(distQueue).start();
-//		}
-//		//TODO: print ut candidate retrieval success i run
-//		//TODO: append results til en log istedenfor å skrive over
-//	}
 }
