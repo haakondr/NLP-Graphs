@@ -9,13 +9,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
+import no.roek.nlpgraphs.concurrency.SentenceRetrievalJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
-import no.roek.nlpgraphs.preprocessing.LiveDependencyParser;
-import no.roek.nlpgraphs.preprocessing.LivePosTagProducer;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 import no.roek.nlpgraphs.search.PerfectDocumentRetrievalWorker;
 import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
@@ -96,30 +95,48 @@ public class App {
 	}
 
 	public static void postProcess() {
-		//TODO: rewrite so parsed data is retrieved from file
-
-		BlockingQueue<PlagiarismJob> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
-		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
-
-		BlockingQueue<PlagiarismJob> posTagQueue = new LinkedBlockingQueue<>(100);
-		for (int i = 0; i < 2; i++) {
-			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
+		BlockingQueue<SentenceRetrievalJob> documentRetrievalQueue = new LinkedBlockingQueue<>(10);
+		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir);
+		
+		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
+		
+		int sentenceRetrievalThreads = ConfigService.getSentenceRetrievalThreads();
+		for (int i = 0; i < sentenceRetrievalThreads ; i++) {
+			new SentenceRetrievalWorker(documentRetrievalQueue, plagQueue).start();
 		}
-
-		BlockingQueue<PlagiarismJob> parseQueue  = new LinkedBlockingQueue<>(100);
-		for (int i = 0; i < 7; i++) {
-			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
+		
+		ProgressPrinter progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
+		int plagThreads = ConfigService.getPlagiarismThreads();
+		for (int i = 0; i < plagThreads; i++) {
+			new PlagiarismWorker(plagQueue, progressPrinter).start();
 		}
-
-		BlockingQueue<PlagiarismJob> distQueue = new LinkedBlockingQueue<>(100);
-		for (int i = 0; i < 7; i++) {
-			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
-		}
-
-		for (int i = 0; i < 7; i++) {
-			new PlagiarismWorker(distQueue).start();
-		}
-		//TODO: print ut candidate retrieval success i run
-		//TODO: append results til en log istedenfor å skrive over
 	}
+	
+//	public static void postProcess() {
+//		//TODO: rewrite so parsed data is retrieved from file
+//
+//		BlockingQueue<PlagiarismJob> documentRetrievalQueue = new LinkedBlockingQueue<>(100);
+//		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
+//
+//		BlockingQueue<PlagiarismJob> posTagQueue = new LinkedBlockingQueue<>(100);
+//		for (int i = 0; i < 2; i++) {
+//			new SentenceRetrievalWorker(documentRetrievalQueue, posTagQueue).start();
+//		}
+//
+//		BlockingQueue<PlagiarismJob> parseQueue  = new LinkedBlockingQueue<>(100);
+//		for (int i = 0; i < 7; i++) {
+//			new LivePosTagProducer(posTagQueue, parseQueue,  "english-left3words-distsim.tagger").start();
+//		}
+//
+//		BlockingQueue<PlagiarismJob> distQueue = new LinkedBlockingQueue<>(100);
+//		for (int i = 0; i < 7; i++) {
+//			new LiveDependencyParser(parseQueue, distQueue, "-c engmalt.linear-1.7.mco -m parse -w . -lfi parser.log").start();
+//		}
+//
+//		for (int i = 0; i < 7; i++) {
+//			new PlagiarismWorker(distQueue).start();
+//		}
+//		//TODO: print ut candidate retrieval success i run
+//		//TODO: append results til en log istedenfor å skrive over
+//	}
 }

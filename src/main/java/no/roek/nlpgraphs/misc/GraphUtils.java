@@ -13,11 +13,14 @@ import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.preprocessing.ParseUtils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class GraphUtils {
 
@@ -84,25 +87,23 @@ public class GraphUtils {
 		return graphs;
 	}
 
-//	public static Graph getGraphFromFile(String filename) {
-//		try {
-//			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
-//			JsonParser jsonParser = new JsonParser();
-//			JsonObject jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
-//			return parseGraph(jsonSentence, filename);
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return null;
-//	}
-	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
-		//TODO: do something if outofboundsexception? this SHOULD work, given the parsed files exist.. could parse live in such cases
 		List<Graph> graphs = getGraphsFromFile(filename);
-		return graphs.get(sentenceNumber+1);
+
+		Graph graph = graphs.get(sentenceNumber+1);
+		if(graph.getSentenceNumber() == sentenceNumber) {
+			return graph;
+		}else {
+			for (Graph temp : graphs) {
+				if(graph.getSentenceNumber() == sentenceNumber) {
+					return temp;
+				}
+			}
+			System.out.println("Could not find sentence "+sentenceNumber+" in parsed file "+filename);
+			return null;
+		}
 	}
-	
+
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
 		Graph graph = new Graph(filename);
 		graph.setLength(jsonGraph.get("length").getAsInt());

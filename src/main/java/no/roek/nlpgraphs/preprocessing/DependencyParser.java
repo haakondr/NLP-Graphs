@@ -44,7 +44,7 @@ public class DependencyParser extends Thread{
 					System.out.println("Stopping "+Thread.currentThread().getName()+" because all files are (should be) parsed.");
 					break;
 				}
-				consume(job);
+				ParseUtils.dependencyParse(job, parsedFilesDir, maltService);
 				progressPrinter.printProgressbar();
 
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
@@ -53,39 +53,5 @@ public class DependencyParser extends Thread{
 			}
 		}
 
-	}
-
-	public void consume(ParseJob posfile) throws MaltChainedException, NullPointerException {
-		JSONObject out = new JSONObject();
-		try {
-			out.put("filename", posfile.getFilename());
-
-			JSONArray jsonSentences = new JSONArray();
-			for (NLPSentence sentence : posfile.getSentences()) {
-				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
-
-				JSONObject jsonSentence = sentence.toJson();
-				JSONArray jsonTokens = new JSONArray();
-				for (String parsedToken : parsedSentences) {
-					String[] token = parsedToken.split("\t");
-
-					JSONObject jsonToken = new JSONObject();
-					jsonToken.put("id", token[0]);
-					jsonToken.put("word", token[1]);
-					jsonToken.put("pos", token[4]);
-					jsonToken.put("rel", token[6]);
-					jsonToken.put("deprel", token[7]);
-					jsonTokens.put(jsonToken);
-				}
-				jsonSentence.put("tokens", jsonTokens);
-				jsonSentences.put(jsonSentence);
-			}
-
-			out.put("sentences", jsonSentences);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		Fileutils.writeToFile(parsedFilesDir+posfile.getParentDir()+posfile.getFilename(), out.toString());
 	}
 }
