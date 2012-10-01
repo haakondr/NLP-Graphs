@@ -27,12 +27,16 @@ public class PlagiarismWorker extends Thread {
 	private String resultsDir;
 	private double plagiarismThreshold;
 	private ProgressPrinter progressPrinter;
+	private String parsedFilesDir, testDir, trainDir;
 
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ProgressPrinter progressPrinter) {
 		this.queue = queue;
 		this.resultsDir = ConfigService.getResultsDir();
 		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
 		this.progressPrinter = progressPrinter;
+		this.parsedFilesDir = ConfigService.getParsedFilesDir();
+		this.testDir = ConfigService.getTestDir();
+		this.trainDir = ConfigService.getTrainDir();
 	}
 
 	@Override
@@ -62,8 +66,8 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		
 		for(TextPair pair : job.getTextPairs()) {
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
+			Graph test = GraphUtils.getGraphFromFile(parsedFilesDir+testDir+pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
+			Graph train = GraphUtils.getGraphFromFile(parsedFilesDir+trainDir+pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
 			
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
