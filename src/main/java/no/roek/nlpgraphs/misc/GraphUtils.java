@@ -96,7 +96,7 @@ public class GraphUtils {
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
 			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-				if(sentence.getAsJsonObject().get("sentenceNumber").equals(Integer.toString(sentenceNumber))) {
+				if(sentence.getAsJsonObject().get("sentenceNumber").getAsInt() == sentenceNumber) {
 					return parseGraph(sentence.getAsJsonObject(), filename);
 				}
 			}
