@@ -68,15 +68,35 @@ public class GraphUtils {
 	}
 
 
-	public static List<Graph> getGraphsFromFile(String filename) {
-		List<Graph> graphs = new ArrayList<>();
+	//	public static List<Graph> getGraphsFromFile(String filename) {
+	//		List<Graph> graphs = new ArrayList<>();
+	//		try {
+	//			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+	//
+	//			JsonParser jsonParser = new JsonParser();
+	//			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+	//			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+	//				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+	//			}
+	//
+	//		} catch (FileNotFoundException e) {
+	//			e.printStackTrace();
+	//			return null;
+	//		}
+	//
+	//		return graphs;
+	//	}
+
+	public static HashMap<Integer, Graph> getGraphsFromFile(String filename) {
+		HashMap<Integer, Graph> graphs = new HashMap<>();
 		try {
 			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
 			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+				Graph graph = parseGraph(sentence.getAsJsonObject(), filename);
+				graphs.put(graph.getSentenceNumber(), graph);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -88,20 +108,7 @@ public class GraphUtils {
 	}
 
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
-		List<Graph> graphs = getGraphsFromFile(filename);
-
-		Graph graph = graphs.get(sentenceNumber+1);
-		if(graph.getSentenceNumber() == sentenceNumber) {
-			return graph;
-		}else {
-			for (Graph temp : graphs) {
-				if(graph.getSentenceNumber() == sentenceNumber) {
-					return temp;
-				}
-			}
-			System.out.println("Could not find sentence "+sentenceNumber+" in parsed file "+filename);
-			return null;
-		}
+		return getGraphsFromFile(filename).get(sentenceNumber);
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
