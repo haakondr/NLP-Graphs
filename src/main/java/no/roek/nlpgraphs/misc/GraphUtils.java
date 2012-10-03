@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.misc;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +80,8 @@ public class GraphUtils {
 				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
 			}
 
-		} catch (FileNotFoundException e) {
+			jsonReader.close();
+		} catch (IOException  e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -100,7 +102,9 @@ public class GraphUtils {
 					return parseGraph(sentence.getAsJsonObject(), filename);
 				}
 			}
-		} catch (FileNotFoundException e) {
+			
+			jsonReader.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("Could not find sentence "+sentenceNumber+" in file "+filename);
