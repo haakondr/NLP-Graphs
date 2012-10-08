@@ -21,21 +21,25 @@ public class SentenceUtils {
 
 	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
 		List<TextPair> textPairs = new ArrayList<>();
-		
+
 		List<Graph> testGraphs = GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile);
 		List<Graph> trainGraphs = GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile);
-		
+
 		for(NLPSentence testSentence : getSentences(dataDir+testDir+testFile)) {
 			for(NLPSentence trainSentence : getSentences(dataDir+trainDir+trainFile)) {
-				if(isSimilar(testGraphs.get(testSentence.getNumber()-2), trainGraphs.get(trainSentence.getNumber()-2))) {
-					textPairs.add(new TextPair(testFile, trainFile, testSentence, trainSentence));
+				try{
+					if(isSimilar(testGraphs.get(testSentence.getNumber()-1), trainGraphs.get(trainSentence.getNumber()-1))) {
+						textPairs.add(new TextPair(testFile, trainFile, testSentence, trainSentence));
+					}
+				}catch (IndexOutOfBoundsException e) {
+					e.printStackTrace();
 				}
 			}
 		}
 
 		return textPairs;
 	}
-	
+
 
 	private static boolean isSimilar( Graph testGraph, Graph trainGraph) {
 		double similar = 0;
@@ -46,12 +50,12 @@ public class SentenceUtils {
 				n++;
 			}
 		}
-		
+
 		double similarity = similar / n;
-		
+
 		return similarity > 0.5;
 	}
-	
+
 	private static double getSim(List<String> attr1, List<String> attr2) {
 		double sim = 0;
 		for (int i = 0; i <attr1.size(); i++) {
@@ -59,13 +63,13 @@ public class SentenceUtils {
 				sim++;
 			}
 		}
-		
+
 		return sim / attr1.size(); 
 	}
-//	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
-//		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
-//		return cmp.getResult() > 0.06;
-//	}
+	//	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
+	//		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
+	//		return cmp.getResult() > 0.06;
+	//	}
 
 	public static List<NLPSentence> getSentences(String file) {
 		try {
@@ -98,7 +102,7 @@ public class SentenceUtils {
 						sentenceBuilder.append(" ");
 					}
 				}
-				
+
 
 				offset++;
 				if(isSentenceDelimiter(c)) {
@@ -119,7 +123,7 @@ public class SentenceUtils {
 					sentenceNumber++;
 					sentenceStart = offset +1;
 				}
-	
+
 			}
 			if(wordBuilder.toString().trim().length()>0) {
 				words.add(new Word(wordBuilder.toString()));
