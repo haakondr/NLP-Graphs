@@ -45,7 +45,7 @@ public class SentenceUtils {
 		}
 
 		double similarity = similar / (testGraph.getSize() + trainGraph.getSize());
-
+		System.out.println(testGraph.getFilename()+" - "+trainGraph.getFilename()+" similarity "+similar+" sentence size:" +(testGraph.getSize() + trainGraph.getSize()));
 		return similarity > 0.05;
 	}
 
