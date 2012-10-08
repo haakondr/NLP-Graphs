@@ -13,7 +13,7 @@ public class ProgressPrinter {
 		return (current * 100) / total;
 	}
 	
-	public synchronized void printProgressbar(){
+	public synchronized void printProgressbar(String text){
 		current++;
 		int percent = getPercent();
 		
@@ -28,8 +28,8 @@ public class ProgressPrinter {
 	            bar.append(" ");
 	        }
 	    }
-	    bar.append("]   " + percent + "%     files done: "+current+"/"+total);
-	    System.out.print("\r" + bar.toString());
+	    bar.append("]  " + percent + "% files done: "+current+"/"+total);
+	    System.out.print("\r" + bar.toString()+" | "+text);
 	}
 	
 	public synchronized boolean isDone() {
