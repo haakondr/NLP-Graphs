@@ -47,7 +47,7 @@ public class DependencyParser extends Thread{
 				ParseJob job = queue.take();
 				ParseUtils.dependencyParse(job, parsedFilesDir, maltService);
 				
-				progressPrinter.printProgressbar();
+				progressPrinter.printProgressbar("");
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
 				e.printStackTrace();
 				running = false;

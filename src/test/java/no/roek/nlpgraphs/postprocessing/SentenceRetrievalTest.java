@@ -17,12 +17,16 @@ public class SentenceRetrievalTest {
 
 	@Test
 	public void shouldRetreieveSentences() {
-		String susp = ConfigService.getDataDir()+ConfigService.getTestDir()+"suspicious-document00014.txt";
-		String source1 = ConfigService.getDataDir()+ConfigService.getTrainDir()+"source-document06087.txt";
-		String source2 = ConfigService.getDataDir()+ConfigService.getTrainDir()+"source-document04449.txt"; 
+		String dataDir = ConfigService.getDataDir();
+		String testDir = ConfigService.getTestDir();
+		String trainDir = ConfigService.getTrainDir();
+		String parsedDir = ConfigService.getParsedFilesDir();
+		String susp = "suspicious-document00014.txt";
+		String source1 = "source-document06087.txt";
+		String source2 = "source-document04449.txt"; 
 
-		List<TextPair> simSentences = SentenceUtils.getSimilarSentences(susp, source1);
-		List<TextPair> simSentences2 = SentenceUtils.getSimilarSentences(susp, source2);
+		List<TextPair> simSentences = SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, susp, source1);
+		List<TextPair> simSentences2 = SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, susp, source2);
 
 
 		String filename = Paths.get(susp).getFileName().toString();

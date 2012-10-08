@@ -11,6 +11,7 @@ import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 import no.roek.nlpgraphs.concurrency.ParseJob;

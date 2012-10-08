@@ -12,16 +12,22 @@ import java.util.List;
 import net.sourceforge.semantics.Compare;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.misc.GraphUtils;
 import edu.stanford.nlp.ling.Word;
 
 public class SentenceUtils {
 
-	public static List<TextPair> getSimilarSentences(String testFile, String trainFile) {
+	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
 		List<TextPair> textPairs = new ArrayList<>();
-
-		for(NLPSentence testSentence : getSentences(testFile)) {
-			for(NLPSentence trainSentence : getSentences(trainFile)) {
-				if(isSimilar(testSentence, trainSentence)) {
+		
+		List<Graph> testGraphs = GraphUtils.getGraphsFromFile(parsedDir+testFile);
+		List<Graph> trainGraphs = GraphUtils.getGraphsFromFile(parsedDir+trainFile);
+		
+		for(NLPSentence testSentence : getSentences(dataDir+testDir+testFile)) {
+			for(NLPSentence trainSentence : getSentences(dataDir+trainDir+trainFile)) {
+				if(isSimilar(testGraphs.get(testSentence.getNumber()-1), trainGraphs.get(trainSentence.getNumber()-1))) {
 					textPairs.add(new TextPair(testFile, trainFile, testSentence, trainSentence));
 				}
 			}
@@ -29,11 +35,37 @@ public class SentenceUtils {
 
 		return textPairs;
 	}
+	
 
-	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
-		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
-		return cmp.getResult() > 0.06;
+	private static boolean isSimilar( Graph testGraph, Graph trainGraph) {
+		double similar = 0;
+		double n = 0;
+		for(Node g1 : testGraph.getNodes()) {
+			for (Node g2: trainGraph.getNodes()) {
+				similar += getSim(g1.getAttributes(), g2.getAttributes());
+				n++;
+			}
+		}
+		
+		double similarity = similar / n;
+		
+		return similarity > 0.5;
 	}
+	
+	private static double getSim(List<String> attr1, List<String> attr2) {
+		double sim = 0;
+		for (int i = 0; i <attr1.size(); i++) {
+			if(attr1.get(i).equalsIgnoreCase(attr2.get(i))) {
+				sim++;
+			}
+		}
+		
+		return sim / attr1.size(); 
+	}
+//	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
+//		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
+//		return cmp.getResult() > 0.06;
+//	}
 
 	public static List<NLPSentence> getSentences(String file) {
 		try {
