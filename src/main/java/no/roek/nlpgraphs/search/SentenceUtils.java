@@ -45,7 +45,7 @@ public class SentenceUtils {
 		}
 
 		double similarity = similar / (testGraph.getSize() + trainGraph.getSize());
-		return similarity > 1;
+		return similarity > 2;
 	}
 
 	private static double getSim(List<String> attr1, List<String> attr2) {
