@@ -25,6 +25,7 @@ public class SentenceUtils {
 		for (Graph testGraph : GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile)) {
 			for (Graph trainGraph : GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile)) {
 				if(isSimilar(testGraph, trainGraph)) {
+					System.out.println(testGraph.getFilename()+" sentence"+testGraph.getSentenceNumber()+" is similar to "+trainGraph.getFilename()+" sentence"+trainGraph.getSentenceNumber());
 					textPairs.add(new TextPair(testFile, trainFile, testGraph.toSentence(), trainGraph.toSentence()));
 				}
 			}
