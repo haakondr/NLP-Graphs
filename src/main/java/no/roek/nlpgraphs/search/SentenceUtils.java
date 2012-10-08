@@ -27,7 +27,7 @@ public class SentenceUtils {
 		
 		for(NLPSentence testSentence : getSentences(dataDir+testDir+testFile)) {
 			for(NLPSentence trainSentence : getSentences(dataDir+trainDir+trainFile)) {
-				if(isSimilar(testGraphs.get(testSentence.getNumber()-1), trainGraphs.get(trainSentence.getNumber()-1))) {
+				if(isSimilar(testGraphs.get(testSentence.getNumber()-2), trainGraphs.get(trainSentence.getNumber()-2))) {
 					textPairs.add(new TextPair(testFile, trainFile, testSentence, trainSentence));
 				}
 			}
