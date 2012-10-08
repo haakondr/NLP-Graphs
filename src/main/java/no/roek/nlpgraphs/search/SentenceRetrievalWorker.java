@@ -47,7 +47,7 @@ public class SentenceRetrievalWorker extends Thread {
 		for (String simDoc : job.getSimilarDocs()) {
 			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), simDoc));
 		}
-
+		System.out.println(plagJob.getFilename()+" has "+plagJob.getTextPairs().size()+" similar sentences");
 		return plagJob;
 	}
 }
