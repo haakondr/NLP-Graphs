@@ -1,5 +1,6 @@
 package no.roek.nlpgraphs.search;
 
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
@@ -45,7 +46,8 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(SentenceRetrievalJob job) {
 		PlagiarismJob plagJob = new PlagiarismJob(job.getFile());
 		for (String simDoc : job.getSimilarDocs()) {
-			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), simDoc));
+			
+			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), Paths.get(simDoc).getFileName().toString()));
 		}
 		
 		return plagJob;
