@@ -66,8 +66,8 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		
 		for(TextPair pair : job.getTextPairs()) {
-			Graph test = GraphUtils.getGraphFromFile(parsedFilesDir+testDir+pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
-			Graph train = GraphUtils.getGraphFromFile(parsedFilesDir+trainDir+pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
+			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
+			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
 			
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
