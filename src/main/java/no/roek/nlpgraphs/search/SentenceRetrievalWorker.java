@@ -10,14 +10,16 @@ public class SentenceRetrievalWorker extends Thread {
 
 	private BlockingQueue<SentenceRetrievalJob> queue;
 	private BlockingQueue<PlagiarismJob> parseQueue;
-	private String trainDir, dataDir;
+	private String trainDir, testDir, dataDir, parsedDir;
 	
 
 	public SentenceRetrievalWorker(BlockingQueue<SentenceRetrievalJob> queue, BlockingQueue<PlagiarismJob> parseQueue) {
 		this.queue = queue;
 		this.parseQueue = parseQueue;
 		this.trainDir = ConfigService.getTrainDir();
+		this.testDir = ConfigService.getTestDir();
 		this.dataDir = ConfigService.getDataDir();
+		this.parsedDir = ConfigService.getParsedFilesDir();
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(SentenceRetrievalJob job) {
 		PlagiarismJob plagJob = new PlagiarismJob(job.getFile());
 		for (String simDoc : job.getSimilarDocs()) {
-			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(job.getFile().toString(), dataDir+trainDir+simDoc));
+			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), simDoc));
 		}
 
 		return plagJob;
