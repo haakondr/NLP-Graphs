@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.NLPSentence;
+
 public class Graph {
 
 	private String filename, originalText;
@@ -119,5 +121,9 @@ public class Graph {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+	
+	public NLPSentence toSentence() {
+		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
 	}
 }

@@ -22,17 +22,10 @@ public class SentenceUtils {
 	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
 		List<TextPair> textPairs = new ArrayList<>();
 
-		List<Graph> testGraphs = GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile);
-		List<Graph> trainGraphs = GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile);
-
-		for(NLPSentence testSentence : getSentences(dataDir+testDir+testFile)) {
-			for(NLPSentence trainSentence : getSentences(dataDir+trainDir+trainFile)) {
-				try{
-					if(isSimilar(testGraphs.get(testSentence.getNumber()-1), trainGraphs.get(trainSentence.getNumber()-1))) {
-						textPairs.add(new TextPair(testFile, trainFile, testSentence, trainSentence));
-					}
-				}catch (IndexOutOfBoundsException e) {
-					e.printStackTrace();
+		for (Graph testGraph : GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile)) {
+			for (Graph trainGraph : GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile)) {
+				if(isSimilar(testGraph, trainGraph)) {
+					textPairs.add(new TextPair(testFile, trainFile, testGraph.toSentence(), trainGraph.toSentence()));
 				}
 			}
 		}
