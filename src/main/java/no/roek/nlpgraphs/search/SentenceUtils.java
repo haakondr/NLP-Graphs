@@ -96,6 +96,8 @@ public class SentenceUtils {
 				sentenceNumber++;
 			}
 			reader.close();
+			in.close();
+			fstream.close();
 
 			return sentences;
 		}catch (IOException e) {

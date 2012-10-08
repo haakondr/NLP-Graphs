@@ -31,8 +31,6 @@ public class SentenceRetrievalTest {
 		PlagiarismReference ref3= new PlagiarismReference(filename, 9615, 235, "source-document04449.txt", 2717, 236);
 
 
-		System.out.println(simSentences.size());
-		System.out.println(simSentences2.size());
 		assertEquals(true, contains(ref1, simSentences));
 		assertEquals(true, contains(ref2, simSentences2));
 		assertEquals(true, contains(ref3, simSentences2));

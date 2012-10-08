@@ -21,8 +21,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
-
 public class GraphUtils {
 
 	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
@@ -79,8 +77,9 @@ public class GraphUtils {
 			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
 				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
 			}
-
+			
 			jsonReader.close();
+
 		} catch (IOException  e) {
 			e.printStackTrace();
 			return null;

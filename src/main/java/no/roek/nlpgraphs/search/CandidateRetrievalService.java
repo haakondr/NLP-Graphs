@@ -72,24 +72,24 @@ public class CandidateRetrievalService {
 		return doc;
 	}
 
-		public List<String> getSimilarDocuments(String filename, int recall) throws CorruptIndexException, IOException {
-			IndexReader ir = IndexReader.open(index);
-			IndexSearcher is = new IndexSearcher(ir);
-	
-			MoreLikeThis mlt = new MoreLikeThis(ir);
-			mlt.setFieldNames(new String[] {"text"});
-			Reader reader = new BufferedReader(new FileReader(filename));
-			Query query = mlt.like(reader, "text");
-		
-			ScoreDoc[] hits = is.search(query, recall).scoreDocs;
-			is.close();
-			
-			List<String> simDocs = new ArrayList<String>();
-			for (ScoreDoc scoreDoc : hits) {
-				Document doc = is.doc(scoreDoc.doc);
-				simDocs.add(doc.get("filename"));
-			}
-	
-			return simDocs;
+	public List<String> getSimilarDocuments(String filename, int recall) throws CorruptIndexException, IOException {
+		IndexReader ir = IndexReader.open(index);
+		IndexSearcher is = new IndexSearcher(ir);
+
+		MoreLikeThis mlt = new MoreLikeThis(ir);
+		mlt.setFieldNames(new String[] {"text"});
+		Reader reader = new BufferedReader(new FileReader(filename));
+		Query query = mlt.like(reader, "text");
+
+		ScoreDoc[] hits = is.search(query, recall).scoreDocs;
+		is.close();
+
+		List<String> simDocs = new ArrayList<String>();
+		for (ScoreDoc scoreDoc : hits) {
+			Document doc = is.doc(scoreDoc.doc);
+			simDocs.add(doc.get("filename"));
 		}
+
+		return simDocs;
+	}
 }
