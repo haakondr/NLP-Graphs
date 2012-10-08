@@ -46,7 +46,7 @@ public class SentenceUtils {
 
 		double similarity = similar / n;
 
-		return similarity > 0.5;
+		return similarity > 0.3;
 	}
 
 	private static double getSim(List<String> attr1, List<String> attr2) {
