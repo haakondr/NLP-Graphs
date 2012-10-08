@@ -46,7 +46,6 @@ public class SentenceRetrievalWorker extends Thread {
 		PlagiarismJob plagJob = new PlagiarismJob(job.getFile());
 		for (String simDoc : job.getSimilarDocs()) {
 			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), simDoc));
-			System.out.println(plagJob.getFilename()+" has "+plagJob.getTextPairs().size()+" similar sentences with file "+simDoc);
 		}
 		
 		return plagJob;
