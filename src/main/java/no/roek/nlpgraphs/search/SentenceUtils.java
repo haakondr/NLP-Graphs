@@ -22,8 +22,8 @@ public class SentenceUtils {
 	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
 		List<TextPair> textPairs = new ArrayList<>();
 		
-		List<Graph> testGraphs = GraphUtils.getGraphsFromFile(parsedDir+testFile);
-		List<Graph> trainGraphs = GraphUtils.getGraphsFromFile(parsedDir+trainFile);
+		List<Graph> testGraphs = GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile);
+		List<Graph> trainGraphs = GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile);
 		
 		for(NLPSentence testSentence : getSentences(dataDir+testDir+testFile)) {
 			for(NLPSentence trainSentence : getSentences(dataDir+trainDir+trainFile)) {
