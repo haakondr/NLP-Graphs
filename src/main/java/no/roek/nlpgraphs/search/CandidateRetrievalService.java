@@ -45,12 +45,17 @@ public class CandidateRetrievalService {
 	public CandidateRetrievalService(Path dir) throws CorruptIndexException, IOException {
 		analyzer = new StandardAnalyzer(Version.LUCENE_36);
 		//TODO: create index only if it does not exist
-		createIndex(dir);
+		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
+		if(indexDir.exists()) {
+			index = new MMapDirectory(indexDir);
+		}else {
+			index = createIndex(dir);
+		}
 	}
 
-	public void createIndex(Path dir) throws CorruptIndexException, IOException {
+	public Directory createIndex(Path dir) throws CorruptIndexException, IOException {
 		Path temp = Paths.get(INDEX_DIR+dir.getFileName().toString());
-		index = new MMapDirectory(temp.toFile());
+		Directory newIndex = new MMapDirectory(temp.toFile());
 
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		writer = new IndexWriter(index, indexWriterConfig);
@@ -63,6 +68,8 @@ public class CandidateRetrievalService {
 			i++;
 		}
 		writer.close();
+		
+		return newIndex;
 	}
 
 	public Document getDocument(Path file) {
