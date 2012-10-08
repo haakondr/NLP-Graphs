@@ -45,6 +45,7 @@ public class PlagiarismWorker extends Thread {
 		while(running) {
 			try {
 				PlagiarismJob job = queue.take();
+				System.out.println(Thread.currentThread().getName()+" starting on new job: "+job.getFilename()+". Currently "+queue.size()+" in queue.");
 				if(job.isLastInQueue()) {
 					running = false;
 				}else {
