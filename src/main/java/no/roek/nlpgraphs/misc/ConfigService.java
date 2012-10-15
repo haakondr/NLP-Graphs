@@ -9,12 +9,9 @@ public class ConfigService {
 	
 	public static String getProperty(String property) {
 		Properties configFile = new Properties();
-		InputStream is;
-		try {
-			is = new FileInputStream("app.properties");
-
+		try (InputStream is = new FileInputStream("app.properties")) {
 			configFile.load(is);
-
+			is.close();
 			return configFile.getProperty(property);
 		} catch (IOException e) {
 			e.printStackTrace();
