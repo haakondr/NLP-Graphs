@@ -17,10 +17,11 @@ public class SentenceRetrievalWorker extends Thread {
 	public SentenceRetrievalWorker(BlockingQueue<SentenceRetrievalJob> queue, BlockingQueue<PlagiarismJob> parseQueue) {
 		this.queue = queue;
 		this.parseQueue = parseQueue;
-		this.trainDir = ConfigService.getTrainDir();
-		this.testDir = ConfigService.getTestDir();
-		this.dataDir = ConfigService.getDataDir();
-		this.parsedDir = ConfigService.getParsedFilesDir();
+		ConfigService cs = new ConfigService();
+		this.trainDir = cs.getTrainDir();
+		this.testDir = cs.getTestDir();
+		this.dataDir = cs.getDataDir();
+		this.parsedDir = cs.getParsedFilesDir();
 	}
 
 	@Override

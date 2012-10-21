@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -21,13 +22,22 @@ import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
 public class App {
 
+//	private static String trainDir, testDir, dataDir, parsedFilesDir, maltParams;
+//	private static int posThreads, maltThreads;
 	private static String trainDir, testDir, dataDir, parsedFilesDir;
+	private static ConfigService cs;
 
 	public static void main(String[] args) throws InterruptedException {
-		dataDir = ConfigService.getDataDir();
-		trainDir = ConfigService.getTrainDir();
-		testDir = ConfigService.getTestDir();
-		parsedFilesDir = ConfigService.getParsedFilesDir();
+		cs = new ConfigService();
+		dataDir = cs.getDataDir();
+		trainDir = cs.getTrainDir();
+		testDir = cs.getTestDir();
+		parsedFilesDir = cs.getParsedFilesDir();
+//		posThreads = cs.getPOSTaggerThreadCount();
+//		maltThreads = cs.getMaltParserThreadCount();
+//		maltParams = cs.getMaltParams();
+//		
+//		cs.close();
 
 		if(shouldPreprocess()) {
 			System.out.println("Starting preprocessing");
@@ -67,14 +77,12 @@ public class App {
 
 
 	public static void preprocess() {
-		int posThreads = ConfigService.getPOSTaggerThreadCount();
-		
 		File[] testFiles = Fileutils.getUnparsedFiles(dataDir, parsedFilesDir);
 		
-		File[][] testChunks = Fileutils.getChunks(testFiles, posThreads);
+		File[][] testChunks = Fileutils.getChunks(testFiles, cs.getPOSTaggerThreadCount());
 		ProgressPrinter progressPrinter = new ProgressPrinter(testFiles.length);
 
-		System.out.println("preprocessing dir "+dataDir+" with "+posThreads+" pos tagger threads, with "+testFiles.length+" files");
+		System.out.println("preprocessing dir "+dataDir+" with "+cs.getPOSTaggerThreadCount()+" pos tagger threads, with "+testFiles.length+" files");
 		BlockingQueue<ParseJob> queue = new LinkedBlockingQueue<ParseJob>(20);
 
 		int j = 0;
@@ -85,10 +93,10 @@ public class App {
 			produer.start();
 		}
 
-		int maltThreads = ConfigService.getMaltParserThreadCount();
+		int maltThreads = cs.getMaltParserThreadCount();
 		System.out.println("preprocessing with "+maltThreads+" dependency parser threads");
 		for (int i = 0; i < maltThreads; i++) {
-			DependencyParser dependencyParser = new DependencyParser(queue, ConfigService.getMaltParams(), progressPrinter);
+			DependencyParser dependencyParser = new DependencyParser(queue, cs.getMaltParams(), progressPrinter);
 			dependencyParser.setName("DependencyParser-"+i);
 			dependencyParser.start();
 		}
@@ -96,17 +104,17 @@ public class App {
 
 	public static void postProcess() {
 		BlockingQueue<SentenceRetrievalJob> documentRetrievalQueue = new LinkedBlockingQueue<>(10);
-		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
+		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, cs.getTrainDir(), cs.getTrainDir(), cs.getTestDir()).start();
 		
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		
-		int sentenceRetrievalThreads = ConfigService.getSentenceRetrievalThreads();
+		int sentenceRetrievalThreads = cs.getSentenceRetrievalThreads();
 		for (int i = 0; i < sentenceRetrievalThreads ; i++) {
 			new SentenceRetrievalWorker(documentRetrievalQueue, plagQueue).start();
 		}
 		
 		ProgressPrinter progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
-		int plagThreads = ConfigService.getPlagiarismThreads();
+		int plagThreads = cs.getPlagiarismThreads();
 		for (int i = 0; i < plagThreads; i++) {
 			new PlagiarismWorker(plagQueue, progressPrinter).start();
 		}

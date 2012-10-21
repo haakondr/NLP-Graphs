@@ -17,9 +17,9 @@ public class PosTagProducer extends Thread {
 	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files){
 		this.queue = queue;
 		this.files = files;
-
+		ConfigService cs = new ConfigService();
 		try {
-			this.tagger = new MaxentTagger(ConfigService.getPOSTaggerParams());
+			this.tagger = new MaxentTagger(cs.getPOSTaggerParams());
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}

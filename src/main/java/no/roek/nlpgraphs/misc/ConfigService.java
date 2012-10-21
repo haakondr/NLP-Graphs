@@ -1,77 +1,94 @@
 package no.roek.nlpgraphs.misc;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class ConfigService {
-	
-	public static String getProperty(String property) {
-		Properties configFile = new Properties();
-		try (InputStream is = new FileInputStream("app.properties")) {
+
+	private Properties configFile;
+	private InputStream is;
+
+	public ConfigService() {
+		configFile = new Properties();
+		try{
+			is = new FileInputStream("app.properties");
 			configFile.load(is);
 			is.close();
-			return configFile.getProperty(property);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static HashMap<String, String> getProperties() {
+		Properties config = new Properties();
+		try(InputStream is = new FileInputStream("app.properties")) {
+			config.load(is);
+			is.close();
+			return new HashMap<String, String>((Map)config);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public static String getParsedFilesDir() {
-		return getProperty("PARSED_DIR");
-	}
-	
-	public static String getDataDir() {
-		return getProperty("DATA_DIR");
-	}
-	
-	public static String getTestDir() {
-		return getProperty("TEST_DIR");
-	}
-	
-	public static String getTrainDir() {
-		return getProperty("TRAIN_DIR");
-	}
-	
-	public static String getAnnotationsDir() {
-		return getProperty("ANNOTATIONS_DIR");
-	}
-	
-	public static String getResultsDir() {
-		return getProperty("RESULTS_DIR");
-	}
-	
-	public static int getDocumentRecall() {
-		return Integer.parseInt(getProperty("DOCUMENT_RECALL"));
+
+	public String getParsedFilesDir() {
+		return configFile.getProperty("PARSED_DIR");
 	}
 
-	public static int getPlagiarismThreshold() {
-		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
+	public String getDataDir() {
+		return configFile.getProperty("DATA_DIR");
 	}
-	
-	public static String getMaltParams() {
-		return getProperty("MALT_PARAMS");
+
+	public String getTestDir() {
+		return configFile.getProperty("TEST_DIR");
 	}
-	
-	public static String getPOSTaggerParams() {
-		return getProperty("POSTAGGER_PARAMS");
+
+	public String getTrainDir() {
+		return configFile.getProperty("TRAIN_DIR");
 	}
-	
-	public static int getPOSTaggerThreadCount() {
-		return Integer.parseInt(getProperty("POSTAGGER_THREADS"));
+
+	public String getAnnotationsDir() {
+		return configFile.getProperty("ANNOTATIONS_DIR");
 	}
-	
-	public static int getMaltParserThreadCount() {
-		return Integer.parseInt(getProperty("MALTPARSER_THREADS"));
+
+	public String getResultsDir() {
+		return configFile.getProperty("RESULTS_DIR");
 	}
-	
-	public static int getPlagiarismThreads() {
-		return Integer.parseInt(getProperty("PLAGIARISM_SEARCHER_THREADS"));
+
+	public int getDocumentRecall() {
+		return Integer.parseInt(configFile.getProperty("DOCUMENT_RECALL"));
 	}
-	
-	public static int getSentenceRetrievalThreads() {
-		return Integer.parseInt(getProperty("SENTENCE_RETRIEVAL_THREADS"));
+
+	public int getPlagiarismThreshold() {
+		return Integer.parseInt(configFile.getProperty("PLAGIARISM_THRESHOLD"));
+	}
+
+	public String getMaltParams() {
+		return configFile.getProperty("MALT_PARAMS");
+	}
+
+	public String getPOSTaggerParams() {
+		return configFile.getProperty("POSTAGGER_PARAMS");
+	}
+
+	public int getPOSTaggerThreadCount() {
+		return Integer.parseInt(configFile.getProperty("POSTAGGER_THREADS"));
+	}
+
+	public int getMaltParserThreadCount() {
+		return Integer.parseInt(configFile.getProperty("MALTPARSER_THREADS"));
+	}
+
+	public int getPlagiarismThreads() {
+		return Integer.parseInt(configFile.getProperty("PLAGIARISM_SEARCHER_THREADS"));
+	}
+
+	public int getSentenceRetrievalThreads() {
+		return Integer.parseInt(configFile.getProperty("SENTENCE_RETRIEVAL_THREADS"));
 	}
 }

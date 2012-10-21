@@ -22,7 +22,8 @@ public class DependencyParser extends Thread{
 	
 	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams, ProgressPrinter progressPrinter) {
 		this.queue = queue;
-		this.parsedFilesDir = ConfigService.getParsedFilesDir();
+		ConfigService cs = new ConfigService();
+		this.parsedFilesDir = cs.getParsedFilesDir();
 		this.progressPrinter = progressPrinter;
 		
 		try {

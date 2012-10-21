@@ -17,10 +17,11 @@ public class SentenceRetrievalTest {
 
 	@Test
 	public void shouldRetreieveSentences() {
-		String dataDir = ConfigService.getDataDir();
-		String testDir = ConfigService.getTestDir();
-		String trainDir = ConfigService.getTrainDir();
-		String parsedDir = ConfigService.getParsedFilesDir();
+		ConfigService cs = new ConfigService();
+		String dataDir = cs.getDataDir();
+		String testDir = cs.getTestDir();
+		String trainDir = cs.getTrainDir();
+		String parsedDir = cs.getParsedFilesDir();
 		String susp = "suspicious-document00014.txt";
 		String source1 = "source-document06087.txt";
 		String source2 = "source-document04449.txt"; 

@@ -27,16 +27,13 @@ public class PlagiarismWorker extends Thread {
 	private String resultsDir;
 	private double plagiarismThreshold;
 	private ProgressPrinter progressPrinter;
-	private String parsedFilesDir, testDir, trainDir;
 
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ProgressPrinter progressPrinter) {
 		this.queue = queue;
-		this.resultsDir = ConfigService.getResultsDir();
-		this.plagiarismThreshold = ConfigService.getPlagiarismThreshold();
+		ConfigService cs = new ConfigService();
+		this.resultsDir = cs.getResultsDir();
+		this.plagiarismThreshold = cs.getPlagiarismThreshold();
 		this.progressPrinter = progressPrinter;
-		this.parsedFilesDir = ConfigService.getParsedFilesDir();
-		this.testDir = ConfigService.getTestDir();
-		this.trainDir = ConfigService.getTrainDir();
 	}
 
 	@Override

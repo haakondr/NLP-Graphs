@@ -21,7 +21,8 @@ public class DocumentRetrievalWorker extends Thread {
 		this.queue = queue;
 		this.testDir = testDir;
 		this.dataDir = dataDir;
-		this.documentRecall = ConfigService.getDocumentRecall();
+		ConfigService cs = new ConfigService();
+		this.documentRecall = cs.getDocumentRecall();
 		try {
 			drs = new CandidateRetrievalService(Paths.get(dataDir+trainDir));
 		} catch (IOException e) {

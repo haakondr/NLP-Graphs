@@ -23,8 +23,9 @@ public class PerfectDocumentRetrievalWorker extends Thread {
 		this.queue = queue;
 		this.testDir = testDir;
 		this.dataDir = dataDir;
-		annotationsDir = ConfigService.getAnnotationsDir();
-		trainDir = ConfigService.getTrainDir();
+		ConfigService cs = new ConfigService();
+		annotationsDir = cs.getAnnotationsDir();
+		trainDir = cs.getTrainDir();
 	}
 
 	@Override
