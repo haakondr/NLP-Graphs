@@ -104,7 +104,7 @@ public class App {
 
 	public static void postProcess() {
 		BlockingQueue<SentenceRetrievalJob> documentRetrievalQueue = new LinkedBlockingQueue<>(10);
-		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, cs.getTrainDir(), cs.getTrainDir(), cs.getTestDir()).start();
+		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
 		
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		
