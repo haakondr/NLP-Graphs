@@ -22,8 +22,6 @@ import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
 public class App {
 
-//	private static String trainDir, testDir, dataDir, parsedFilesDir, maltParams;
-//	private static int posThreads, maltThreads;
 	private static String trainDir, testDir, dataDir, parsedFilesDir;
 	private static ConfigService cs;
 
@@ -33,11 +31,6 @@ public class App {
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
 		parsedFilesDir = cs.getParsedFilesDir();
-//		posThreads = cs.getPOSTaggerThreadCount();
-//		maltThreads = cs.getMaltParserThreadCount();
-//		maltParams = cs.getMaltParams();
-//		
-//		cs.close();
 
 		if(shouldPreprocess()) {
 			System.out.println("Starting preprocessing");

@@ -4,11 +4,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
 
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
@@ -69,20 +73,24 @@ public class GraphUtils {
 
 	public static List<Graph> getGraphsFromFile(String filename) {
 		List<Graph> graphs = new ArrayList<>();
+		JsonReader jsonReader = null;
 		try {
-			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
 			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
 				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
 			}
-			
-			jsonReader.close();
-
 		} catch (IOException  e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			try {
+				jsonReader.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return graphs;
@@ -91,8 +99,9 @@ public class GraphUtils {
 	
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		JsonReader jsonReader = null;
 		try {
-			JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
@@ -101,10 +110,14 @@ public class GraphUtils {
 					return parseGraph(sentence.getAsJsonObject(), filename);
 				}
 			}
-			
-			jsonReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				jsonReader.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("Could not find sentence "+sentenceNumber+" in file "+filename);
 		return null;

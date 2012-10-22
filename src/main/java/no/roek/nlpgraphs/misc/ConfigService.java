@@ -1,12 +1,12 @@
 package no.roek.nlpgraphs.misc;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.io.IOUtils;
+
 
 public class ConfigService {
 
@@ -21,20 +21,22 @@ public class ConfigService {
 			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(is);
 		}
 	}
 
-	public static HashMap<String, String> getProperties() {
-		Properties config = new Properties();
-		try(InputStream is = new FileInputStream("app.properties")) {
-			config.load(is);
-			is.close();
-			return new HashMap<String, String>((Map)config);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	public static HashMap<String, String> getProperties() {
+//		Properties config = new Properties();
+//		try(InputStream is = new FileInputStream("app.properties")) {
+//			config.load(is);
+//			is.close();
+//			return new HashMap<String, String>((Map)config);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 
 	public String getParsedFilesDir() {
 		return configFile.getProperty("PARSED_DIR");

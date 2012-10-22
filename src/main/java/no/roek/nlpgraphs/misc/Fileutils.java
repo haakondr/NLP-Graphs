@@ -13,33 +13,39 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+
 
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {
 		createParentFolders(filename);
 
+		BufferedWriter writer = null;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			writer = new BufferedWriter(new FileWriter(filename));
 
 			for (String line : lines) {
 				writer.write(line);
 				writer.newLine();
 			}
-			writer.close();
 		}catch ( IOException ioe ) {
 			ioe.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(writer);
 		}
 	}
 
-	public synchronized static void writeToFile(String filename, String text) {
+	public static void writeToFile(String filename, String text) {
 		createParentFolders(filename);
-
-		try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename), Charset.forName("UTF-8"))){
+		BufferedWriter writer = null;
+		try {
+			writer = Files.newBufferedWriter(Paths.get(filename), Charset.forName("UTF-8"));
 			writer.write(text);
-			writer.close();
 		}catch ( IOException ioe ) {
 			ioe.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(writer);
 		}
 	}
 
@@ -153,15 +159,12 @@ public class Fileutils {
 //	}
 
 	public static String getText(Path path) {
-
-		List<String> lines;
 		try {
-			lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+			List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
 			StringBuffer sb = new StringBuffer();
 			for (String line : lines) {
 				sb.append(line);
 			}
-
 			return sb.toString();
 		} catch (IOException e) {
 			e.printStackTrace();

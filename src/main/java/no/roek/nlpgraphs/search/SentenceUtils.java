@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+
 import net.sourceforge.semantics.Compare;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
@@ -64,11 +66,14 @@ public class SentenceUtils {
 	//	}
 
 	public static List<NLPSentence> getSentences(String file) {
+		FileInputStream fstream = null;
+		DataInputStream in = null;
+		BufferedReader reader = null;
 		try {
 			String filename = Paths.get(file).getFileName().toString();
-			FileInputStream fstream = new FileInputStream(file);
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			fstream = new FileInputStream(file);
+			in = new DataInputStream(fstream);
+			reader = new BufferedReader(new InputStreamReader(in));
 
 			StringBuilder wordBuilder = new StringBuilder();
 			StringBuilder sentenceBuilder = new StringBuilder();
@@ -123,13 +128,14 @@ public class SentenceUtils {
 				sentences.add(new NLPSentence(filename, sentenceNumber, offset, sentenceLength, sentenceBuilder.toString(), words));
 				sentenceNumber++;
 			}
-			reader.close();
-			in.close();
-			fstream.close();
 
 			return sentences;
 		}catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			IOUtils.closeQuietly(reader);
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(fstream);
 		}
 		return null;
 	}
