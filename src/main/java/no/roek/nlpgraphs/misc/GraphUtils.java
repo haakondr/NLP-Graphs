@@ -99,6 +99,7 @@ public class GraphUtils {
 	
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		//TODO: this is not very efficient. Some way to just retrieve the matching sentence is preferred, instead of iterating through
 		JsonReader jsonReader = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
