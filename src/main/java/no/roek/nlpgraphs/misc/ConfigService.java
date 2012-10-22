@@ -26,18 +26,6 @@ public class ConfigService {
 		}
 	}
 
-//	public static HashMap<String, String> getProperties() {
-//		Properties config = new Properties();
-//		try(InputStream is = new FileInputStream("app.properties")) {
-//			config.load(is);
-//			is.close();
-//			return new HashMap<String, String>((Map)config);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-
 	public String getParsedFilesDir() {
 		return configFile.getProperty("PARSED_DIR");
 	}

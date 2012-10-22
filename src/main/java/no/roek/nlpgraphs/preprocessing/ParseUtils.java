@@ -50,7 +50,7 @@ public class ParseUtils {
 		try {
 			out.put("filename", job.getFilename());
 
-			JSONArray jsonSentences = new JSONArray();
+			JSONObject jsonSentences = new JSONObject();
 			for (NLPSentence sentence : job.getSentences()) {
 				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
 
@@ -68,7 +68,7 @@ public class ParseUtils {
 					jsonTokens.put(jsonToken);
 				}
 				jsonSentence.put("tokens", jsonTokens);
-				jsonSentences.put(jsonSentence);
+				jsonSentences.put(Integer.toString(sentence.getNumber()), jsonSentence);
 			}
 
 			out.put("sentences", jsonSentences);

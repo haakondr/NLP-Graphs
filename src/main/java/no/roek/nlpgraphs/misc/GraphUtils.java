@@ -99,18 +99,15 @@ public class GraphUtils {
 	
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
-		//TODO: this is not very efficient. Some way to just retrieve the matching sentence is preferred, instead of iterating through
 		JsonReader jsonReader = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-				if(sentence.getAsJsonObject().get("sentenceNumber").getAsInt() == sentenceNumber) {
-					return parseGraph(sentence.getAsJsonObject(), filename);
-				}
-			}
+			JsonElement sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
+			
+			return parseGraph(sentence.getAsJsonObject(), filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
