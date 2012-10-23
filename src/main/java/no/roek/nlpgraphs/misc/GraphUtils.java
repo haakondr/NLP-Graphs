@@ -141,6 +141,7 @@ public class GraphUtils {
 	public static Node createNodeFromJson(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
 		String id = jsonNode.get("id").getAsString();
 		String word = jsonNode.get("word").getAsString();
+		String lemma = jsonNode.get("lemma").getAsString();
 		String pos = jsonNode.get("pos").getAsString();
 		String rel = jsonNode.get("rel").getAsString();
 		String deprel = jsonNode.get("deprel").getAsString();
@@ -153,7 +154,7 @@ public class GraphUtils {
 			adj.get(id).add(new String[] {rel, deprel});
 		}
 
-		return new Node(id, new String[] {word, pos}); 
+		return new Node(id, new String[] {word, lemma, pos}); 
 	}
 
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
