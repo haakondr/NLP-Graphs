@@ -17,6 +17,7 @@ import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
 
+import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
@@ -58,21 +59,21 @@ public class PlagiarismWorker extends Thread {
 		System.exit(0);
 	}
 
-	
+
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
-		
+
 		for(TextPair pair : job.getTextPairs()) {
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
-			
+
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
 			if(dist < plagiarismThreshold) {
 				plagReferences.add(getPlagiarismReference(pair, dist));
 			}
 		}
-		
+
 		return plagReferences;
 	}
 
@@ -107,13 +108,16 @@ public class PlagiarismWorker extends Thread {
 		doc.setContent(root);
 
 		XMLOutputter outputter = new XMLOutputter();
+
+		FileWriter writer = null;
 		try {
 			Fileutils.createParentFolders(resultsDir+file);
-			FileWriter writer = new FileWriter(resultsDir+file);
+			writer = new FileWriter(resultsDir+file);
 			outputter.output(doc, writer);
-			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(writer);
 		}
 	}
 }
