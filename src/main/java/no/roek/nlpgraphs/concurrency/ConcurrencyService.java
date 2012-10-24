@@ -52,7 +52,11 @@ public class ConcurrencyService {
 		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
 		
 		for (File file : unparsedFiles) {
-			posTagQueue.put(file);
+			try {
+				posTagQueue.put(file);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		posTagCount = cs.getPOSTaggerThreadCount();
 		parseQueue = new LinkedBlockingQueue<>();
