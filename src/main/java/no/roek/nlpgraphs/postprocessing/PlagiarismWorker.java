@@ -55,8 +55,7 @@ public class PlagiarismWorker extends Thread {
 			}
 		}
 
-		System.out.println("Exiting app. Calculation done.");
-		System.exit(0);
+		System.out.println("Stopping PlagiarismWorker thread. Calculation done.");
 	}
 
 
