@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.concurrency;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -47,13 +48,14 @@ public class ConcurrencyService {
 
 	private void preprocess() {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
+		
+		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
 		posTagCount = cs.getPOSTaggerThreadCount();
 		parseQueue = new LinkedBlockingQueue<>();
 		posTagThreads = new PosTagProducer[posTagCount];
 
-		File[][] chunks = Fileutils.getChunks(unparsedFiles, posTagCount);
 		for (int i = 0; i < posTagCount; i++) {
-			PosTagProducer producer = new PosTagProducer(parseQueue, chunks[i]);
+			PosTagProducer producer = new PosTagProducer(posTagQueue, parseQueue);
 			producer.start();
 			posTagThreads[i] = producer;
 		}
@@ -72,13 +74,8 @@ public class ConcurrencyService {
 		return progressPrinter;
 	}
 
-	public synchronized void dependencyParsingDone(int index) {
-		/**
-		 * This is called each time a 
-		 */
-		dependencyParserThreads[index] = null;
+	public synchronized void dependencyParsingDone() {
 		dependencyParserCount--;
-
 		if(dependencyParserCount == 0) {
 			postProcess();
 		}

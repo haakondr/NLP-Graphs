@@ -55,5 +55,6 @@ public class DependencyParser extends Thread{
 				running = false;
 			}
 		}
+		concurrencyService.dependencyParsingDone();
 	}
 }
