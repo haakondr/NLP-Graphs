@@ -50,6 +50,10 @@ public class ConcurrencyService {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
 		
 		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
+		
+		for (File file : unparsedFiles) {
+			posTagQueue.put(file);
+		}
 		posTagCount = cs.getPOSTaggerThreadCount();
 		parseQueue = new LinkedBlockingQueue<>();
 		posTagThreads = new PosTagProducer[posTagCount];
