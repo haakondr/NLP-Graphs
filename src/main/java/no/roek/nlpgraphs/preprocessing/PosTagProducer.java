@@ -11,12 +11,12 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class PosTagProducer extends Thread {
 
 	private final BlockingQueue<ParseJob> queue;
+	private BlockingQueue<File> unparsedFiles;
 	private MaxentTagger tagger;
-	private File[] files;
 
-	public PosTagProducer(BlockingQueue<ParseJob> queue, File[] files){
+	public PosTagProducer(BlockingQueue<File> unparsedFiles, BlockingQueue<ParseJob> queue){
 		this.queue = queue;
-		this.files = files;
+		this.unparsedFiles = unparsedFiles;
 		ConfigService cs = new ConfigService();
 		try {
 			this.tagger = new MaxentTagger(cs.getPOSTaggerParams());
@@ -30,17 +30,19 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				for (File file : files) {
+				File file = unparsedFiles.poll();
+				if(file != null) {
 					file.getParentFile().mkdirs();
-
 					ParseJob parseJob = ParseUtils.posTagFile(file, tagger);
 					queue.put(parseJob);
+				}else {
+					running = false;
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		System.out.println("stopping "+Thread.currentThread().getName()+" after postagging "+files.length+" files");
+		System.out.println("stopping postagger thread: "+Thread.currentThread().getName());
 	}
 }
