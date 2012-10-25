@@ -64,18 +64,18 @@ public class ConcurrencyService {
 		posTagThreads = new PosTagProducer[posTagCount];
 
 		for (int i = 0; i < posTagCount; i++) {
-			PosTagProducer producer = new PosTagProducer(posTagQueue, parseQueue);
-			producer.start();
-			posTagThreads[i] = producer;
+			posTagThreads[i] = new PosTagProducer(posTagQueue, parseQueue);
+			posTagThreads[i].setName("Postag-thread-"+i);
+			posTagThreads[i].start();
 		}
 
 		dependencyParserCount = cs.getMaltParserThreadCount();
 		progressPrinter = new ProgressPrinter(unparsedFiles.length);
 		dependencyParserThreads = new DependencyParser[dependencyParserCount];
 		for (int i = 0; i < dependencyParserCount; i++) {
-			DependencyParser parser = new DependencyParser(parseQueue, cs.getMaltParams(), this);
-			parser.start();
-			dependencyParserThreads[i] = parser;
+			dependencyParserThreads[i] =  new DependencyParser(parseQueue, cs.getMaltParams(), this);
+			dependencyParserThreads[i].setName("Dependency-parser-"+i);
+			dependencyParserThreads[i].start();
 		}
 	}
 
@@ -107,7 +107,9 @@ public class ConcurrencyService {
 
 		sentenceRetrievalThreads = cs.getSentenceRetrievalThreads();
 		for (int i = 0; i < sentenceRetrievalThreads ; i++) {
-			new SentenceRetrievalWorker(documentRetrievalQueue, plagQueue).start();
+			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(documentRetrievalQueue, plagQueue);
+			worker.setName("SentenceRetrieval-Thread-"+i);
+			worker.start();
 		}
 
 		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
@@ -115,6 +117,7 @@ public class ConcurrencyService {
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {
 			plagThreads[i] = new PlagiarismWorker(plagQueue, this);
+			plagThreads[i].setName("Plagiarism-thread-"+i);
 			plagThreads[i].start();
 		}
 	}

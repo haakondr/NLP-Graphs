@@ -53,7 +53,7 @@ public class PlagiarismWorker extends Thread {
 			}
 		}
 
-		System.out.println("Stopping PlagiarismWorker thread. Calculation done.");
+		System.out.println("Stopping "+Thread.currentThread().getName()+" Calculation done.");
 	}
 
 	public synchronized void kill() {
@@ -63,7 +63,7 @@ public class PlagiarismWorker extends Thread {
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
-		System.out.println("Finding plagiarism for file: "+job.getFilename()+" with "+job.getTextPairs().size()+" plag passages");
+		System.out.println(Thread.currentThread().getName()+" finding plagiarism for file: "+job.getFilename()+" with "+job.getTextPairs().size()+" plag passages");
 
 		for(TextPair pair : job.getTextPairs()) {
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
