@@ -31,7 +31,7 @@ public class PosTagProducer extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				File file = unparsedFiles.poll(100, TimeUnit.SECONDS);
+				File file = unparsedFiles.poll(20, TimeUnit.SECONDS);
 				if(file != null) {
 					file.getParentFile().mkdirs();
 					ParseJob parseJob = ParseUtils.posTagFile(file, tagger);

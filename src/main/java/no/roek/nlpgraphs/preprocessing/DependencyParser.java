@@ -57,4 +57,14 @@ public class DependencyParser extends Thread{
 		}
 		concurrencyService.dependencyParsingDone();
 	}
+	
+	public synchronized void kill() {
+		ParseJob job = new ParseJob("kill");
+		job.setLastInQueue(true);
+		try {
+			queue.put(job);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
