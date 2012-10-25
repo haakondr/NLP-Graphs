@@ -5,52 +5,80 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
+
+
 public class ConfigService {
-	
-	public static String getProperty(String property) {
-		Properties configFile = new Properties();
-		InputStream is;
-		try {
+
+	private Properties configFile;
+	private InputStream is;
+
+	public ConfigService() {
+		configFile = new Properties();
+		try{
 			is = new FileInputStream("app.properties");
-
 			configFile.load(is);
-
-			return configFile.getProperty(property);
+			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+		} finally {
+			IOUtils.closeQuietly(is);
 		}
 	}
-	
-	public static String getParsedFilesDir() {
-		return getProperty("PARSED_DIR");
+
+	public String getParsedFilesDir() {
+		return configFile.getProperty("PARSED_DIR");
 	}
-	
-	public static String getDataDir() {
-		return getProperty("DATA_DIR");
+
+	public String getDataDir() {
+		return configFile.getProperty("DATA_DIR");
 	}
-	
-	public static String getTestDir() {
-		return getProperty("TEST_DIR");
+
+	public String getTestDir() {
+		return configFile.getProperty("TEST_DIR");
 	}
-	
-	public static String getTrainDir() {
-		return getProperty("TRAIN_DIR");
+
+	public String getTrainDir() {
+		return configFile.getProperty("TRAIN_DIR");
 	}
-	
-	public static String getAnnotationsDir() {
-		return getProperty("ANNOTATIONS_DIR");
+
+	public String getAnnotationsDir() {
+		return configFile.getProperty("ANNOTATIONS_DIR");
 	}
-	
-	public static String getResultsDir() {
-		return getProperty("RESULTS_DIR");
+
+	public String getResultsDir() {
+		return configFile.getProperty("RESULTS_DIR");
 	}
-	
-	public static int getDocumentRecall() {
-		return Integer.parseInt(getProperty("DOCUMENT_RECALL"));
+
+	public int getDocumentRecall() {
+		return Integer.parseInt(configFile.getProperty("DOCUMENT_RECALL"));
 	}
-	
-	public static int getPlagiarismThreshold() {
-		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
+
+	public int getPlagiarismThreshold() {
+		return Integer.parseInt(configFile.getProperty("PLAGIARISM_THRESHOLD"));
+	}
+
+	public String getMaltParams() {
+		return configFile.getProperty("MALT_PARAMS");
+	}
+
+	public String getPOSTaggerParams() {
+		return configFile.getProperty("POSTAGGER_PARAMS");
+	}
+
+	public int getPOSTaggerThreadCount() {
+		return Integer.parseInt(configFile.getProperty("POSTAGGER_THREADS"));
+	}
+
+	public int getMaltParserThreadCount() {
+		return Integer.parseInt(configFile.getProperty("MALTPARSER_THREADS"));
+	}
+
+	public int getPlagiarismThreads() {
+		return Integer.parseInt(configFile.getProperty("PLAGIARISM_SEARCHER_THREADS"));
+	}
+
+	public int getSentenceRetrievalThreads() {
+		return Integer.parseInt(configFile.getProperty("SENTENCE_RETRIEVAL_THREADS"));
 	}
 }

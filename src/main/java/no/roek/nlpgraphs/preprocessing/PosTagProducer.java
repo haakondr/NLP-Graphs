@@ -1,27 +1,26 @@
 package no.roek.nlpgraphs.preprocessing;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.document.DocumentFile;
-import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.misc.SentenceUtils;
-import edu.stanford.nlp.ling.TaggedWord;
+import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
-public class PosTagProducer implements Runnable{
+public class PosTagProducer extends Thread {
 
-	private final BlockingQueue<DocumentFile> queue;
-	private DocumentFile[] files;
+	private final BlockingQueue<ParseJob> queue;
+	private BlockingQueue<File> unparsedFiles;
 	private MaxentTagger tagger;
 
-	public PosTagProducer(BlockingQueue<DocumentFile> queue, DocumentFile[] files, String taggerParams){
+	public PosTagProducer(BlockingQueue<File> unparsedFiles, BlockingQueue<ParseJob> queue){
 		this.queue = queue;
-		this.files = files;
+		this.unparsedFiles = unparsedFiles;
+		ConfigService cs = new ConfigService();
 		try {
-			this.tagger = new MaxentTagger(taggerParams);
+			this.tagger = new MaxentTagger(cs.getPOSTaggerParams());
 		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
 		}
@@ -29,44 +28,22 @@ public class PosTagProducer implements Runnable{
 
 	@Override
 	public void run() {
-		int i = 0;
-		int filecount = files.length;
-
-		for (DocumentFile file : files) {
-			i++;
-			DocumentFile taggedFile = tagFile(file, i==filecount);
-			System.out.println(Thread.currentThread().getName()+": done POS-tagging file "+file.getRelPath());
+		boolean running = true;
+		while(running) {
 			try {
-				queue.put(taggedFile);
+				File file = unparsedFiles.poll(20, TimeUnit.SECONDS);
+				if(file != null) {
+					file.getParentFile().mkdirs();
+					ParseJob parseJob = ParseUtils.posTagFile(file, tagger);
+					queue.put(parseJob);
+				}else {
+					running = false;
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-
-	public DocumentFile tagFile(DocumentFile file, boolean isLastInQueue) {
-		file.setLastInQueue(isLastInQueue);
-		file.setSentences(SentenceUtils.getSentences(file.getPath().toString()));
-
-		int sentenceNumber = 1;
-		for (NLPSentence sentence : file.getSentences()) {
-			try {
-				List<TaggedWord> taggedSentence = tagger.tagSentence(sentence.getWords());
-				List<String> temp = new ArrayList<>();
-
-				int i = 1;
-				for (TaggedWord token : taggedSentence) {
-					temp.add(sentenceNumber+"_"+i+"\t"+token.word()+"\t"+"_"+"\t"+token.tag()+"\t"+token.tag()+"\t"+"_");
-					i++;
-				}
-				sentenceNumber++;
-				sentence.setPostags(temp.toArray(new String[0]));
-			}catch (IndexOutOfBoundsException e) {
-				e.printStackTrace();
-			}
-		} 
-
-		return file;
+		
+		System.out.println("stopping postagger thread: "+Thread.currentThread().getName());
 	}
 }
