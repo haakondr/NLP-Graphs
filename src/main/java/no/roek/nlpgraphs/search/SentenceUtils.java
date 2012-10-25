@@ -58,6 +58,9 @@ public class SentenceUtils {
 	}
 
 	private static int getIndexToInsertTextPair(TextPair tp, List<TextPair> textPairs, int n) {
+		if(n == 0) {
+			return 0;
+		}
 		if(tp.getSimilarity() > textPairs.get(n).getSimilarity()) {
 			return -1;
 		}
