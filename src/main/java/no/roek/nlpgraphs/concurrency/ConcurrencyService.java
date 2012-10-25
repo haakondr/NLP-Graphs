@@ -26,7 +26,7 @@ public class ConcurrencyService {
 	private ConfigService cs;
 	private DependencyParser[] dependencyParserThreads;
 	private PosTagProducer[] posTagThreads;
-	private int dependencyParserCount, posTagCount;
+	private int dependencyParserCount, posTagCount, sentenceRetrievalThreads, plagThreads;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir;
 
@@ -84,7 +84,11 @@ public class ConcurrencyService {
 
 	public synchronized void dependencyParsingDone() {
 		dependencyParserCount--;
-		if(dependencyParserCount == 0) {
+		if(dependencyParserCount <= 0) {
+			for (DependencyParser  parser: dependencyParserThreads) {
+				parser.kill();
+			}
+			
 			postProcess();
 		}
 	}
@@ -98,15 +102,23 @@ public class ConcurrencyService {
 
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 
-		int sentenceRetrievalThreads = cs.getSentenceRetrievalThreads();
+		sentenceRetrievalThreads = cs.getSentenceRetrievalThreads();
 		for (int i = 0; i < sentenceRetrievalThreads ; i++) {
 			new SentenceRetrievalWorker(documentRetrievalQueue, plagQueue).start();
 		}
 
 		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
-		int plagThreads = cs.getPlagiarismThreads();
+		plagThreads = cs.getPlagiarismThreads();
 		for (int i = 0; i < plagThreads; i++) {
 			new PlagiarismWorker(plagQueue, progressPrinter).start();
+		}
+	}
+	
+	public synchronized void plagThreadDone() {
+		plagThreads--;
+		if(plagThreads == 0) {
+			System.out.println("Plagiarism search done. exiting");
+			System.exit(0);
 		}
 	}
 }

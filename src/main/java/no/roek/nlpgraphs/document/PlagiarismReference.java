@@ -2,10 +2,10 @@ package no.roek.nlpgraphs.document;
 
 public class PlagiarismReference {
 	private String filename, type, obfuscation,language, sourceReference, sourceLanguage;
-	private String offset, length, sourceOffset, sourceLength;
+	private String offset, length, sourceOffset, sourceLength, name;
 	private double similarity;
 		
-	public PlagiarismReference(String filename, String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
+	public PlagiarismReference(String filename, String name, String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
 		this.filename = filename;
 		this.type = type;
 		this.obfuscation = obfuscation;
@@ -18,7 +18,7 @@ public class PlagiarismReference {
 		this.sourceLength = sourceLength;
 	}
 	
-	public PlagiarismReference(String filename, String offset, String length, String sourceReference, String sourceOffset, String sourceLength) {
+	public PlagiarismReference(String filename, String name, String offset, String length, String sourceReference, String sourceOffset, String sourceLength) {
 		this.filename = filename;
 		this.sourceReference = sourceReference;
 		this.offset = offset;
@@ -27,13 +27,13 @@ public class PlagiarismReference {
 		this.sourceLength = sourceLength;
 	}
 	
-	public PlagiarismReference(String filename, String offset, String length, String sourceReference, String sourceOffset, String sourceLength, double similarity) {
-		this(filename, offset, length, sourceReference, sourceOffset, sourceLength);
+	public PlagiarismReference(String filename, String name, String offset, String length, String sourceReference, String sourceOffset, String sourceLength, double similarity) {
+		this(filename, name, offset, length, sourceReference, sourceOffset, sourceLength);
 		this.similarity = similarity;
 	}
 	
-	public PlagiarismReference(String filename, int offset, int length, String sourceReference, int sourceOffset, int sourceLength) {
-		this(filename, Integer.toString(offset), Integer.toString(length), sourceReference, Integer.toString(sourceOffset), Integer.toString(sourceLength));
+	public PlagiarismReference(String filename, String name, int offset, int length, String sourceReference, int sourceOffset, int sourceLength) {
+		this(filename, name, Integer.toString(offset), Integer.toString(length), sourceReference, Integer.toString(sourceOffset), Integer.toString(sourceLength));
 	}
 
 	public String getType() {
@@ -78,5 +78,9 @@ public class PlagiarismReference {
 
 	public String getFilename() {
 		return filename;
+	}
+
+	public String getName() {
+		return name;
 	}
 }
