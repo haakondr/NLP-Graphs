@@ -41,7 +41,7 @@ public class XMLUtils {
 					String sourceOffset = row.getAttributeValue("source_offset");
 					String sourceLength = row.getAttributeValue("source_length");
 					
-					plagiarisms.add(new PlagiarismReference(filename, type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
+					plagiarisms.add(new PlagiarismReference(filename, "detected-plagiarism", type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
 					return plagiarisms;
 				}
 			}
