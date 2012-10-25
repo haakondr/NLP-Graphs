@@ -45,7 +45,7 @@ public class PlagiarismWorker extends Thread {
 		while(running) {
 			try {
 				PlagiarismJob job = queue.take();
-				if(job == null) {
+				if(job.isLastInQueue()) {
 					running = false;
 					break;
 				}
@@ -62,7 +62,9 @@ public class PlagiarismWorker extends Thread {
 
 	public synchronized void kill() {
 		try {
-			queue.put(null);
+			PlagiarismJob job = new PlagiarismJob("kill");
+			job.setLastInQueue(true);
+			queue.put(job);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

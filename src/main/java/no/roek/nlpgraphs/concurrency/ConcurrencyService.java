@@ -38,7 +38,7 @@ public class ConcurrencyService {
 		testDir = cs.getTestDir();
 		this.unparsedFiles = Fileutils.getUnparsedFiles(dataDir, cs.getParsedFilesDir());
 	}
-	
+
 	public void start() {
 		if(!(unparsedFiles.length==0)) {
 			preprocess();
@@ -49,9 +49,9 @@ public class ConcurrencyService {
 
 	private void preprocess() {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
-		
+
 		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
-		
+
 		for (File file : unparsedFiles) {
 			try {
 				posTagQueue.put(file);
@@ -89,7 +89,7 @@ public class ConcurrencyService {
 		if(progressPrinter.isDone()) {
 			parser.kill();
 		}
-		
+
 		if(dependencyParserCount == 0) {
 			System.out.println("Dependency parsing done. Starting plagiarism search..");
 			postProcess();
@@ -121,14 +121,14 @@ public class ConcurrencyService {
 			plagThreads[i].start();
 		}
 	}
-	
+
 	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
 			for(PlagiarismWorker plagWorker : plagThreads) {
 				plagWorker.kill();
 			}
-			
+
 			System.out.println("Plagiarism search done. exiting");
 			System.exit(0);
 		}
