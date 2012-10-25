@@ -4,6 +4,7 @@ public class TextPair {
 	
 	private String testFile, trainFile;
 	private NLPSentence testSentence, trainSentence;
+	private double similarity;
 	
 	public TextPair(String testFile, String trainFile) {
 		this.testFile = testFile;
@@ -14,6 +15,14 @@ public class TextPair {
 		this(testFile, trainFile);
 		this.testSentence = testSentence;
 		this.trainSentence = trainSentence;
+	}
+	
+	public double getSimilarity() {
+		return similarity;
+	}
+
+	public void setSimilarity(double similarity) {
+		this.similarity = similarity;
 	}
 
 	public String getTestFile() {

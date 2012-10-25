@@ -7,6 +7,7 @@ public class PlagiarismReference {
 		
 	public PlagiarismReference(String filename, String name, String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
 		this.filename = filename;
+		this.name = name;
 		this.type = type;
 		this.obfuscation = obfuscation;
 		this.language = language;
@@ -20,6 +21,7 @@ public class PlagiarismReference {
 	
 	public PlagiarismReference(String filename, String name, String offset, String length, String sourceReference, String sourceOffset, String sourceLength) {
 		this.filename = filename;
+		this.name = name;
 		this.sourceReference = sourceReference;
 		this.offset = offset;
 		this.length = length;

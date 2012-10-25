@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -23,12 +24,18 @@ import edu.stanford.nlp.ling.WordLemmaTag;
 public class SentenceUtils {
 
 	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
-		List<TextPair> textPairs = new ArrayList<>();
+		List<TextPair> textPairs = new LinkedList<>();
 
 		for (Graph testGraph : GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile)) {
 			for (Graph trainGraph : GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile)) {
-				if(isSimilar(testGraph, trainGraph)) {
-					textPairs.add(new TextPair(testFile, trainFile, testGraph.toSentence(), trainGraph.toSentence()));
+				TextPair tp = getTextPair(testGraph, trainGraph);
+				int n = textPairs.size();
+				int index = getIndexToInsertTextPair(tp, textPairs, n);
+				if(index != -1) {
+					textPairs.add(index, tp);
+					if(n>= 10) {
+						textPairs.remove(textPairs.size()-1);
+					}
 				}
 			}
 		}
@@ -37,18 +44,31 @@ public class SentenceUtils {
 	}
 
 
-	private static boolean isSimilar( Graph testGraph, Graph trainGraph) {
+	private static TextPair getTextPair( Graph testGraph, Graph trainGraph) {
 		double similar = 0;
-		double n = 0;
 		for(Node g1 : testGraph.getNodes()) {
 			for (Node g2: trainGraph.getNodes()) {
 				similar += getSim(g1.getAttributes(), g2.getAttributes());
-				n++;
 			}
 		}
 
-		double similarity = similar / (testGraph.getSize() + trainGraph.getSize());
-		return similarity > 1.5;
+		TextPair tp = new TextPair(testGraph.getFilename(), trainGraph.getFilename(), testGraph.toSentence(), trainGraph.toSentence());
+		tp.setSimilarity(similar / (testGraph.getSize() + trainGraph.getSize()));
+		return tp;
+	}
+
+	private static int getIndexToInsertTextPair(TextPair tp, List<TextPair> textPairs, int n) {
+		if(tp.getSimilarity() > textPairs.get(n).getSimilarity()) {
+			return -1;
+		}
+
+		for (int i = n; i < n; i--) {
+			if(tp.getSimilarity() > textPairs.get(i).getSimilarity()) {
+				return i;
+			}
+		}
+
+		return 0;
 	}
 
 	private static double getSim(List<String> attr1, List<String> attr2) {
@@ -153,7 +173,7 @@ public class SentenceUtils {
 	private static StringBuilder createWord(StringBuilder wordBuilder, List<WordLemmaTag> words, int offset) {
 		if(wordBuilder.toString().trim().length() > 0) {
 			//TODO: is offset/length really needed for each word? In such case, wordlemmatag is not the right class
-//			words.add(new Word(wordBuilder.toString().trim(), offset-wordBuilder.length(), offset));
+			//			words.add(new Word(wordBuilder.toString().trim(), offset-wordBuilder.length(), offset));
 			words.add(new WordLemmaTag(wordBuilder.toString().trim()));
 			return new StringBuilder();
 		}
