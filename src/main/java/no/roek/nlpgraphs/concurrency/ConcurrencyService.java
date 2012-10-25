@@ -26,7 +26,8 @@ public class ConcurrencyService {
 	private ConfigService cs;
 	private DependencyParser[] dependencyParserThreads;
 	private PosTagProducer[] posTagThreads;
-	private int dependencyParserCount, posTagCount, sentenceRetrievalThreads, plagThreads;
+	private PlagiarismWorker[] plagThreads;
+	private int dependencyParserCount, posTagCount, sentenceRetrievalThreads, plagThreadCount;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir;
 
@@ -82,13 +83,15 @@ public class ConcurrencyService {
 		return progressPrinter;
 	}
 
-	public synchronized void dependencyParsingDone() {
+	public synchronized void depParseJobDone(DependencyParser parser, String text) {
+		progressPrinter.printProgressbar(text);
 		dependencyParserCount--;
-		if(dependencyParserCount <= 0) {
-			for (DependencyParser  parser: dependencyParserThreads) {
-				parser.kill();
-			}
-			
+		if(progressPrinter.isDone()) {
+			parser.kill();
+		}
+		
+		if(dependencyParserCount == 0) {
+			System.out.println("Dependency parsing done. Starting plagiarism search..");
 			postProcess();
 		}
 	}
@@ -108,15 +111,22 @@ public class ConcurrencyService {
 		}
 
 		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
-		plagThreads = cs.getPlagiarismThreads();
-		for (int i = 0; i < plagThreads; i++) {
-			new PlagiarismWorker(plagQueue, progressPrinter).start();
+		plagThreadCount = cs.getPlagiarismThreads();
+		plagThreads = new PlagiarismWorker[plagThreadCount];
+		for (int i = 0; i < plagThreadCount; i++) {
+			plagThreads[i] = new PlagiarismWorker(plagQueue, this);
+			plagThreads[i].start();
 		}
 	}
 	
-	public synchronized void plagThreadDone() {
-		plagThreads--;
-		if(plagThreads == 0) {
+	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
+		progressPrinter.printProgressbar(text);
+		if(progressPrinter.isDone()) {
+			worker.kill();
+			plagThreadCount--;
+		}
+		
+		if(plagThreadCount == 0) {
 			System.out.println("Plagiarism search done. exiting");
 			System.exit(0);
 		}

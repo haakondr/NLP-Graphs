@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
+import no.roek.nlpgraphs.concurrency.ConcurrencyService;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismReference;
@@ -27,29 +28,26 @@ public class PlagiarismWorker extends Thread {
 	private BlockingQueue<PlagiarismJob> queue;
 	private String resultsDir;
 	private double plagiarismThreshold;
-	private ProgressPrinter progressPrinter;
+	private ConcurrencyService concurrencyService;
+	private boolean running;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ProgressPrinter progressPrinter) {
+	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ConcurrencyService concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
 		this.resultsDir = cs.getResultsDir();
 		this.plagiarismThreshold = cs.getPlagiarismThreshold();
-		this.progressPrinter = progressPrinter;
+		this.concurrencyService = concurrencyService;
 	}
 
 	@Override
 	public void run() {
-		boolean running = true;
+		running = true;
 		while(running) {
 			try {
 				PlagiarismJob job = queue.take();
-				if(job.isLastInQueue()) {
-					running = false;
-				}else {
-					List<PlagiarismReference> plagReferences = findPlagiarism(job);
-					writeResults(job.getFile().getFileName().toString(), plagReferences);
-					progressPrinter.printProgressbar("queue: "+queue.size());
-				}
+				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+				writeResults(job.getFile().getFileName().toString(), plagReferences);
+				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -58,12 +56,15 @@ public class PlagiarismWorker extends Thread {
 		System.out.println("Stopping PlagiarismWorker thread. Calculation done.");
 	}
 
+	public synchronized void kill() {
+		running = false;
+	}
 
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		System.out.println("Finding plagiarism for file: "+job.getFilename()+" with "+job.getTextPairs().size()+" plag passages");
-		
+
 		for(TextPair pair : job.getTextPairs()) {
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
