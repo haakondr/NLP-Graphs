@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -20,6 +21,7 @@ import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.preprocessing.ParseUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,48 +29,49 @@ import com.google.gson.stream.JsonReader;
 
 public class GraphUtils {
 
-	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
-		Graph graph = new Graph();
-		graph.setFilename(sentence.getFilename());
-		graph.setLength(sentence.getLength());
-		graph.setOffset(sentence.getStart());
-		graph.setOriginalText(sentence.getText());
-		graph.setSentenceNumber(sentence.getNumber());
+	//	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
+	//		Graph graph = new Graph();
+	//		graph.setFilename(sentence.getFilename());
+	//		graph.setLength(sentence.getLength());
+	//		graph.setOffset(sentence.getStart());
+	//		graph.setOriginalText(sentence.getText());
+	//		graph.setSentenceNumber(sentence.getNumber());
+	//
+	//		HashMap<String, List<String[]>> adjacent = new HashMap<>();
+	//
+	//		for(String wordString : parsedTokens) {
+	//			Node node = getNode(wordString, adjacent);
+	//			graph.addNode(node);
+	//		}
+	//
+	//		addEdges(graph, adjacent);
+	//
+	//		return graph;
+	//	}
 
-		HashMap<String, List<String[]>> adjacent = new HashMap<>();
+	//	public static Node getNode(String wordString, HashMap<String, List<String[]>> adjacent) {
+	//		String[] token = wordString.split("\t");
+	//		String id = token[0];
+	//		String word = token[1];
+	//		String lemma = token[2];
+	//		String pos = token[4];
+	//		String rel = token[6];
+	//		String deprel = token[7];
+	//
+	//		if(!adjacent.containsKey(id)) {
+	//			adjacent.put(id, new ArrayList<String[]>());
+	//		}
+	//
+	//		if(!isRelationToIdNull(rel)) {
+	//			adjacent.get(id).add(new String[] {rel, deprel});
+	//		}
+	//
+	//		return new Node(id, new String[] {word, lemma, pos});
+	//	}
 
-		for(String wordString : parsedTokens) {
-			Node node = getNode(wordString, adjacent);
-			graph.addNode(node);
-		}
-
-		addEdges(graph, adjacent);
-
-		return graph;
-	}
-
-	public static Node getNode(String wordString, HashMap<String, List<String[]>> adjacent) {
-		String[] token = wordString.split("\t");
-		String id = token[0];
-		String word = token[1];
-		String pos = token[4];
-		String rel = token[6];
-		String deprel = token[7];
-
-		if(!adjacent.containsKey(id)) {
-			adjacent.put(id, new ArrayList<String[]>());
-		}
-
-		if(!isRelationToIdNull(rel)) {
-			adjacent.get(id).add(new String[] {rel, deprel});
-		}
-
-		return new Node(id, new String[] {word, pos});
-	}
-
-	private static boolean isRelationToIdNull(String rel) {
-		return rel.equals("0");
-	}
+	//	private static boolean isRelationToIdNull(String rel) {
+	//		return rel.equals("0");
+	//	}
 
 
 	public static List<Graph> getGraphsFromFile(String filename) {
@@ -79,9 +82,15 @@ public class GraphUtils {
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+			JsonObject sentences = fileObject.get("sentences").getAsJsonObject();
+			for(Map.Entry<String,JsonElement> entry : sentences.entrySet()) {
+				JsonObject sentence = entry.getValue().getAsJsonObject();
+				graphs.add(parseGraph(sentence, filename));
+
 			}
+			//			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
+			//				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
+			//			}
 		} catch (IOException  e) {
 			e.printStackTrace();
 			return null;
@@ -95,9 +104,9 @@ public class GraphUtils {
 
 		return graphs;
 	}
-	
-	
-	
+
+
+
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
 		try {
@@ -106,7 +115,7 @@ public class GraphUtils {
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
 			JsonElement sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
-			
+
 			return parseGraph(sentence.getAsJsonObject(), filename);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -141,6 +150,7 @@ public class GraphUtils {
 	public static Node createNodeFromJson(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
 		String id = jsonNode.get("id").getAsString();
 		String word = jsonNode.get("word").getAsString();
+		String lemma = jsonNode.get("lemma").getAsString();
 		String pos = jsonNode.get("pos").getAsString();
 		String rel = jsonNode.get("rel").getAsString();
 		String deprel = jsonNode.get("deprel").getAsString();
@@ -153,7 +163,9 @@ public class GraphUtils {
 			adj.get(id).add(new String[] {rel, deprel});
 		}
 
-		return new Node(id, new String[] {word, pos}); 
+		return new Node(id, new String[] {lemma, pos});
+		//TODO: checking for lemma is probably better, so word is omitted
+		//		return new Node(id, new String[] {word, lemma, pos}); 
 	}
 
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {

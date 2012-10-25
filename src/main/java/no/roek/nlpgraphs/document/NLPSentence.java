@@ -10,20 +10,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.stanford.nlp.ling.Word;
+import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {
 	
 	private int number, start, length;
 	private String text, filename;
 	private String[] postags;
-	private List<Word> words;
+	private List<WordLemmaTag> words;
 	
 	public NLPSentence(String filename, int number, int start, int length, String text, String[] postags) {
 		this(filename, number, start, length, text);
 		this.postags = postags;
 	}
 	
-	public NLPSentence(String filename, int number, int start, int length, String text, List<Word> words) {
+	public NLPSentence(String filename, int number, int start, int length, String text, List<WordLemmaTag> words) {
 		this(filename, number, start, length, text);
 		this.words = words;
 	}
@@ -64,11 +65,11 @@ public class NLPSentence {
 		this.postags = postags;
 	}
 
-	public List<Word> getWords() {
+	public List<WordLemmaTag> getWords() {
 		return words;
 	}
 	
-	public void addWord(Word word) {
+	public void addWord(WordLemmaTag word) {
 		words.add(word);
 	}
 

@@ -18,6 +18,7 @@ import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import edu.stanford.nlp.ling.Word;
+import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class SentenceUtils {
 
@@ -78,7 +79,7 @@ public class SentenceUtils {
 			StringBuilder wordBuilder = new StringBuilder();
 			StringBuilder sentenceBuilder = new StringBuilder();
 			List<NLPSentence> sentences = new ArrayList<NLPSentence>();
-			List<Word> words = new ArrayList<>();
+			List<WordLemmaTag> words = new ArrayList<>();
 
 			int character = 1, offset = 0, sentenceNumber = 1, sentenceStart = 0;
 			while((character = reader.read()) != -1) {
@@ -114,7 +115,7 @@ public class SentenceUtils {
 						sentences.add(new NLPSentence(filename, sentenceNumber, sentenceStart, sentenceLength, sentenceBuilder.toString(), words));
 					}
 					createWord(wordBuilder, words, offset);
-					words = new ArrayList<Word>();
+					words = new ArrayList<WordLemmaTag>();
 					sentenceBuilder = new StringBuilder();
 					wordBuilder = new StringBuilder();
 					sentenceNumber++;
@@ -123,7 +124,7 @@ public class SentenceUtils {
 
 			}
 			if(wordBuilder.toString().trim().length()>0) {
-				words.add(new Word(wordBuilder.toString()));
+				words.add(new WordLemmaTag(wordBuilder.toString()));
 				int sentenceLength = offset - sentenceStart;
 				sentences.add(new NLPSentence(filename, sentenceNumber, offset, sentenceLength, sentenceBuilder.toString(), words));
 				sentenceNumber++;
@@ -149,9 +150,11 @@ public class SentenceUtils {
 		return sentenceBuilder;
 	}
 
-	private static StringBuilder createWord(StringBuilder wordBuilder, List<Word> words, int offset) {
+	private static StringBuilder createWord(StringBuilder wordBuilder, List<WordLemmaTag> words, int offset) {
 		if(wordBuilder.toString().trim().length() > 0) {
-			words.add(new Word(wordBuilder.toString().trim(), offset-wordBuilder.length(), offset));
+			//TODO: is offset/length really needed for each word? In such case, wordlemmatag is not the right class
+//			words.add(new Word(wordBuilder.toString().trim(), offset-wordBuilder.length(), offset));
+			words.add(new WordLemmaTag(wordBuilder.toString().trim()));
 			return new StringBuilder();
 		}
 
