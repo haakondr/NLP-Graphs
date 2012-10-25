@@ -62,21 +62,21 @@ public class PlagiarismWorker extends Thread {
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
+		System.out.println("Finding plagiarism for file: "+job.getFilename()+" with "+job.getTextPairs().size()+" plag passages");
+		
 		for(TextPair pair : job.getTextPairs()) {
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
 
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
-			if(dist < plagiarismThreshold) {
-				plagReferences.add(getPlagiarismReference(pair, dist));
-			}
+			plagReferences.add(getPlagiarismReference(pair, dist, (dist < plagiarismThreshold)));
 		}
 
 		return plagReferences;
 	}
 
-	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity) {
+	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity, boolean detectedPlagiarism) {
 		NLPSentence test = pair.getTestSentence();
 		NLPSentence train = pair.getTrainSentence();
 		String filename = test.getFilename();
@@ -85,7 +85,8 @@ public class PlagiarismWorker extends Thread {
 		String sourceReference = train.getFilename();
 		String sourceOffset = Integer.toString(train.getStart());
 		String sourceLength = Integer.toString(train.getLength());
-		return new PlagiarismReference(filename, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
+		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
+		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
 
 	public void writeResults(String file, List<PlagiarismReference> plagiarisms) {
@@ -93,7 +94,7 @@ public class PlagiarismWorker extends Thread {
 		root.setAttribute("reference", file);
 		for (PlagiarismReference plagiarismReference : plagiarisms) {
 			Element reference = new Element("feature");
-			reference.setAttribute("name", "detected-plagiarism");
+			reference.setAttribute("name", plagiarismReference.getName());
 			reference.setAttribute("this_offset", plagiarismReference.getOffset());
 			reference.setAttribute("this_length", plagiarismReference.getLength());
 			reference.setAttribute("obfuscation", Double.toString(plagiarismReference.getSimilarity()));
