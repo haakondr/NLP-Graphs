@@ -25,17 +25,19 @@ public class SentenceUtils {
 
 	public static List<TextPair> getSimilarSentences(String dataDir, String parsedDir, String testDir, String trainDir, String testFile, String trainFile) {
 		List<TextPair> textPairs = new LinkedList<>();
-
+		int n = textPairs.size();
 		for (Graph testGraph : GraphUtils.getGraphsFromFile(parsedDir+testDir+testFile)) {
 			for (Graph trainGraph : GraphUtils.getGraphsFromFile(parsedDir+trainDir+trainFile)) {
 				TextPair tp = getTextPair(testGraph, trainGraph);
-				int n = textPairs.size();
+
 				int index = getIndexToInsertTextPair(tp, textPairs, n);
 				if(index != -1) {
 					textPairs.add(index, tp);
-					if(n>= 10) {
-						textPairs.remove(textPairs.size()-1);
+					n = textPairs.size();
+					if(n> 30) {
+						textPairs.remove(n-1);
 					}
+					n = textPairs.size();
 				}
 			}
 		}
@@ -61,13 +63,13 @@ public class SentenceUtils {
 		if(n == 0) {
 			return 0;
 		}
-		if(tp.getSimilarity() > textPairs.get(n-1).getSimilarity()) {
+		if(tp.getSimilarity() > textPairs.get(n-1).getSimilarity() && n > 30) {
 			return -1;
 		}
 
-		for (int i = n; i < n; i--) {
+		for (int i = n-1; i >= 0; i--) {
 			if(tp.getSimilarity() > textPairs.get(i).getSimilarity()) {
-				return i;
+				return i+1;
 			}
 		}
 
