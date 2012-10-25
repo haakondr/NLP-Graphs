@@ -125,10 +125,6 @@ public class ConcurrencyService {
 	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
-			plagThreadCount--;
-		}
-		
-		if(plagThreadCount == 0) {
 			for(PlagiarismWorker plagWorker : plagThreads) {
 				plagWorker.kill();
 			}
