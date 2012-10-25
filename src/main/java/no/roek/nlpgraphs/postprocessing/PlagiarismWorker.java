@@ -45,6 +45,10 @@ public class PlagiarismWorker extends Thread {
 		while(running) {
 			try {
 				PlagiarismJob job = queue.take();
+				if(job == null) {
+					running = false;
+					break;
+				}
 				List<PlagiarismReference> plagReferences = findPlagiarism(job);
 				writeResults(job.getFile().getFileName().toString(), plagReferences);
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
@@ -57,7 +61,11 @@ public class PlagiarismWorker extends Thread {
 	}
 
 	public synchronized void kill() {
-		running = false;
+		try {
+			queue.put(null);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {

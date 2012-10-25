@@ -125,11 +125,14 @@ public class ConcurrencyService {
 	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
-			worker.kill();
 			plagThreadCount--;
 		}
 		
 		if(plagThreadCount == 0) {
+			for(PlagiarismWorker plagWorker : plagThreads) {
+				plagWorker.kill();
+			}
+			
 			System.out.println("Plagiarism search done. exiting");
 			System.exit(0);
 		}
