@@ -33,7 +33,6 @@ public class SentenceRetrievalWorker extends Thread {
 				SentenceRetrievalJob job = queue.take();
 				if(job.isLastInQueue()) {
 					running = false;
-					System.out.println(Thread.currentThread().getName()+ " encountered the last job in queue, stopping.");
 					break;
 				}
 				parseQueue.put(getParseJob(job));

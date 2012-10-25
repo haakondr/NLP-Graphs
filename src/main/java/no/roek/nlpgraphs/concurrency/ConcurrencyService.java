@@ -129,7 +129,7 @@ public class ConcurrencyService {
 				plagWorker.kill();
 			}
 
-			System.out.println("Plagiarism search done. exiting");
+			System.out.println("\nPlagiarism search done. exiting");
 			System.exit(0);
 		}
 	}
