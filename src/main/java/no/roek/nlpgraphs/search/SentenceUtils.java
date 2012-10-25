@@ -61,7 +61,7 @@ public class SentenceUtils {
 		if(n == 0) {
 			return 0;
 		}
-		if(tp.getSimilarity() > textPairs.get(n).getSimilarity()) {
+		if(tp.getSimilarity() > textPairs.get(n-1).getSimilarity()) {
 			return -1;
 		}
 
