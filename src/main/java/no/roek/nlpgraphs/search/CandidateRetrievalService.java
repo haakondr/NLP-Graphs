@@ -65,6 +65,16 @@ public class CandidateRetrievalService {
 		return writer;
 	}
 
+	public synchronized void closeWriter() {
+		try {
+			getWriter().close();
+		} catch (CorruptIndexException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addDocument(List<NLPSentence> sentences) {
 		/**
 		 * Adds all sentences from a list to the index.
@@ -78,13 +88,7 @@ public class CandidateRetrievalService {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				try {
-					writer.close();
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
+			} 
 		}
 	}
 

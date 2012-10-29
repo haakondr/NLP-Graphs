@@ -28,6 +28,7 @@ public class ConcurrencyService {
 	private int dependencyParserCount, posTagCount, sentenceRetrievalThreadCount, plagThreadCount;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir, parsedFilesDir;
+	private CandidateRetrievalService  crs;
 
 	public ConcurrencyService() {
 		cs = new ConfigService();
@@ -38,18 +39,18 @@ public class ConcurrencyService {
 		this.unparsedFiles = Fileutils.getUnparsedFiles(dataDir, cs.getParsedFilesDir());
 	}
 
-//	public void start() {
-//		if(!(unparsedFiles.length==0)) {
-//			preprocess();
-//		}else {
-//			postProcess();
-//		}
-//	}
+	//	public void start() {
+	//		if(!(unparsedFiles.length==0)) {
+	//			preprocess();
+	//		}else {
+	//			postProcess();
+	//		}
+	//	}
 
 	public boolean shouldPreprocess() {
 		return (unparsedFiles.length != 0);
 	}
-	
+
 	public void preprocess() {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
 
@@ -107,7 +108,7 @@ public class ConcurrencyService {
 		File indexDir = new File("lucene/"+trainDir);
 		return !indexDir.exists();
 	}
-	
+
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
 		for (File f : Fileutils.getFileList(dataDir+trainDir)) {
@@ -118,9 +119,9 @@ public class ConcurrencyService {
 			}
 		}
 		progressPrinter = new ProgressPrinter(documentQueue.size());
-		
-		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(dataDir+trainDir));
-		
+
+		crs = new CandidateRetrievalService(Paths.get(dataDir+trainDir));
+
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
 		for (int i = 0; i < indexBuilderThreads.length; i++) {
 			indexBuilderThreads[i] = new IndexBuilder(documentQueue, crs, this);
@@ -128,7 +129,7 @@ public class ConcurrencyService {
 			indexBuilderThreads[i].start();
 		}
 	}
-	
+
 	public synchronized void indexBuilderJobDone() {
 		progressPrinter.printProgressbar("indexbuilder progress");
 		if(progressPrinter.isDone()) {
@@ -136,6 +137,8 @@ public class ConcurrencyService {
 				thread.kill();
 			}
 			
+			crs.closeWriter();
+
 			try {
 				System.out.println("Index building done.. Starting plagiarism search.");
 				App.main(null);
@@ -143,9 +146,9 @@ public class ConcurrencyService {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	public void PlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
@@ -156,10 +159,10 @@ public class ConcurrencyService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(testDir));
-		
+
 		for (int i = 0; i < sentenceRetrievalThreadCount ; i++) {
 			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
 			worker.setName("SentenceRetrieval-Thread-"+i);
