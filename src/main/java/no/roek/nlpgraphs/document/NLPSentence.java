@@ -9,7 +9,6 @@ import no.roek.nlpgraphs.search.SentenceUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {

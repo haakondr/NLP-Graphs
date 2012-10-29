@@ -5,9 +5,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.SentencePair;
-import no.roek.nlpgraphs.document.TextPair;
 
 public class PlagiarismJob extends Job {
 

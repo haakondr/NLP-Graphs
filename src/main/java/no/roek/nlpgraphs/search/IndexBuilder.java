@@ -1,11 +1,8 @@
 package no.roek.nlpgraphs.search;
 
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.concurrency.ConcurrencyService;
-
-import org.apache.lucene.index.IndexWriter;
 
 public class IndexBuilder extends Thread {
 

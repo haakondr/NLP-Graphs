@@ -5,15 +5,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import no.roek.nlpgraphs.document.GraphPair;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.SentencePair;
-import no.roek.nlpgraphs.graph.Graph;
-import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;

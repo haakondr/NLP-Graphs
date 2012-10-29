@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-
-import net.sourceforge.semantics.Compare;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
-import edu.stanford.nlp.ling.Word;
+
+import org.apache.commons.io.IOUtils;
+
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class SentenceUtils {

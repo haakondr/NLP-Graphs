@@ -9,15 +9,12 @@ import java.util.concurrent.BlockingQueue;
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.concurrency.ConcurrencyService;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.document.SentencePair;
-import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
-import no.roek.nlpgraphs.misc.ProgressPrinter;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;

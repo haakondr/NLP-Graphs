@@ -4,6 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.search.SentenceUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,11 +20,6 @@ import edu.stanford.nlp.ling.WordLemmaTag;
 import edu.stanford.nlp.ling.WordTag;
 import edu.stanford.nlp.process.Morphology;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
-
-import no.roek.nlpgraphs.concurrency.ParseJob;
-import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.search.SentenceUtils;
 
 public class ParseUtils {
 

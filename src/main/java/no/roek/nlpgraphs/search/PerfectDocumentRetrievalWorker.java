@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.concurrency.PlagiarismJob;
 import no.roek.nlpgraphs.concurrency.SentenceRetrievalJob;
 import no.roek.nlpgraphs.document.PlagiarismReference;
 import no.roek.nlpgraphs.misc.ConfigService;

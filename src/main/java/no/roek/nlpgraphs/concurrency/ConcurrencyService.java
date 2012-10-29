@@ -1,18 +1,9 @@
 package no.roek.nlpgraphs.concurrency;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.apache.lucene.index.CorruptIndexException;
 
 import no.roek.nlpgraphs.App;
 import no.roek.nlpgraphs.misc.ConfigService;
@@ -23,7 +14,6 @@ import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 import no.roek.nlpgraphs.search.CandidateRetrievalService;
 import no.roek.nlpgraphs.search.IndexBuilder;
-import no.roek.nlpgraphs.search.PerfectDocumentRetrievalWorker;
 import no.roek.nlpgraphs.search.SentenceRetrievalWorker;
 
 public class ConcurrencyService {
@@ -127,6 +117,7 @@ public class ConcurrencyService {
 				e.printStackTrace();
 			}
 		}
+		progressPrinter = new ProgressPrinter(documentQueue.size());
 		
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(dataDir+trainDir));
 		
@@ -157,11 +148,6 @@ public class ConcurrencyService {
 	
 	public void PlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
-//		BlockingQueue<SentenceRetrievalJob> documentRetrievalQueue = new LinkedBlockingQueue<>(10);
-
-		//TODO: replace with a real doc retrieval worker
-//		new PerfectDocumentRetrievalWorker(documentRetrievalQueue, dataDir, trainDir, testDir).start();
-
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
 		for (File file : Fileutils.getFileList(parsedFilesDir+testDir)) {
 			try {
@@ -201,6 +187,4 @@ public class ConcurrencyService {
 			System.exit(0);
 		}
 	}
-	
-	
 }
