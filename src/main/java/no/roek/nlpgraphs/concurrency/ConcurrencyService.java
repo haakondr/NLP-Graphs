@@ -131,7 +131,7 @@ public class ConcurrencyService {
 	}
 
 	public synchronized void indexBuilderJobDone() {
-		progressPrinter.printProgressbar("indexbuilder progress");
+		progressPrinter.printProgressbar("IndexBuilder");
 		if(progressPrinter.isDone()) {
 			for(IndexBuilder thread : indexBuilderThreads) {
 				thread.kill();
