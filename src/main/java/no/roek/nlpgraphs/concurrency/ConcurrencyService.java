@@ -25,7 +25,7 @@ public class ConcurrencyService {
 	private PosTagProducer[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
-	private int dependencyParserCount, posTagCount, sentenceRetrievalThreadCount, plagThreadCount;
+	private int dependencyParserCount, posTagCount, plagThreadCount;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir, parsedFilesDir;
 	private CandidateRetrievalService  crs;
@@ -153,7 +153,6 @@ public class ConcurrencyService {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
 		for (File file : Fileutils.getFileList(parsedFilesDir+testDir)) {
-			System.out.println(file.toString());
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
@@ -164,7 +163,7 @@ public class ConcurrencyService {
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(testDir));
 
-		for (int i = 0; i < sentenceRetrievalThreadCount ; i++) {
+		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
 			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
 			worker.setName("SentenceRetrieval-Thread-"+i);
 			worker.start();
