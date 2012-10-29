@@ -153,6 +153,7 @@ public class ConcurrencyService {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
 		for (File file : Fileutils.getFileList(parsedFilesDir+testDir)) {
+			System.out.println(file.toString());
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
