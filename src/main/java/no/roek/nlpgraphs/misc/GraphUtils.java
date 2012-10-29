@@ -110,6 +110,7 @@ public class GraphUtils {
 
 			return parseGraph(sentence.getAsJsonObject(), filename);
 		} catch (IOException e) {
+			System.out.println("could not find sentence in "+filename+ " sentencenumber: "+sentenceNumber);
 			e.printStackTrace();
 		} finally {
 			try {
