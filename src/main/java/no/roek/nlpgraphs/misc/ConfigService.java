@@ -81,4 +81,8 @@ public class ConfigService {
 	public int getSentenceRetrievalThreads() {
 		return Integer.parseInt(configFile.getProperty("SENTENCE_RETRIEVAL_THREADS"));
 	}
+	
+	public int getIndexBuilderThreads() {
+		return Integer.parseInt(configFile.getProperty("INDEX_BUILDER_THREADS"));
+	}
 }

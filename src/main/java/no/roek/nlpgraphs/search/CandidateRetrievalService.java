@@ -1,19 +1,19 @@
 package no.roek.nlpgraphs.search;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.Fileutils;
+import no.roek.nlpgraphs.document.GraphPair;
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -26,77 +26,132 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.similar.MoreLikeThis;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 
 
 public class CandidateRetrievalService {
 
-	//	private RAMDirectory index;
-	private Directory index;
+	private FSDirectory index;
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
-	private File[] documents;
-	private StandardAnalyzer analyzer;
 	private static final String INDEX_DIR = "lucene/";
-	private Map<String, Integer> documentDict = new HashMap<>();
 
-	public CandidateRetrievalService(Path dir) throws CorruptIndexException, IOException {
-		analyzer = new StandardAnalyzer(Version.LUCENE_36);
-		//TODO: create index only if it does not exist
-		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
-		if(indexDir.exists()) {
-			index = new MMapDirectory(indexDir);
-		}else {
-			index = createIndex(dir);
-		}
-	}
-
-	public Directory createIndex(Path dir) throws CorruptIndexException, IOException {
-		Path temp = Paths.get(INDEX_DIR+dir.getFileName().toString());
-		Directory newIndex = new MMapDirectory(temp.toFile());
-
+	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
-		writer = new IndexWriter(index, indexWriterConfig);
-		documents = Fileutils.getFileList(dir);
-		int i = 0;
-		for (File file: documents) {
-			Document doc = getDocument(file.toPath());
-			writer.addDocument(doc);
-			this.documentDict.put(doc.get("filename"), i);
-			i++;
+		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
+		try {
+			if(indexDir.exists()) {
+				index = FSDirectory.open(indexDir);
+			}else {
+				index = createIndex(dir);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		writer.close();
-		
-		return newIndex;
 	}
 
-	public Document getDocument(Path file) {
+	private FSDirectory createIndex(Path dir) throws IOException {
+		Path temp = Paths.get(INDEX_DIR+dir.getFileName().toString());
+		return new NIOFSDirectory(temp.toFile());
+	}
+
+	private IndexWriter getWriter() {
+		if(writer == null) {
+			try {
+				writer = new IndexWriter(index, indexWriterConfig);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return writer;
+	}
+
+	public void addDocument(List<NLPSentence> sentences) {
+		/**
+		 * Adds all sentences from a list to the index.
+		 * Should be thread safe and can be called from multiple threads simultaneously.
+		 */
+		for (NLPSentence nlpSentence : sentences) {
+			Document doc = getSentence(nlpSentence);
+			try {
+				getWriter().addDocument(doc);
+			} catch (CorruptIndexException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					writer.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public Document getSentence(NLPSentence sentence) {
 		Document doc = new Document();
-		doc.add(new Field("text", Fileutils.getText(file), org.apache.lucene.document.Field.Store.NO, org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
-		doc.add(new Field("filename", file.getFileName().toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.ANALYZED));
+		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
+				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
+		doc.add(new Field("FILENAME", sentence.getFilename().toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+
 		return doc;
 	}
 
-	public List<String> getSimilarDocuments(String filename, int recall) throws CorruptIndexException, IOException {
+	public List<SentencePair> getSimilarSentences(String filename, int retrievalCount) throws CorruptIndexException, IOException {
+		/**
+		 * Retrieves the n most similar sentences for every sentence in a file.
+		 */
 		IndexReader ir = IndexReader.open(index);
 		IndexSearcher is = new IndexSearcher(ir);
 
 		MoreLikeThis mlt = new MoreLikeThis(ir);
-		mlt.setFieldNames(new String[] {"text"});
-		Reader reader = new BufferedReader(new FileReader(filename));
-		Query query = mlt.like(reader, "text");
+		mlt.setFieldNames(new String[] {"LEMMAS"});
 
-		ScoreDoc[] hits = is.search(query, recall).scoreDocs;
+		List<SentencePair> simDocs = new LinkedList<>();
+		int n = 0;
+		List<NLPSentence> sentences = SentenceUtils.getSentences(filename);
+		for (NLPSentence nlpSentence : sentences) {
+			StringReader sr = new StringReader(nlpSentence.getLemmas());
+			Query query = mlt.like(sr, "LEMMAS");
+			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
+			for (ScoreDoc scoreDoc : hits) {
+				int i = getIndexToInsert(scoreDoc, simDocs, n);
+				if(i != -1) {
+					Document doc = is.doc(scoreDoc.doc);
+					SentencePair sp = new SentencePair(doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), filename, nlpSentence.getNumber(), scoreDoc.score);
+					simDocs.add(i, sp);
+					
+					n = simDocs.size();
+					if(n > retrievalCount) {
+						simDocs.remove(n-1);
+						n = simDocs.size();
+					}
+				}
+			}
+		}
 		is.close();
 
-		List<String> simDocs = new ArrayList<String>();
-		for (ScoreDoc scoreDoc : hits) {
-			Document doc = is.doc(scoreDoc.doc);
-			simDocs.add(doc.get("filename"));
+		return simDocs;
+	}
+
+	private int getIndexToInsert(ScoreDoc doc, List<SentencePair> bestScoreDocs, int n) {
+		if(n == 0) {
+			return 0;
+		}
+		if(doc.score > bestScoreDocs.get(n-1).getSimilarity() && n > 30) {
+			return -1;
 		}
 
-		return simDocs;
+		for (int i = n-1; i >= 0; i--) {
+			if(doc.score > bestScoreDocs.get(i).getSimilarity()) {
+				return i+1;
+			}
+		}
+		return 0;
 	}
 }
