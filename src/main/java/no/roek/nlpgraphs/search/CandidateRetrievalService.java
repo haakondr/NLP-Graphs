@@ -37,10 +37,12 @@ public class CandidateRetrievalService {
 	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
+		
 		try {
 			if(indexDir.exists()) {
 				index = FSDirectory.open(indexDir);
 			}else {
+				writer = new IndexWriter(index, indexWriterConfig);
 				index = createIndex(dir);
 			}
 		} catch (IOException e) {
@@ -53,21 +55,10 @@ public class CandidateRetrievalService {
 		return new NIOFSDirectory(temp.toFile());
 	}
 
-	private IndexWriter getWriter() {
-		if(writer == null) {
-			try {
-				writer = new IndexWriter(index, indexWriterConfig);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return writer;
-	}
 
 	public synchronized void closeWriter() {
 		try {
-			getWriter().close();
+			writer.close();
 		} catch (CorruptIndexException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -83,7 +74,7 @@ public class CandidateRetrievalService {
 		for (NLPSentence nlpSentence : sentences) {
 			Document doc = getSentence(nlpSentence);
 			try {
-				getWriter().addDocument(doc);
+				writer.addDocument(doc);
 			} catch (CorruptIndexException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
