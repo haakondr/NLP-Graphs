@@ -27,6 +27,7 @@ public class SentenceRetrievalWorker extends Thread {
 			try {
 				File file = retrievalQueue.take();
 				if(file == null) {
+					System.out.println("No files in queue. "+Thread.currentThread().getName()+" stopping..");
 					running = false;
 				}else {
 					queue.put(getParseJob(file));
