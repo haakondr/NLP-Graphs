@@ -100,6 +100,7 @@ public class GraphUtils {
 
 
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		System.out.println(filename+" "+sentenceNumber);
 		JsonReader jsonReader = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
@@ -110,7 +111,6 @@ public class GraphUtils {
 
 			return parseGraph(sentence.getAsJsonObject(), filename);
 		} catch (IOException e) {
-			System.out.println("could not find sentence in "+filename+ " sentencenumber: "+sentenceNumber);
 			e.printStackTrace();
 		} finally {
 			try {
