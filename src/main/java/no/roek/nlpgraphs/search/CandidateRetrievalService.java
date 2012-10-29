@@ -42,8 +42,8 @@ public class CandidateRetrievalService {
 			if(indexDir.exists()) {
 				index = FSDirectory.open(indexDir);
 			}else {
-				writer = new IndexWriter(index, indexWriterConfig);
 				index = createIndex(dir);
+				writer = new IndexWriter(index, indexWriterConfig);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
