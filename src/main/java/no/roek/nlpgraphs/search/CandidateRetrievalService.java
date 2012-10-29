@@ -10,6 +10,7 @@ import java.util.List;
 
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.misc.ConfigService;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -33,10 +34,15 @@ public class CandidateRetrievalService {
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
 	private static final String INDEX_DIR = "lucene/";
+	private String parsedDir, testDir, trainDir;
 
 	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
+		ConfigService cs = new ConfigService();
+		parsedDir = cs.getParsedFilesDir();
+		testDir = cs.getTestDir();
+		trainDir = cs.getTrainDir();
 		
 		try {
 			if(indexDir.exists()) {
@@ -114,7 +120,7 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n);
 				if(i != -1) {
 					Document doc = is.doc(scoreDoc.doc);
-					SentencePair sp = new SentencePair(doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), filename, nlpSentence.getNumber(), scoreDoc.score);
+					SentencePair sp = new SentencePair(parsedDir+trainDir+doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), filename, nlpSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 					
 					n = simDocs.size();
