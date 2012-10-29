@@ -120,7 +120,7 @@ public class ConcurrencyService {
 		}
 		progressPrinter = new ProgressPrinter(documentQueue.size());
 
-		crs = new CandidateRetrievalService(Paths.get(dataDir+trainDir));
+		crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
 		for (int i = 0; i < indexBuilderThreads.length; i++) {
@@ -161,7 +161,7 @@ public class ConcurrencyService {
 		}
 
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
-		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(testDir));
+		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
 			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
