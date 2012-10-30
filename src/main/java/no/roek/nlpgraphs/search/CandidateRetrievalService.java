@@ -120,7 +120,8 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n);
 				if(i != -1) {
 					Document doc = is.doc(scoreDoc.doc);
-					SentencePair sp = new SentencePair(parsedDir+trainDir+doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), filename, nlpSentence.getNumber(), scoreDoc.score);
+					//TODO: sett full path i filename i index istedet?
+					SentencePair sp = new SentencePair(parsedDir+trainDir+doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), nlpSentence.getFilename(), nlpSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 					
 					n = simDocs.size();

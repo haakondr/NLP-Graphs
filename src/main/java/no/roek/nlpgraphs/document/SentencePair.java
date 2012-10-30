@@ -12,8 +12,8 @@ public class SentencePair {
 	
 	public SentencePair(String trainFile, int trainSentence, String testFile, int testSentence, float similarity) {
 		this.trainFile = trainFile;
-		this.testFile = testFile;
 		this.trainSentence = trainSentence;
+		this.testFile = testFile;
 		this.testSentence = testSentence;
 		this.similarity = similarity;
 	}

@@ -70,8 +70,8 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(SentencePair pair : job.getTextPairs()) {
-			Graph test = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
-			Graph train = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
+			Graph train = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
+			Graph test = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
 
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
@@ -115,6 +115,7 @@ public class PlagiarismWorker extends Thread {
 		FileWriter writer = null;
 		try {
 			Fileutils.createParentFolders(resultsDir+file);
+			//TODO: .xml file ending instead of .txt, so permeasures.py detects it
 			writer = new FileWriter(resultsDir+file);
 			outputter.output(doc, writer);
 		} catch (IOException e) {

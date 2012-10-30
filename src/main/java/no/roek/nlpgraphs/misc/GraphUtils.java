@@ -119,7 +119,6 @@ public class GraphUtils {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Could not find sentence "+sentenceNumber+" in file "+filename);
 		return null;
 	}
 
@@ -142,7 +141,8 @@ public class GraphUtils {
 
 	public static Node createNodeFromJson(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
 		String id = jsonNode.get("id").getAsString();
-		String word = jsonNode.get("word").getAsString();
+		//ommited word, as matching for lemmas is better for the GED algorithm
+//		String word = jsonNode.get("word").getAsString();
 		String lemma = jsonNode.get("lemma").getAsString();
 		String pos = jsonNode.get("pos").getAsString();
 		String rel = jsonNode.get("rel").getAsString();
