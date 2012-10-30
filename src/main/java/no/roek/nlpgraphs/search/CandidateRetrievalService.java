@@ -107,6 +107,8 @@ public class CandidateRetrievalService {
 		IndexSearcher is = new IndexSearcher(ir);
 
 		MoreLikeThis mlt = new MoreLikeThis(ir);
+	    mlt.setMinTermFreq(1);
+	    mlt.setMinDocFreq(1);
 		mlt.setFieldNames(new String[] {"LEMMAS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
