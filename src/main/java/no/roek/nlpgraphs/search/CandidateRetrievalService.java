@@ -111,17 +111,16 @@ public class CandidateRetrievalService {
 
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
-		List<NLPSentence> sentences = SentenceUtils.getSentences(filename);
-		for (NLPSentence nlpSentence : sentences) {
-			StringReader sr = new StringReader(nlpSentence.getLemmas());
+		for (NLPSentence testSentence : SentenceUtils.getSentences(filename)) {
+			StringReader sr = new StringReader(testSentence.getLemmas());
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
 			for (ScoreDoc scoreDoc : hits) {
 				int i = getIndexToInsert(scoreDoc, simDocs, n);
 				if(i != -1) {
-					Document doc = is.doc(scoreDoc.doc);
+					Document trainDoc = is.doc(scoreDoc.doc);
 					//TODO: sett full path i filename i index istedet?
-					SentencePair sp = new SentencePair(parsedDir+trainDir+doc.get("FILENAME"), Integer.parseInt(doc.get("SENTENCE_NUMBER")), nlpSentence.getFilename(), nlpSentence.getNumber(), scoreDoc.score);
+					SentencePair sp = new SentencePair(parsedDir+trainDir+trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 					
 					n = simDocs.size();

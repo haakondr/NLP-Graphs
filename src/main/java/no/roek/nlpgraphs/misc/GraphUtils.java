@@ -100,7 +100,6 @@ public class GraphUtils {
 
 
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
-		System.out.println(filename+" "+sentenceNumber);
 		JsonReader jsonReader = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
@@ -157,7 +156,6 @@ public class GraphUtils {
 		}
 
 		return new Node(id, new String[] {lemma, pos});
-		//TODO: checking for lemma is probably better, so word is omitted
 		//		return new Node(id, new String[] {word, lemma, pos}); 
 	}
 

@@ -111,7 +111,7 @@ public class ConcurrencyService {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for (File f : Fileutils.getFileList(dataDir+trainDir)) {
+		for (File f : Fileutils.getFileList(parsedFilesDir+trainDir)) {
 			try {
 				documentQueue.put(f.toString());
 			} catch (InterruptedException e) {
