@@ -42,8 +42,9 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(File file) {
 		PlagiarismJob plagJob = new PlagiarismJob(file.toPath());
 		try {
-			for(SentencePair sentence : crs.getSimilarSentences(file.toString(), 50)) {
-				plagJob.addTextPair(sentence);
+			for(SentencePair sp : crs.getSimilarSentences(file.toString(), 50)) {
+				System.out.println("textpair: "+sp.getTrainFile()+" - "+sp.getTestFile());
+				plagJob.addTextPair(sp);
 			}
 		} catch ( IOException e) {
 			e.printStackTrace();

@@ -107,7 +107,6 @@ public class SentenceUtils {
 			}
 		} catch (IOException  e) {
 			e.printStackTrace();
-			return null;
 		} finally {
 			try {
 				jsonReader.close();
