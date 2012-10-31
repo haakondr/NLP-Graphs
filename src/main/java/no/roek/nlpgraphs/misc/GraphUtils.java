@@ -100,6 +100,7 @@ public class GraphUtils {
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
+		System.out.println(filename+" "+sentenceNumber);
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
