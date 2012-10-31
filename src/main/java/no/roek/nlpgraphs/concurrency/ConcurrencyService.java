@@ -169,7 +169,7 @@ public class ConcurrencyService {
 			worker.start();
 		}
 
-		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(dataDir+testDir));
+		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(parsedFilesDir+testDir));
 		plagThreadCount = cs.getPlagiarismThreads();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {
