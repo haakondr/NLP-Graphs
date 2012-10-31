@@ -145,12 +145,13 @@ public class CandidateRetrievalService {
 		if(n == 0) {
 			return 0;
 		}
-		if(doc.score > simDocs.get(n-1).getSimilarity() && n > retrievalCount) {
+		
+		if(doc.score < simDocs.get(n-1).getSimilarity()) {
 			return -1;
 		}
 
 		for (int i = n-1; i >= 0; i--) {
-			if(doc.score > simDocs.get(i).getSimilarity()) {
+			if(doc.score < simDocs.get(i).getSimilarity()) {
 				return i+1;
 			}
 		}

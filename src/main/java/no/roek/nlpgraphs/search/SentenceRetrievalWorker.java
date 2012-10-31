@@ -46,7 +46,6 @@ public class SentenceRetrievalWorker extends Thread {
 				System.out.println("textpair: "+sp.getTrainFile()+" "+sp.getTrainSentence()+" - "+sp.getTestFile()+" "+sp.getTestSentence());
 				plagJob.addTextPair(sp);
 			}
-			System.out.println("found "+plagJob.getTextPairs().size()+" candidate passages for file "+file.getName());
 		} catch ( IOException e) {
 			e.printStackTrace();
 		}
