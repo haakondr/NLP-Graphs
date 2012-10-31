@@ -126,7 +126,7 @@ public class SentenceUtils {
 		String text = jsonSentence.get("originalText").getAsString();
 		
 		List<WordLemmaTag> tokens = new ArrayList<>();
-		for(JsonElement jsonToken : jsonSentence.getAsJsonArray()) {
+		for(JsonElement jsonToken : jsonSentence.get("tokens").getAsJsonArray()) {
 			tokens.add(getTokens(jsonToken.getAsJsonObject()));
 		}
 
