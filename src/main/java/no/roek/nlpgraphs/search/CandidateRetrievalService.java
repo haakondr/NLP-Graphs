@@ -10,7 +10,9 @@ import java.util.List;
 
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.GraphUtils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -109,11 +111,13 @@ public class CandidateRetrievalService {
 		MoreLikeThis mlt = new MoreLikeThis(ir);
 	    mlt.setMinTermFreq(1);
 	    mlt.setMinDocFreq(1);
+	    //TODO: set stopword set mlt.setStopWords()
 		mlt.setFieldNames(new String[] {"LEMMAS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
-		for (NLPSentence testSentence : SentenceUtils.getSentences(filename)) {
+//		for (NLPSentence testSentence : SentenceUtils.getSentences(filename)) {
+		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
 			StringReader sr = new StringReader(testSentence.getLemmas());
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
