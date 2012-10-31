@@ -124,8 +124,7 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					//TODO: sett full path i filename i index istedet?
-					SentencePair sp = new SentencePair(parsedDir+trainDir+trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					SentencePair sp = new SentencePair(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 					
 					n = simDocs.size();
