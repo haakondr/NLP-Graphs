@@ -121,7 +121,7 @@ public class CandidateRetrievalService {
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
 			for (ScoreDoc scoreDoc : hits) {
-				int i = getIndexToInsert(scoreDoc, simDocs, n);
+				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
 					//TODO: sett full path i filename i index istedet?
@@ -141,16 +141,16 @@ public class CandidateRetrievalService {
 		return simDocs;
 	}
 
-	private int getIndexToInsert(ScoreDoc doc, List<SentencePair> bestScoreDocs, int n) {
+	private int getIndexToInsert(ScoreDoc doc, List<SentencePair> simDocs, int n, int retrievalCount) {
 		if(n == 0) {
 			return 0;
 		}
-		if(doc.score > bestScoreDocs.get(n-1).getSimilarity() && n > 30) {
+		if(doc.score > simDocs.get(n-1).getSimilarity() && n > retrievalCount) {
 			return -1;
 		}
 
 		for (int i = n-1; i >= 0; i--) {
-			if(doc.score > bestScoreDocs.get(i).getSimilarity()) {
+			if(doc.score > simDocs.get(i).getSimilarity()) {
 				return i+1;
 			}
 		}
