@@ -12,7 +12,6 @@ public class IndexBuilder extends Thread {
 	private ConcurrencyService concurrencyService;
 
 	public IndexBuilder(BlockingQueue<String> documentQueue, CandidateRetrievalService crs, ConcurrencyService concurrencyService) {
-		//TODO: remove stopwords
 		this.crs = crs;
 		this.documentQueue = documentQueue;
 		this.concurrencyService = concurrencyService;
@@ -27,10 +26,9 @@ public class IndexBuilder extends Thread {
 				if(filename.equals("die")) {
 					running = false;
 				}else {
-					crs.addDocument(SentenceUtils.getSentences(filename));
+					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(filename));
 					concurrencyService.indexBuilderJobDone();
 				}
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

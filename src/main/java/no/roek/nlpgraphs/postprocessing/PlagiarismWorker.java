@@ -70,7 +70,6 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(SentencePair pair : job.getTextPairs()) {
-			System.out.println("checking "+pair.getTrainFile() + " "+pair.getTrainSentence()+ " against "+pair.getTestFile()+" "+pair.getTestSentence());
 			Graph train = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
 			Graph test = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
 
