@@ -4,14 +4,8 @@ import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.ConcurrencyService;
 import no.roek.nlpgraphs.concurrency.ParseJob;
-import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.ProgressPrinter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 

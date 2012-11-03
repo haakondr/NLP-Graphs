@@ -9,14 +9,12 @@ import java.util.concurrent.BlockingQueue;
 import no.roek.nlpgraphs.algorithm.GraphEditDistance;
 import no.roek.nlpgraphs.concurrency.ConcurrencyService;
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismReference;
-import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.document.SentencePair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
-import no.roek.nlpgraphs.misc.ProgressPrinter;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
@@ -71,9 +69,9 @@ public class PlagiarismWorker extends Thread {
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
-		for(TextPair pair : job.getTextPairs()) {
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestSentence().getFilename(), pair.getTestSentence().getNumber());
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainSentence().getFilename(), pair.getTrainSentence().getNumber());
+		for(SentencePair pair : job.getTextPairs()) {
+			Graph train = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
+			Graph test = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
 
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
@@ -83,15 +81,13 @@ public class PlagiarismWorker extends Thread {
 		return plagReferences;
 	}
 
-	public PlagiarismReference getPlagiarismReference(TextPair pair, double similarity, boolean detectedPlagiarism) {
-		NLPSentence test = pair.getTestSentence();
-		NLPSentence train = pair.getTrainSentence();
-		String filename = test.getFilename();
-		String offset = Integer.toString(test.getStart());
-		String length = Integer.toString(test.getLength());
-		String sourceReference = train.getFilename();
-		String sourceOffset = Integer.toString(train.getStart());
-		String sourceLength = Integer.toString(train.getLength());
+	public PlagiarismReference getPlagiarismReference(SentencePair pair, double similarity, boolean detectedPlagiarism) {
+		String filename = pair.getTestFile();
+		String offset = Integer.toString(pair.getTestGraph().getOffset());
+		String length = Integer.toString(pair.getTestGraph().getLength());
+		String sourceReference = pair.getTrainFile();
+		String sourceOffset = Integer.toString(pair.getTrainGraph().getOffset());
+		String sourceLength = Integer.toString(pair.getTrainGraph().getLength());
 		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
 		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
@@ -119,6 +115,7 @@ public class PlagiarismWorker extends Thread {
 		FileWriter writer = null;
 		try {
 			Fileutils.createParentFolders(resultsDir+file);
+			//TODO: .xml file ending instead of .txt, so permeasures.py detects it
 			writer = new FileWriter(resultsDir+file);
 			outputter.output(doc, writer);
 		} catch (IOException e) {

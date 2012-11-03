@@ -9,7 +9,6 @@ import no.roek.nlpgraphs.search.SentenceUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {
@@ -73,6 +72,17 @@ public class NLPSentence {
 		words.add(word);
 	}
 
+	public String getLemmas() {
+		//TODO: this string should probably be created when object is created. stopwords should be removed as well
+		StringBuilder sb = new StringBuilder();
+		for (WordLemmaTag word : words) {
+			sb.append(word.lemma());
+			sb.append(" ");
+		}
+		
+		return sb.toString();
+	}
+	
 	public String getFilename() {
 		return filename;
 	}

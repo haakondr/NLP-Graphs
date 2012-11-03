@@ -9,16 +9,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-
-import net.sourceforge.semantics.Compare;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
-import edu.stanford.nlp.ling.Word;
+
+import org.apache.commons.io.IOUtils;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class SentenceUtils {
@@ -86,10 +91,55 @@ public class SentenceUtils {
 
 		return sim / attr1.size(); 
 	}
-	//	private static boolean isSimilar(NLPSentence querySentence, NLPSentence sentence) {
-	//		Compare cmp = new Compare(querySentence.getText(), sentence.getText());
-	//		return cmp.getResult() > 0.06;
-	//	}
+	
+	public static List<NLPSentence> getSentencesFromParsedFile(String filename) {
+		List<NLPSentence> sentences = new ArrayList<>();
+		JsonReader jsonReader = null;
+		try {
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+
+			JsonParser jsonParser = new JsonParser();
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			JsonObject jsonSentences = fileObject.get("sentences").getAsJsonObject();
+			for(Map.Entry<String,JsonElement> entry : jsonSentences.entrySet()) {
+				JsonObject sentence = entry.getValue().getAsJsonObject();
+				sentences.add(getSentence(sentence, filename));
+			}
+		} catch (IOException  e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				jsonReader.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return sentences;
+	}
+	
+	public static NLPSentence getSentence(JsonObject jsonSentence, String filename) {
+		int number = jsonSentence.get("sentenceNumber").getAsInt();
+		int offset = jsonSentence.get("offset").getAsInt();
+		int length = jsonSentence.get("length").getAsInt();
+		String text = jsonSentence.get("originalText").getAsString();
+		
+		List<WordLemmaTag> tokens = new ArrayList<>();
+		for(JsonElement jsonToken : jsonSentence.get("tokens").getAsJsonArray()) {
+			tokens.add(getTokens(jsonToken.getAsJsonObject()));
+		}
+
+		return new NLPSentence(filename, number, offset, length, text, tokens);
+	}
+	
+	public static WordLemmaTag getTokens(JsonObject jsonToken) {
+		String word = jsonToken.get("word").getAsString();
+		String lemma = jsonToken.get("lemma").getAsString();
+		String pos = jsonToken.get("pos").getAsString();
+		
+		return new WordLemmaTag(word, lemma, pos);
+	}
+
 
 	public static List<NLPSentence> getSentences(String file) {
 		FileInputStream fstream = null;

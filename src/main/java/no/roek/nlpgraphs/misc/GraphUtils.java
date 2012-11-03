@@ -1,11 +1,8 @@
 package no.roek.nlpgraphs.misc;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,15 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.preprocessing.ParseUtils;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -104,9 +97,7 @@ public class GraphUtils {
 
 		return graphs;
 	}
-
-
-
+	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
 		try {
@@ -126,7 +117,6 @@ public class GraphUtils {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Could not find sentence "+sentenceNumber+" in file "+filename);
 		return null;
 	}
 
@@ -149,7 +139,8 @@ public class GraphUtils {
 
 	public static Node createNodeFromJson(JsonObject jsonNode, HashMap<String, List<String[]>> adj) {
 		String id = jsonNode.get("id").getAsString();
-		String word = jsonNode.get("word").getAsString();
+		//ommited word, as matching for lemmas is better for the GED algorithm
+//		String word = jsonNode.get("word").getAsString();
 		String lemma = jsonNode.get("lemma").getAsString();
 		String pos = jsonNode.get("pos").getAsString();
 		String rel = jsonNode.get("rel").getAsString();
@@ -164,7 +155,6 @@ public class GraphUtils {
 		}
 
 		return new Node(id, new String[] {lemma, pos});
-		//TODO: checking for lemma is probably better, so word is omitted
 		//		return new Node(id, new String[] {word, lemma, pos}); 
 	}
 

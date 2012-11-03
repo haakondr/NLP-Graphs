@@ -1,41 +1,37 @@
 package no.roek.nlpgraphs.search;
 
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.concurrency.SentenceRetrievalJob;
-import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.document.SentencePair;
 
 public class SentenceRetrievalWorker extends Thread {
 
-	private BlockingQueue<SentenceRetrievalJob> queue;
-	private BlockingQueue<PlagiarismJob> parseQueue;
-	private String trainDir, testDir, dataDir, parsedDir;
+	private BlockingQueue<PlagiarismJob> queue;
+	private BlockingQueue<File> retrievalQueue;
+	private CandidateRetrievalService crs;
 	
 
-	public SentenceRetrievalWorker(BlockingQueue<SentenceRetrievalJob> queue, BlockingQueue<PlagiarismJob> parseQueue) {
+	public SentenceRetrievalWorker(CandidateRetrievalService crs, BlockingQueue<File> retrievalQueue, BlockingQueue<PlagiarismJob> queue) {
 		this.queue = queue;
-		this.parseQueue = parseQueue;
-		ConfigService cs = new ConfigService();
-		this.trainDir = cs.getTrainDir();
-		this.testDir = cs.getTestDir();
-		this.dataDir = cs.getDataDir();
-		this.parsedDir = cs.getParsedFilesDir();
+		this.crs = crs;
+		this.retrievalQueue = retrievalQueue;
 	}
 
 	@Override
 	public void run() {
 		boolean running = true;
-
 		while(running) {
 			try {
-				SentenceRetrievalJob job = queue.take();
-				if(job.isLastInQueue()) {
+				File file = retrievalQueue.take();
+				if(file == null) {
+					System.out.println("No files in queue. "+Thread.currentThread().getName()+" stopping..");
 					running = false;
-					break;
+				}else {
+					queue.put(getParseJob(file));
 				}
-				parseQueue.put(getParseJob(job));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				running = false;
@@ -43,11 +39,14 @@ public class SentenceRetrievalWorker extends Thread {
 		}
 	}
 
-	public PlagiarismJob getParseJob(SentenceRetrievalJob job) {
-		PlagiarismJob plagJob = new PlagiarismJob(job.getFile());
-		for (String simDoc : job.getSimilarDocs()) {
-			
-			plagJob.addAllTextPairs(SentenceUtils.getSimilarSentences(dataDir, parsedDir, testDir, trainDir, job.getFilename(), Paths.get(simDoc).getFileName().toString()));
+	public PlagiarismJob getParseJob(File file) {
+		PlagiarismJob plagJob = new PlagiarismJob(file.toPath());
+		try {
+			for(SentencePair sp : crs.getSimilarSentences(file.toString(), 50)) {
+				plagJob.addTextPair(sp);
+			}
+		} catch ( IOException e) {
+			e.printStackTrace();
 		}
 		
 		return plagJob;
