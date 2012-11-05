@@ -89,8 +89,9 @@ public class ConcurrencyService {
 
 	public synchronized void depParseJobDone(DependencyParser parser, String text) {
 		progressPrinter.printProgressbar(text);
-		dependencyParserCount--;
+
 		if(progressPrinter.isDone()) {
+			dependencyParserCount--;
 			parser.kill();
 		}
 
