@@ -3,6 +3,7 @@ package no.roek.nlpgraphs.search;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.concurrency.ConcurrencyService;
+import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class IndexBuilder extends Thread {
 

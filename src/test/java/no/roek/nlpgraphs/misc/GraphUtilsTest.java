@@ -7,7 +7,6 @@ import java.util.List;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.search.SentenceUtils;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,11 +32,11 @@ public class GraphUtilsTest {
 		assertEquals(67, size);
 	}
 	
-	@Test
-	public void shouldBeCorrectText() {
-		String origText = "He must kill out the smaller centres of interest, in order that his whole will, love, and attention may pour itself out towards, seize upon, unite with, that special manifestation of the beauty and significance of the universe to which he is drawn.";
-		assertEquals(origText, graph1.getOriginalText());
-	}
+//	@Test
+//	public void shouldBeCorrectText() {
+//		String origText = "He must kill out the smaller centres of interest, in order that his whole will, love, and attention may pour itself out towards, seize upon, unite with, that special manifestation of the beauty and significance of the universe to which he is drawn.";
+//		assertEquals(origText, graph1.getOriginalText());
+//	}
 	
 //	
 //	@Test

@@ -124,6 +124,7 @@ public class Graph {
 	}
 	
 	public NLPSentence toSentence() {
-		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
+//		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
+		return new NLPSentence(filename, sentenceNumber, offset, length);
 	}
 }
