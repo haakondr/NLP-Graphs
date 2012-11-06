@@ -54,7 +54,7 @@ public class ConcurrencyService {
 	public void preprocess() {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
 
-		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
+		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>(15);
 
 		for (File file : unparsedFiles) {
 			try {
