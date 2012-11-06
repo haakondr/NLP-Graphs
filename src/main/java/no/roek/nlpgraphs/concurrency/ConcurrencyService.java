@@ -54,7 +54,7 @@ public class ConcurrencyService {
 	public void preprocess() {
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
 
-		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>(15);
+		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
 
 		for (File file : unparsedFiles) {
 			try {
@@ -64,7 +64,7 @@ public class ConcurrencyService {
 			}
 		}
 		posTagCount = cs.getPOSTaggerThreadCount();
-		parseQueue = new LinkedBlockingQueue<>();
+		parseQueue = new LinkedBlockingQueue<>(15);
 		posTagThreads = new PosTagProducer[posTagCount];
 
 		for (int i = 0; i < posTagCount; i++) {
