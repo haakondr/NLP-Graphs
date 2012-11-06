@@ -87,6 +87,7 @@ public class DependencyParser {
 		if(jwiPos!= null) {
 			IIndexWord idxWord = dict.getIndexWord(lemma, jwiPos);
 
+			try {
 			for(IWordID wordId : idxWord.getWordIDs()) {
 				IWord word = dict.getWord(wordId);
 
@@ -99,6 +100,9 @@ public class DependencyParser {
 						}
 					}
 				}
+			}
+			}catch(NullPointerException e){
+				System.out.println("Nullpointer when looking for synonyms for "+lemma);
 			}
 		}
 
