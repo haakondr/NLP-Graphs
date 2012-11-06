@@ -87,22 +87,19 @@ public class DependencyParser {
 		if(jwiPos!= null) {
 			IIndexWord idxWord = dict.getIndexWord(lemma, jwiPos);
 
-			try {
-			for(IWordID wordId : idxWord.getWordIDs()) {
-				IWord word = dict.getWord(wordId);
+			if(idxWord!=null) {
+				for(IWordID wordId : idxWord.getWordIDs()) {
+					IWord word = dict.getWord(wordId);
 
-				for(IWord synonym : word.getSynset().getWords()) {
-					String temp = synonym.getLemma();
-					//wordnet returns words with underscore. at the moment, the system cannot deal with them so they are omitted
-					if(!temp.equalsIgnoreCase(lemma)) {
-						if(!temp.contains("_")) {
-						jsonSynonyms.put(synonym.getLemma());
+					for(IWord synonym : word.getSynset().getWords()) {
+						String temp = synonym.getLemma();
+						if(!temp.equalsIgnoreCase(lemma)) {
+							if(!temp.contains("_")) {
+								jsonSynonyms.put(synonym.getLemma());
+							}
 						}
 					}
 				}
-			}
-			}catch(NullPointerException e){
-				System.out.println("Nullpointer when looking for synonyms for "+lemma);
 			}
 		}
 
@@ -110,14 +107,14 @@ public class DependencyParser {
 	}
 
 	private POS getJWIPOSTag(String pos) {
-		if(pos.startsWith("NN")) {
+		if(pos.equals("NN") || pos.equals("NNS")) {
 			return POS.NOUN;
 		}else if(pos.startsWith("VB")) {
 			return POS.VERB;
 		}else if(pos.startsWith("RB")) {
 			return POS.ADVERB;
 		}else if(pos.startsWith("JJ")) {
-			return POS.ADVERB;
+			return POS.ADJECTIVE;
 		}
 
 		return null;

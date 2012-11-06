@@ -25,7 +25,7 @@ public class ParseTest {
 //TODO: takes a couple seconds, uncommit to test dependency parsing
 	@Test
 	public void shouldDependencyParse() throws ClassNotFoundException, IOException, NullPointerException, MaltChainedException {
-		String filename = "parse_test.txt";
+		String filename = "source-document04231.txt";
 		String dir = "src/test/resources/documents/";
 //		List<NLPSentence> sentences = SentenceUtils.getSentences(dir+filename);
 		POSTagParser parser = new POSTagParser();
