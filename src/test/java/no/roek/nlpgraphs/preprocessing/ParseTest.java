@@ -36,7 +36,10 @@ public class ParseTest {
 		MaltParserService maltService = new MaltParserService();
 		maltService.initializeParserModel(cs.getMaltParams());
 		String outDir = "src/test/resources/parsetest/";
-		ParseUtils.dependencyParse(job, outDir, maltService);
+		
+		DependencyParser dependencyParser = new DependencyParser();
+		dependencyParser.dependencyParse(job, outDir);
+//		ParseUtils.dependencyParse(job, outDir, maltService);
 		
 		Graph graph = GraphUtils.getGraphFromFile(outDir+job.getParentDir()+job.getFilename(), 1);
 		

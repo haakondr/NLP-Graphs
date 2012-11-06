@@ -10,7 +10,7 @@ import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
-import no.roek.nlpgraphs.preprocessing.DependencyParser;
+import no.roek.nlpgraphs.preprocessing.DependencyProducer;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 import no.roek.nlpgraphs.search.CandidateRetrievalService;
 import no.roek.nlpgraphs.search.IndexBuilder;
@@ -21,7 +21,7 @@ public class ConcurrencyService {
 	private File[] unparsedFiles;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
-	private DependencyParser[] dependencyParserThreads;
+	private DependencyProducer[] dependencyParserThreads;
 	private PosTagProducer[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
@@ -75,9 +75,9 @@ public class ConcurrencyService {
 
 		dependencyParserCount = cs.getMaltParserThreadCount();
 		progressPrinter = new ProgressPrinter(unparsedFiles.length);
-		dependencyParserThreads = new DependencyParser[dependencyParserCount];
+		dependencyParserThreads = new DependencyProducer[dependencyParserCount];
 		for (int i = 0; i < dependencyParserCount; i++) {
-			dependencyParserThreads[i] =  new DependencyParser(parseQueue, cs.getMaltParams(), this);
+			dependencyParserThreads[i] =  new DependencyProducer(parseQueue, cs.getMaltParams(), this);
 			dependencyParserThreads[i].setName("Dependency-parser-"+i);
 			dependencyParserThreads[i].start();
 		}
@@ -87,7 +87,7 @@ public class ConcurrencyService {
 		return progressPrinter;
 	}
 
-	public synchronized void depParseJobDone(DependencyParser parser, String text) {
+	public synchronized void depParseJobDone(DependencyProducer parser, String text) {
 		progressPrinter.printProgressbar(text);
 
 		if(progressPrinter.isDone()) {
