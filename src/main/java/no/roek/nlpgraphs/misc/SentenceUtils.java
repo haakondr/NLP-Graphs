@@ -16,11 +16,13 @@ import java.util.StringTokenizer;
 
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.document.WordToken;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -124,22 +126,27 @@ public class SentenceUtils {
 		int number = jsonSentence.get("sentenceNumber").getAsInt();
 		int offset = jsonSentence.get("offset").getAsInt();
 		int length = jsonSentence.get("length").getAsInt();
-		String text = jsonSentence.get("originalText").getAsString();
+//		String text = jsonSentence.get("originalText").getAsString();
 		
-		List<WordLemmaTag> tokens = new ArrayList<>();
+		List<WordToken> tokens = new ArrayList<>();
 		for(JsonElement jsonToken : jsonSentence.get("tokens").getAsJsonArray()) {
-			tokens.add(getTokens(jsonToken.getAsJsonObject()));
+			tokens.add(getToken(jsonToken.getAsJsonObject()));
 		}
 
 		return new NLPSentence(filename, number, offset, length, tokens);
 	}
 	
-	public static WordLemmaTag getTokens(JsonObject jsonToken) {
+	public static WordToken getToken(JsonObject jsonToken) {
 		String word = jsonToken.get("word").getAsString();
 		String lemma = jsonToken.get("lemma").getAsString();
 		String pos = jsonToken.get("pos").getAsString();
+		JsonArray jsonSynonyms = jsonToken.get("synonyms").getAsJsonArray();
+		List<String> synonyms = new ArrayList<>();
+		for (JsonElement syn : jsonSynonyms) {
+			synonyms.add(syn.getAsString());
+		}
 		
-		return new WordLemmaTag(word, lemma, pos);
+		return new WordToken(word, lemma, pos, synonyms.toArray(new String[0]));
 	}
 
 

@@ -37,15 +37,11 @@ public class CandidateRetrievalService {
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
 	private static final String INDEX_DIR = "lucene/";
-	private String parsedDir, testDir, trainDir;
 
 	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
 		ConfigService cs = new ConfigService();
-		parsedDir = cs.getParsedFilesDir();
-		testDir = cs.getTestDir();
-		trainDir = cs.getTrainDir();
 		
 		try {
 			if(indexDir.exists()) {
@@ -94,7 +90,7 @@ public class CandidateRetrievalService {
 
 	public Document getSentence(NLPSentence sentence) {
 		Document doc = new Document();
-		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
+		doc.add(new Field("TOKENS", sentence.getLemmasAndSynonyms(), org.apache.lucene.document.Field.Store.NO, 
 				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
 		doc.add(new Field("FILENAME", sentence.getFilename().toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
 		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
@@ -113,13 +109,14 @@ public class CandidateRetrievalService {
 	    mlt.setMinTermFreq(1);
 	    mlt.setMinDocFreq(1);
 	    //TODO: set stopword set mlt.setStopWords()
-		mlt.setFieldNames(new String[] {"LEMMAS"});
+	    //TODO: weight synonyms lower than exact match? How?
+		mlt.setFieldNames(new String[] {"TOKENS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
 		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
-			StringReader sr = new StringReader(testSentence.getLemmas());
-			Query query = mlt.like(sr, "LEMMAS");
+			StringReader sr = new StringReader(testSentence.getLemmasAndSynonyms());
+			Query query = mlt.like(sr, "TOKENS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
 			for (ScoreDoc scoreDoc : hits) {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);

@@ -12,29 +12,29 @@ import org.json.JSONObject;
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {
-	
+
 	private int number, start, length;
 	private String filename, text;
 	private String[] postags;
-	private List<WordLemmaTag> words;
-	
-	public NLPSentence(String filename, int number, int start, int length, List<WordLemmaTag> words, String[] postags) {
+	private List<WordToken> words;
+
+	public NLPSentence(String filename, int number, int start, int length, List<WordToken> words, String[] postags) {
 		this(filename, number, start, length);
 		this.postags = postags;
 	}
-	
-	public NLPSentence(String filename, int number, int start, int length, List<WordLemmaTag> words) {
+
+	public NLPSentence(String filename, int number, int start, int length, List<WordToken> words) {
 		this(filename, number, start, length);
 		this.words = words;
 	}
-	
+
 	public NLPSentence(String filename, int number, int start, int length) {
 		this.filename = filename;
 		this.number = number;
 		this.start = start;
 		this.length = length;
 	}
-	
+
 	public int getLength() {
 		return length;
 	}
@@ -46,43 +46,55 @@ public class NLPSentence {
 	public int getStart() {
 		return start;
 	}
-	
-//	public String getText() {
-//		return text;
-//	}
+
+	//	public String getText() {
+	//		return text;
+	//	}
 
 
 	public String[] getPostags() {
 		return postags;
 	}
-	
+
 	public void setPostags(String[] postags) {
 		this.postags = postags;
 	}
 
-	public List<WordLemmaTag> getWords() {
+	public List<WordToken> getWords() {
 		return words;
 	}
-	
-	public void addWord(WordLemmaTag word) {
+
+	public void addWord(WordToken word) {
 		words.add(word);
 	}
 
-	public String getLemmas() {
-		//TODO: this string should probably be created when object is created. stopwords removed as well?
+//	public String getLemmas() {
+//		//TODO: this string should probably be created when object is created. 
+//		StringBuilder sb = new StringBuilder();
+//		for (WordToken word : words) {
+//			sb.append(word.getLemma());
+//			sb.append(" ");
+//		}
+//
+//		return sb.toString();
+//	}
+
+	public String getLemmasAndSynonyms() {
+		//TODO: this string should probably be created when object is created.
 		StringBuilder sb = new StringBuilder();
-		for (WordLemmaTag word : words) {
-			sb.append(word.lemma());
-			sb.append(" ");
+		for (WordToken word : words) {
+			sb.append(word.getLemma()+" ");
+			for (String synonym: word.getSynonyms()) {
+				sb.append(synonym+" ");
+			}
 		}
-		
 		return sb.toString();
 	}
-	
+
 	public String getFilename() {
 		return filename;
 	}
-	
+
 	public String getRelativePath() {
 		Path file = Paths.get(filename);
 		String outfilename = file.getFileName().toString().replace(".txt", "");
@@ -93,28 +105,28 @@ public class NLPSentence {
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
-	
+
 	public JSONObject toJson() throws JSONException {
 		JSONObject jsonSentence = new JSONObject();
 		jsonSentence.put("sentenceNumber", number);
-//		jsonSentence.put("originalText", text);
+		//		jsonSentence.put("originalText", text);
 		jsonSentence.put("offset", start);
 		jsonSentence.put("length", getLength());
 
 		return jsonSentence;
 	}
-	
+
 	public boolean matchesPlagSourceRef(PlagiarismReference ref) {
 		int refLen = Integer.parseInt(ref.getSourceLength());
 		int refOffset = Integer.parseInt(ref.getSourceOffset());
-		
+
 		return SentenceUtils.isAlmostEqual(refOffset, start) && SentenceUtils.isAlmostEqual(refLen, length) && ref.getSourceReference().equals(getFilename());
 	}
-	
+
 	public boolean matchesPlagSuspiciousRef(PlagiarismReference ref) {
 		int refLen = Integer.parseInt(ref.getLength());
 		int refOffset = Integer.parseInt(ref.getOffset());
-		
+
 		return SentenceUtils.isAlmostEqual(refOffset, start) && SentenceUtils.isAlmostEqual(refLen, length) && ref.getFilename().equals(getFilename());
 	}
 }
