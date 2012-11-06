@@ -1,52 +1,121 @@
 package no.roek.nlpgraphs.preprocessing;
 
-import java.util.concurrent.BlockingQueue;
+import java.io.File;
+import java.io.IOException;
 
-import no.roek.nlpgraphs.concurrency.ConcurrencyService;
 import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.Fileutils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
-public class DependencyParser extends Thread{
-	private final BlockingQueue<ParseJob> queue;
+
+import edu.mit.jwi.Dictionary;
+import edu.mit.jwi.IDictionary;
+import edu.mit.jwi.item.IIndexWord;
+import edu.mit.jwi.item.IWord;
+import edu.mit.jwi.item.IWordID;
+import edu.mit.jwi.item.POS;
+
+public class DependencyParser {
+
 	private MaltParserService maltService;
-	private String parsedFilesDir;
-	private ConcurrencyService concurrencyService;
-	private boolean running;
-	
-	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams, ConcurrencyService concurrencyService) {
-		this.queue = queue;
+	private IDictionary dict;
+
+	public DependencyParser() {
 		ConfigService cs = new ConfigService();
-		this.parsedFilesDir = cs.getParsedFilesDir();
-		this.concurrencyService = concurrencyService;
-		
+		String wordnetDir = cs.getWordNetDir();
+		dict = new Dictionary(new File(wordnetDir+"dict"));
+		try {
+			dict.open() ;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			this.maltService = new MaltParserService();
-			maltService.initializeParserModel(maltParams);
+			maltService.initializeParserModel(cs.getMaltParams());
 		} catch (MaltChainedException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void run() {
-		running = true;
-		while(running) {
-			try {
-				ParseJob job = queue.take();
-				ParseUtils.dependencyParse(job, parsedFilesDir, maltService);
-				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
-			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
-				e.printStackTrace();
-				running = false;
+	public JSONObject dependencyParse(ParseJob job, String outDir) throws MaltChainedException, NullPointerException {
+		JSONObject out = new JSONObject();
+		try {
+			out.put("filename", job.getFilename());
+
+			JSONObject jsonSentences = new JSONObject();
+			for (NLPSentence sentence : job.getSentences()) {
+				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
+
+				JSONObject jsonSentence = sentence.toJson();
+				JSONArray jsonTokens = new JSONArray();
+				for (String parsedToken : parsedSentences) {
+					String[] token = parsedToken.split("\t");
+
+					JSONObject jsonToken = new JSONObject();
+					jsonToken.put("id", token[0]);
+					jsonToken.put("word", token[1]);
+					jsonToken.put("lemma", token[2]);
+					jsonToken.put("pos", token[4]);
+					jsonToken.put("rel", token[6]);
+					jsonToken.put("deprel", token[7]);
+					jsonToken.put("synonyms", getSynonyms(token[2], token[4]));
+					jsonTokens.put(jsonToken);
+				}
+				jsonSentence.put("tokens", jsonTokens);
+				jsonSentences.put(Integer.toString(sentence.getNumber()), jsonSentence);
+			}
+
+			out.put("sentences", jsonSentences);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename(), out.toString());
+		return out;
+	}
+
+	public JSONArray getSynonyms(String lemma, String pos) {
+		JSONArray jsonSynonyms = new JSONArray();
+		POS jwiPos = getJWIPOSTag(pos);
+		if(jwiPos!= null) {
+			IIndexWord idxWord = dict.getIndexWord(lemma, jwiPos);
+
+			for(IWordID wordId : idxWord.getWordIDs()) {
+				IWord word = dict.getWord(wordId);
+
+				for(IWord synonym : word.getSynset().getWords()) {
+					String temp = synonym.getLemma();
+					//wordnet returns words with underscore. at the moment, the system cannot deal with them so they are omitted
+					if(!temp.equalsIgnoreCase(lemma)) {
+						if(!temp.contains("_")) {
+						jsonSynonyms.put(synonym.getLemma());
+						}
+					}
+				}
 			}
 		}
-		System.out.println("Stopping "+Thread.currentThread().getName()+": all files are parsed.");
+
+		return jsonSynonyms;
 	}
-	
-	public synchronized void kill() {
-		running = false;
+
+	private POS getJWIPOSTag(String pos) {
+		if(pos.startsWith("NN")) {
+			return POS.NOUN;
+		}else if(pos.startsWith("VB")) {
+			return POS.VERB;
+		}else if(pos.startsWith("RB")) {
+			return POS.ADVERB;
+		}else if(pos.startsWith("JJ")) {
+			return POS.ADVERB;
+		}
+
+		return null;
 	}
 }
