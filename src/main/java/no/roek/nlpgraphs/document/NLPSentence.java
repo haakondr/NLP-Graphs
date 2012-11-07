@@ -68,29 +68,29 @@ public class NLPSentence {
 		words.add(word);
 	}
 
-//	public String getLemmas() {
-//		//TODO: this string should probably be created when object is created. 
-//		StringBuilder sb = new StringBuilder();
-//		for (WordToken word : words) {
-//			sb.append(word.getLemma());
-//			sb.append(" ");
-//		}
-//
-//		return sb.toString();
-//	}
-
-	public String getLemmasAndSynonyms() {
-		//TODO: this string should probably be created when object is created.
+	public String getLemmas() {
+		//TODO: this string should probably be created when object is created. 
 		StringBuilder sb = new StringBuilder();
 		for (WordToken word : words) {
-			sb.append(word.getLemma()+" ");
-			for (String synonym: word.getSynonyms()) {
-				sb.append(synonym+" ");
-			}
+			sb.append(word.getLemma());
+			sb.append(" ");
 		}
+
 		return sb.toString();
 	}
 
+//	public String getLemmasAndSynonyms() {
+//		//TODO: this string should probably be created when object is created.
+//		StringBuilder sb = new StringBuilder();
+//		for (WordToken word : words) {
+//			sb.append(word.getLemma()+" ");
+//			for (String synonym: word.getSynonyms()) {
+//				sb.append(synonym+" ");
+//			}
+//		}
+//		return sb.toString();
+//	}
+//
 	public String getFilename() {
 		return filename;
 	}

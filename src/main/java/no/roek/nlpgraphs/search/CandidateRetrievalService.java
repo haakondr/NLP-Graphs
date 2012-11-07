@@ -90,7 +90,7 @@ public class CandidateRetrievalService {
 
 	public Document getSentence(NLPSentence sentence) {
 		Document doc = new Document();
-		doc.add(new Field("TOKENS", sentence.getLemmasAndSynonyms(), org.apache.lucene.document.Field.Store.NO, 
+		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
 				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
 		doc.add(new Field("FILENAME", sentence.getFilename().toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
 		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
@@ -110,13 +110,13 @@ public class CandidateRetrievalService {
 	    mlt.setMinDocFreq(1);
 	    //TODO: set stopword set mlt.setStopWords()
 	    //TODO: weight synonyms lower than exact match? How?
-		mlt.setFieldNames(new String[] {"TOKENS"});
+		mlt.setFieldNames(new String[] {"LEMMAS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
 		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
-			StringReader sr = new StringReader(testSentence.getLemmasAndSynonyms());
-			Query query = mlt.like(sr, "TOKENS");
+			StringReader sr = new StringReader(testSentence.getLemmas());
+			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
 			for (ScoreDoc scoreDoc : hits) {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);

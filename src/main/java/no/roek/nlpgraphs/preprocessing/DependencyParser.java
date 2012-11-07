@@ -65,7 +65,8 @@ public class DependencyParser {
 					jsonToken.put("pos", token[4]);
 					jsonToken.put("rel", token[6]);
 					jsonToken.put("deprel", token[7]);
-					jsonToken.put("synonyms", getSynonyms(token[2], token[4]));
+					//TODO: synonyms are omitted until they prove useful.
+//					jsonToken.put("synonyms", getSynonyms(token[2], token[4]));
 					jsonTokens.put(jsonToken);
 				}
 				jsonSentence.put("tokens", jsonTokens);
