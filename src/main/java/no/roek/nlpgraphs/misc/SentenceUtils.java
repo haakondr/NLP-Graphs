@@ -140,13 +140,14 @@ public class SentenceUtils {
 		String word = jsonToken.get("word").getAsString();
 		String lemma = jsonToken.get("lemma").getAsString();
 		String pos = jsonToken.get("pos").getAsString();
-		JsonArray jsonSynonyms = jsonToken.get("synonyms").getAsJsonArray();
-		List<String> synonyms = new ArrayList<>();
-		for (JsonElement syn : jsonSynonyms) {
-			synonyms.add(syn.getAsString());
-		}
+//		JsonArray jsonSynonyms = jsonToken.get("synonyms").getAsJsonArray();
+//		List<String> synonyms = new ArrayList<>();
+//		for (JsonElement syn : jsonSynonyms) {
+//			synonyms.add(syn.getAsString());
+//		}
 		
-		return new WordToken(word, lemma, pos, synonyms.toArray(new String[0]));
+//		return new WordToken(word, lemma, pos, synonyms.toArray(new String[0]));
+		return new WordToken(word, lemma, pos);
 	}
 
 
