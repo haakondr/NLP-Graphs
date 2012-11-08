@@ -30,6 +30,7 @@ public class DependencyProducer extends Thread{
 		while(running) {
 			try {
 				ParseJob job = queue.take();
+				System.out.println(job.getFilename());
 				parser.dependencyParse(job, parsedFilesDir);
 				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
 			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
