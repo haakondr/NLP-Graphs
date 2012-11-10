@@ -42,7 +42,7 @@ public class CandidateRetrievalService {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
 		ConfigService cs = new ConfigService();
-		
+
 		try {
 			if(indexDir.exists()) {
 				index = FSDirectory.open(indexDir);
@@ -70,21 +70,23 @@ public class CandidateRetrievalService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addDocument(List<NLPSentence> sentences) {
 		/**
 		 * Adds all sentences from a list to the index.
 		 * Should be thread safe and can be called from multiple threads simultaneously.
 		 */
 		for (NLPSentence nlpSentence : sentences) {
-			Document doc = getSentence(nlpSentence);
-			try {
-				writer.addDocument(doc);
-			} catch (CorruptIndexException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} 
+			if(nlpSentence.getLength() < 80) {
+				Document doc = getSentence(nlpSentence);
+				try {
+					writer.addDocument(doc);
+				} catch (CorruptIndexException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			}
 		}
 	}
 
@@ -106,10 +108,10 @@ public class CandidateRetrievalService {
 		IndexSearcher is = new IndexSearcher(ir);
 
 		MoreLikeThis mlt = new MoreLikeThis(ir);
-	    mlt.setMinTermFreq(1);
-	    mlt.setMinDocFreq(1);
-	    //TODO: set stopword set mlt.setStopWords()
-	    //TODO: weight synonyms lower than exact match? How?
+		mlt.setMinTermFreq(1);
+		mlt.setMinDocFreq(1);
+		//TODO: set stopword set mlt.setStopWords()
+		//TODO: weight synonyms lower than exact match? How?
 		mlt.setFieldNames(new String[] {"LEMMAS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
@@ -124,7 +126,7 @@ public class CandidateRetrievalService {
 					Document trainDoc = is.doc(scoreDoc.doc);
 					SentencePair sp = new SentencePair(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
-					
+
 					n = simDocs.size();
 					if(n > retrievalCount) {
 						simDocs.remove(n-1);
@@ -142,7 +144,7 @@ public class CandidateRetrievalService {
 		if(n == 0) {
 			return 0;
 		}
-		
+
 		if(doc.score < simDocs.get(n-1).getSimilarity()) {
 			return -1;
 		}
