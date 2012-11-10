@@ -37,11 +37,12 @@ public class CandidateRetrievalService {
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
 	private static final String INDEX_DIR = "lucene/";
+	private ConfigService cs;
 
 	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
-		ConfigService cs = new ConfigService();
+		cs = new ConfigService();
 
 		try {
 			if(indexDir.exists()) {
@@ -124,7 +125,7 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					SentencePair sp = new SentencePair(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					SentencePair sp = new SentencePair(cs, trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 
 					n = simDocs.size();
