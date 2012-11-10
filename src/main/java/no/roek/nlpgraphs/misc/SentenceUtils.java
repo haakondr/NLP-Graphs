@@ -107,7 +107,7 @@ public class SentenceUtils {
 			JsonObject jsonSentences = fileObject.get("sentences").getAsJsonObject();
 			for(Map.Entry<String,JsonElement> entry : jsonSentences.entrySet()) {
 				JsonObject sentence = entry.getValue().getAsJsonObject();
-				sentences.add(getSentence(sentence, filename));
+				sentences.add(getSentence(sentence, fileObject.get("filename").getAsString()));
 			}
 		} catch (IOException  e) {
 			e.printStackTrace();
