@@ -118,6 +118,9 @@ public class CandidateRetrievalService {
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
 		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
+			if(testSentence.getLength()<80) {
+				continue;
+			}
 			StringReader sr = new StringReader(testSentence.getLemmas());
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
