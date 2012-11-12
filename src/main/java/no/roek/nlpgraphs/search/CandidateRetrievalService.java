@@ -78,7 +78,7 @@ public class CandidateRetrievalService {
 		 * Should be thread safe and can be called from multiple threads simultaneously.
 		 */
 		for (NLPSentence nlpSentence : sentences) {
-			if(nlpSentence.getLength() < 80) {
+			if(nlpSentence.getLength() > 80) {
 				Document doc = getSentence(nlpSentence);
 				try {
 					writer.addDocument(doc);
