@@ -24,7 +24,7 @@ import org.jdom2.output.XMLOutputter;
 public class PlagiarismWorker extends Thread {
 
 	private BlockingQueue<PlagiarismJob> queue;
-	private String resultsDir;
+	private String resultsDir, parsedDir, testDir, trainDir;
 	private double plagiarismThreshold;
 	private ConcurrencyService concurrencyService;
 	private boolean running;
@@ -32,6 +32,9 @@ public class PlagiarismWorker extends Thread {
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ConcurrencyService concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
+		parsedDir = cs.getParsedFilesDir();
+		testDir =cs.getTestDir();
+		trainDir = cs.getTrainDir();
 		this.resultsDir = cs.getResultsDir();
 		this.plagiarismThreshold = cs.getPlagiarismThreshold();
 		this.concurrencyService = concurrencyService;
@@ -70,8 +73,8 @@ public class PlagiarismWorker extends Thread {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(SentencePair pair : job.getTextPairs()) {
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
+			Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+pair.getTrainFile(), pair.getTrainSentence());
+			Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+pair.getTestFile(), pair.getTestSentence());
 
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
