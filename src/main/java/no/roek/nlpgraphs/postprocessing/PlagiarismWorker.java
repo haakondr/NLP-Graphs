@@ -91,7 +91,8 @@ public class PlagiarismWorker extends Thread {
 		String sourceReference = pair.getTrainFile();
 		String sourceOffset = Integer.toString(pair.getTrainGraph().getOffset());
 		String sourceLength = Integer.toString(pair.getTrainGraph().getLength());
-		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
+//		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
+		String name = "detected-plagiarism";
 		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
 
