@@ -32,7 +32,7 @@ public class CandidateRetrievalTest {
 	public static void shouldRetrieveCorrectPassage() throws CorruptIndexException, IOException {
 		String filename = "suspicious-document00228.txt";
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(cs.getTrainDir()));
-		List<SentencePair> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 30);
+		List<SentencePair> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 50);
 		List<PlagiarismReference> references = XMLUtils.getPlagiarismReferences("src/test/resources/suspicious-document00228.xml");
 
 		int correct = 0;
