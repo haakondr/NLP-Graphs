@@ -32,7 +32,7 @@ public class CandidateRetrievalTest {
 	public static void shouldRetrieveCorrectPassage() throws CorruptIndexException, IOException {
 		String filename = "suspicious-document00228.txt";
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(cs.getTrainDir()));
-		List<SentencePair> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 11092);
+		List<SentencePair> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 150);
 		List<PlagiarismReference> references = XMLUtils.getPlagiarismReferences("src/test/resources/suspicious-document00228.xml");
 
 		int correct = 0;
@@ -103,13 +103,13 @@ public class CandidateRetrievalTest {
 	}
 
 	public static boolean isWithinPassage(int offset, int length, int refOffset, int refLength) {
-		if(offset-10 < refOffset) {
+		if(offset+5 < refOffset) {
 			return false;
 		}
-		if(offset+length-10 < refOffset+refLength) {
+		if(offset+length-5 > refOffset+refLength) {
 			return false;
 		}
 
-		return (refOffset < offset) && (offset+length < refOffset+refLength);
+		return (refOffset < offset+5) && (offset+length-5 < refOffset+refLength);
 	}
 }
