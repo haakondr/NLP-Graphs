@@ -162,6 +162,8 @@ public class ConcurrencyService {
 			}
 		}
 
+		progressPrinter = new ProgressPrinter(retrievalQueue.size());
+		
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
 
@@ -170,8 +172,7 @@ public class ConcurrencyService {
 			worker.setName("SentenceRetrieval-Thread-"+i);
 			worker.start();
 		}
-
-		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(parsedFilesDir+testDir));
+		
 		plagThreadCount = cs.getPlagiarismThreads();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {
