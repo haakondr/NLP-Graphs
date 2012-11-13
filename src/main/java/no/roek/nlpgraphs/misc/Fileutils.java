@@ -65,14 +65,14 @@ public class Fileutils {
 		return new File(dir).list().length;
 	}
 
-	public static List<File> getFileList(Path dir, Path baseDir) {
+	public static List<File> getFiles(Path dir, Path baseDir) {
 		List<File> tasks = new ArrayList<File>();
 
 		for (File file : getFiles(dir)) {
 			if(file.isFile() && file.getName().endsWith(".txt")) {
 				tasks.add(file);
 			}else if(file.isDirectory()) {
-				tasks.addAll(getFileList(file.toPath(), baseDir));
+				tasks.addAll(getFiles(file.toPath(), baseDir));
 			}
 		}
 		return tasks;
@@ -83,11 +83,11 @@ public class Fileutils {
 	}
 	
 	public static File[] getFileList(Path dir) {
-		return getFileList(dir, dir).toArray(new File[0]);
+		return getFiles(dir, dir).toArray(new File[0]);
 	}
 
 
-	public static File[] getUnparsedFiles(String dir, String outDir) {
+	public static File[] getFilesNotDone(String dir, String outDir) {
 		File[] files = getFileList(dir);
 		List<File> out = new ArrayList<File>();
 		for (File file : files) {

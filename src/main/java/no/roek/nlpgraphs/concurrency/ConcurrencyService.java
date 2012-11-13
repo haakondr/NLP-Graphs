@@ -36,7 +36,7 @@ public class ConcurrencyService {
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
 		parsedFilesDir = cs.getParsedFilesDir();
-		this.unparsedFiles = Fileutils.getUnparsedFiles(dataDir, cs.getParsedFilesDir());
+		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
 	}
 
 	//	public void start() {
@@ -112,7 +112,7 @@ public class ConcurrencyService {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for (File f : Fileutils.getFileList(parsedFilesDir+trainDir)) {
+		for (File f : Fileutils.getFiles(parsedFilesDir+trainDir)) {
 			try {
 				documentQueue.put(f.toString());
 			} catch (InterruptedException e) {
@@ -153,7 +153,8 @@ public class ConcurrencyService {
 	public void PlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
-		for (File file : Fileutils.getFileList(parsedFilesDir+testDir)) {
+		
+		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir())) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {

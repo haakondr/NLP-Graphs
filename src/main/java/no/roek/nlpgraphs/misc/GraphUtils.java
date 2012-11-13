@@ -100,14 +100,13 @@ public class GraphUtils {
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
+		JsonElement sentence = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			JsonElement sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
-
-			return parseGraph(sentence.getAsJsonObject(), filename);
+			sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -117,7 +116,8 @@ public class GraphUtils {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		
+		return parseGraph(sentence.getAsJsonObject(), filename);
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
