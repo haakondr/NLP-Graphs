@@ -50,8 +50,8 @@ public class PlagiarismWorker extends Thread {
 					running = false;
 					break;
 				}
-//				List<PlagiarismReference> plagReferences = findPlagiarism(job);
-				List<PlagiarismReference> plagReferences = listCandidateReferences(job);
+				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+//				List<PlagiarismReference> plagReferences = listCandidateReferences(job);
 				writeResults(job.getFile().getFileName().toString(), plagReferences);
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
@@ -101,8 +101,8 @@ public class PlagiarismWorker extends Thread {
 		String sourceReference = pair.getTrainFile();
 		String sourceOffset = Integer.toString(pair.getTrainGraph().getOffset());
 		String sourceLength = Integer.toString(pair.getTrainGraph().getLength());
-//		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
-		String name = "detected-plagiarism";
+		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
+//		String name = "detected-plagiarism";
 		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
 
