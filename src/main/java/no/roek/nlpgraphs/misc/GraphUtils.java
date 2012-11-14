@@ -3,6 +3,7 @@ package no.roek.nlpgraphs.misc;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -99,6 +100,8 @@ public class GraphUtils {
 	}
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		//TODO: partition files into sentence files, or at least partition them into parts? 
+		//Reading entire files this way causes way too many garbage collections, which hurts performance
 		JsonReader jsonReader = null;
 		JsonElement sentence = null;
 		try {

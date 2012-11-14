@@ -50,7 +50,8 @@ public class PlagiarismWorker extends Thread {
 					running = false;
 					break;
 				}
-				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+//				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+				List<PlagiarismReference> plagReferences = listCandidateReferences(job);
 				writeResults(job.getFile().getFileName().toString(), plagReferences);
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
@@ -69,6 +70,15 @@ public class PlagiarismWorker extends Thread {
 		}
 	}
 
+	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
+		List<PlagiarismReference> plagReferences = new ArrayList<>();
+		for (SentencePair pair : job.getTextPairs()) {
+			plagReferences.add(getPlagiarismReference(pair, pair.getSimilarity(), false));
+		}
+		
+		return plagReferences;
+	}
+	
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
