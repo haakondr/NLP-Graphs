@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.concurrency;
+package no.roek.nlpgraphs.misc;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

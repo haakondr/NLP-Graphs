@@ -2,8 +2,7 @@ package no.roek.nlpgraphs.postprocessing;
 
 import java.util.List;
 
-import no.roek.nlpgraphs.document.PlagiarismReference;
-import no.roek.nlpgraphs.document.TextPair;
+import no.roek.nlpgraphs.ged.PlagiarismReference;
 
 public class SentenceRetrievalTest {
 
@@ -34,14 +33,14 @@ public class SentenceRetrievalTest {
 //		assertEquals(true, contains(ref3, simSentences2));
 //	}
 
-	private boolean contains(PlagiarismReference ref, List<TextPair> simSentences) {
-		for (TextPair textPair : simSentences) {
-			if(textPair.getTestSentence().matchesPlagSuspiciousRef(ref) && textPair.getTrainSentence().matchesPlagSourceRef(ref)) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean contains(PlagiarismReference ref, List<TextPair> simSentences) {
+//		for (TextPair textPair : simSentences) {
+//			if(textPair.getTestSentence().matchesPlagSuspiciousRef(ref) && textPair.getTrainSentence().matchesPlagSourceRef(ref)) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 
 }

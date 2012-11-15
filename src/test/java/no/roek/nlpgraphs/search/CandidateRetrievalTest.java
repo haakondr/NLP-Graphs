@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.document.PlagiarismReference;
+import no.roek.nlpgraphs.candidate.retrieval.CandidateRetrievalService;
 import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.ged.PlagiarismReference;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import no.roek.nlpgraphs.misc.XMLUtils;

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 

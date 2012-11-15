@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.concurrency;
+package no.roek.nlpgraphs.ged;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.misc.Job;
 
 public class PlagiarismJob extends Job {
 

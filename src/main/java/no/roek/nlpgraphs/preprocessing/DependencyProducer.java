@@ -2,8 +2,7 @@ package no.roek.nlpgraphs.preprocessing;
 
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.concurrency.ConcurrencyService;
-import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.App;
 import no.roek.nlpgraphs.misc.ConfigService;
 
 import org.maltparser.MaltParserService;
@@ -12,11 +11,11 @@ import org.maltparser.core.exception.MaltChainedException;
 public class DependencyProducer extends Thread{
 	private final BlockingQueue<ParseJob> queue;
 	private String parsedFilesDir;
-	private ConcurrencyService concurrencyService;
+	private App concurrencyService;
 	private boolean running;
 	private DependencyParser parser;
 	
-	public DependencyProducer(BlockingQueue<ParseJob> queue,  String maltParams, ConcurrencyService concurrencyService) {
+	public DependencyProducer(BlockingQueue<ParseJob> queue,  String maltParams, App concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
 		this.parsedFilesDir = cs.getParsedFilesDir();

@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.postprocessing;
+package no.roek.nlpgraphs.ged;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.algorithm.GraphEditDistance;
-import no.roek.nlpgraphs.concurrency.ConcurrencyService;
-import no.roek.nlpgraphs.concurrency.PlagiarismJob;
-import no.roek.nlpgraphs.document.PlagiarismReference;
+import no.roek.nlpgraphs.App;
 import no.roek.nlpgraphs.document.SentencePair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
@@ -26,10 +23,10 @@ public class PlagiarismWorker extends Thread {
 	private BlockingQueue<PlagiarismJob> queue;
 	private String resultsDir, parsedDir, testDir, trainDir;
 	private double plagiarismThreshold;
-	private ConcurrencyService concurrencyService;
+	private App concurrencyService;
 	private boolean running;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ConcurrencyService concurrencyService) {
+	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, App concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
 		parsedDir = cs.getParsedFilesDir();

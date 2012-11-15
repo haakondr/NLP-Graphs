@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.algorithm;
+package no.roek.nlpgraphs.ged;
 
 import java.util.List;
 

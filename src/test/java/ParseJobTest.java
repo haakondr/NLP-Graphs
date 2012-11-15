@@ -1,5 +1,5 @@
 import static org.junit.Assert.assertEquals;
-import no.roek.nlpgraphs.concurrency.ParseJob;
+import no.roek.nlpgraphs.preprocessing.ParseJob;
 
 import org.junit.Test;
 

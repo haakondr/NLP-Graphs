@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;

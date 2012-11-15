@@ -3,7 +3,6 @@ package no.roek.nlpgraphs.preprocessing;
 import java.io.File;
 import java.io.IOException;
 
-import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;

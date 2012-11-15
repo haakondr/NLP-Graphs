@@ -1,7 +1,9 @@
-package no.roek.nlpgraphs.concurrency;
+package no.roek.nlpgraphs.candidate.retrieval;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import no.roek.nlpgraphs.misc.Job;
 
 public class SentenceRetrievalJob extends Job {
 

@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.ling.CoreLabel;
