@@ -13,17 +13,13 @@ public class PosTagProducer extends Thread {
 
 	private final BlockingQueue<ParseJob> queue;
 	private BlockingQueue<File> unparsedFiles;
-	private MaxentTagger tagger;
-
+	private POSTagParser parser;
+		
+	
 	public PosTagProducer(BlockingQueue<File> unparsedFiles, BlockingQueue<ParseJob> queue){
 		this.queue = queue;
 		this.unparsedFiles = unparsedFiles;
-		ConfigService cs = new ConfigService();
-		try {
-			this.tagger = new MaxentTagger(cs.getPOSTaggerParams());
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
+		this.parser = new POSTagParser();
 	}
 
 	@Override
@@ -34,7 +30,7 @@ public class PosTagProducer extends Thread {
 				File file = unparsedFiles.poll(20, TimeUnit.SECONDS);
 				if(file != null) {
 					file.getParentFile().mkdirs();
-					ParseJob parseJob = ParseUtils.posTagFile(file, tagger);
+					ParseJob parseJob = parser.posTagFile(file.toPath());
 					queue.put(parseJob);
 				}else {
 					running = false;

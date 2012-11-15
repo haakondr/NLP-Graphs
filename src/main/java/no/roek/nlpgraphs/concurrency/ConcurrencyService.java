@@ -10,7 +10,7 @@ import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.postprocessing.PlagiarismWorker;
-import no.roek.nlpgraphs.preprocessing.DependencyParser;
+import no.roek.nlpgraphs.preprocessing.DependencyProducer;
 import no.roek.nlpgraphs.preprocessing.PosTagProducer;
 import no.roek.nlpgraphs.search.CandidateRetrievalService;
 import no.roek.nlpgraphs.search.IndexBuilder;
@@ -21,7 +21,7 @@ public class ConcurrencyService {
 	private File[] unparsedFiles;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
-	private DependencyParser[] dependencyParserThreads;
+	private DependencyProducer[] dependencyParserThreads;
 	private PosTagProducer[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
@@ -36,7 +36,7 @@ public class ConcurrencyService {
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
 		parsedFilesDir = cs.getParsedFilesDir();
-		this.unparsedFiles = Fileutils.getUnparsedFiles(dataDir, cs.getParsedFilesDir());
+		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
 	}
 
 	//	public void start() {
@@ -64,7 +64,7 @@ public class ConcurrencyService {
 			}
 		}
 		posTagCount = cs.getPOSTaggerThreadCount();
-		parseQueue = new LinkedBlockingQueue<>();
+		parseQueue = new LinkedBlockingQueue<>(15);
 		posTagThreads = new PosTagProducer[posTagCount];
 
 		for (int i = 0; i < posTagCount; i++) {
@@ -75,9 +75,9 @@ public class ConcurrencyService {
 
 		dependencyParserCount = cs.getMaltParserThreadCount();
 		progressPrinter = new ProgressPrinter(unparsedFiles.length);
-		dependencyParserThreads = new DependencyParser[dependencyParserCount];
+		dependencyParserThreads = new DependencyProducer[dependencyParserCount];
 		for (int i = 0; i < dependencyParserCount; i++) {
-			dependencyParserThreads[i] =  new DependencyParser(parseQueue, cs.getMaltParams(), this);
+			dependencyParserThreads[i] =  new DependencyProducer(parseQueue, cs.getMaltParams(), this);
 			dependencyParserThreads[i].setName("Dependency-parser-"+i);
 			dependencyParserThreads[i].start();
 		}
@@ -87,10 +87,11 @@ public class ConcurrencyService {
 		return progressPrinter;
 	}
 
-	public synchronized void depParseJobDone(DependencyParser parser, String text) {
+	public synchronized void depParseJobDone(DependencyProducer parser, String text) {
 		progressPrinter.printProgressbar(text);
-		dependencyParserCount--;
+
 		if(progressPrinter.isDone()) {
+			dependencyParserCount--;
 			parser.kill();
 		}
 
@@ -111,7 +112,7 @@ public class ConcurrencyService {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for (File f : Fileutils.getFileList(parsedFilesDir+trainDir)) {
+		for (File f : Fileutils.getFiles(parsedFilesDir+trainDir)) {
 			try {
 				documentQueue.put(f.toString());
 			} catch (InterruptedException e) {
@@ -152,7 +153,8 @@ public class ConcurrencyService {
 	public void PlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
-		for (File file : Fileutils.getFileList(parsedFilesDir+testDir)) {
+		
+		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir())) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
@@ -160,6 +162,8 @@ public class ConcurrencyService {
 			}
 		}
 
+		progressPrinter = new ProgressPrinter(retrievalQueue.size());
+		
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
 
@@ -168,8 +172,7 @@ public class ConcurrencyService {
 			worker.setName("SentenceRetrieval-Thread-"+i);
 			worker.start();
 		}
-
-		progressPrinter = new ProgressPrinter(Fileutils.getFileCount(parsedFilesDir+testDir));
+		
 		plagThreadCount = cs.getPlagiarismThreads();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {

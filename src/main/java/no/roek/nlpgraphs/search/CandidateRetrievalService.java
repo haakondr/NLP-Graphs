@@ -13,6 +13,7 @@ import no.roek.nlpgraphs.document.SentencePair;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.misc.SentenceUtils;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -36,16 +37,13 @@ public class CandidateRetrievalService {
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
 	private static final String INDEX_DIR = "lucene/";
-	private String parsedDir, testDir, trainDir;
+	private ConfigService cs;
 
 	public CandidateRetrievalService(Path dir)  {
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
-		ConfigService cs = new ConfigService();
-		parsedDir = cs.getParsedFilesDir();
-		testDir = cs.getTestDir();
-		trainDir = cs.getTrainDir();
-		
+		cs = new ConfigService();
+
 		try {
 			if(indexDir.exists()) {
 				index = FSDirectory.open(indexDir);
@@ -73,21 +71,23 @@ public class CandidateRetrievalService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addDocument(List<NLPSentence> sentences) {
 		/**
 		 * Adds all sentences from a list to the index.
 		 * Should be thread safe and can be called from multiple threads simultaneously.
 		 */
 		for (NLPSentence nlpSentence : sentences) {
-			Document doc = getSentence(nlpSentence);
-			try {
-				writer.addDocument(doc);
-			} catch (CorruptIndexException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} 
+			if(nlpSentence.getLength() > 80) {
+				Document doc = getSentence(nlpSentence);
+				try {
+					writer.addDocument(doc);
+				} catch (CorruptIndexException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			}
 		}
 	}
 
@@ -109,14 +109,18 @@ public class CandidateRetrievalService {
 		IndexSearcher is = new IndexSearcher(ir);
 
 		MoreLikeThis mlt = new MoreLikeThis(ir);
-	    mlt.setMinTermFreq(1);
-	    mlt.setMinDocFreq(1);
-	    //TODO: set stopword set mlt.setStopWords()
+		mlt.setMinTermFreq(1);
+		mlt.setMinDocFreq(1);
+		//TODO: set stopword set mlt.setStopWords()
+		//TODO: weight synonyms lower than exact match? How?
 		mlt.setFieldNames(new String[] {"LEMMAS"});
 
 		List<SentencePair> simDocs = new LinkedList<>();
 		int n = 0;
 		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
+			if(testSentence.getLength()<80) {
+				continue;
+			}
 			StringReader sr = new StringReader(testSentence.getLemmas());
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
@@ -124,9 +128,9 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					SentencePair sp = new SentencePair(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					SentencePair sp = new SentencePair(cs, trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
-					
+
 					n = simDocs.size();
 					if(n > retrievalCount) {
 						simDocs.remove(n-1);
@@ -144,7 +148,7 @@ public class CandidateRetrievalService {
 		if(n == 0) {
 			return 0;
 		}
-		
+
 		if(doc.score < simDocs.get(n-1).getSimilarity()) {
 			return -1;
 		}

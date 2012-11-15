@@ -3,6 +3,7 @@ package no.roek.nlpgraphs.misc;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -99,15 +100,16 @@ public class GraphUtils {
 	}
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
+		//TODO: partition files into sentence files, or at least partition them into parts? 
+		//Reading entire files this way causes way too many garbage collections, which hurts performance
 		JsonReader jsonReader = null;
+		JsonElement sentence = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
 			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			JsonElement sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
-
-			return parseGraph(sentence.getAsJsonObject(), filename);
+			sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -117,14 +119,15 @@ public class GraphUtils {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		
+		return parseGraph(sentence.getAsJsonObject(), filename);
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
 		Graph graph = new Graph(filename);
 		graph.setLength(jsonGraph.get("length").getAsInt());
 		graph.setOffset(jsonGraph.get("offset").getAsInt());
-		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
+//		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
 		graph.setSentenceNumber(jsonGraph.get("sentenceNumber").getAsInt());
 
 		HashMap<String, List<String[]>> adj = new HashMap<>();

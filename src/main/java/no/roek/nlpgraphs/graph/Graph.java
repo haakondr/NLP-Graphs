@@ -87,9 +87,19 @@ public class Graph {
 		return filename;
 	}
 
-	public String getOriginalText() {
-		return originalText;
+//	public String getOriginalText() {
+//		return originalText;
+//	}
+	
+	public String getTextString() {
+		StringBuffer sb = new StringBuffer();
+		for(Node node : nodes) {
+			sb.append(node.getAttributes().get(0)+" ");
+		}
+		
+		return sb.toString();
 	}
+	
 
 	public void setOriginalText(String originalText) {
 		this.originalText = originalText;
@@ -124,6 +134,7 @@ public class Graph {
 	}
 	
 	public NLPSentence toSentence() {
-		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
+//		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
+		return new NLPSentence(filename, sentenceNumber, offset, length);
 	}
 }

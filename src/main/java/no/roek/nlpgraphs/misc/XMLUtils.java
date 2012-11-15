@@ -29,8 +29,8 @@ public class XMLUtils {
 			List<Element> elements = root.getChildren("feature");
 			for (int i = 0; i < elements.size(); i++) {
 				Element row = elements.get(i);
-				if(row.getAttribute("name").getValue().equals("plagiarism") || row.getAttribute("name").getValue().equals("detected-plagiarism")) {
-					
+				String plagType = row.getAttribute("name").getValue();
+				if(plagType.equals("plagiarism") || plagType.equals("detected-plagiarism") || plagType.equals("simulated")) {
 					String type = row.getAttributeValue("type");
 					String obfuscation = row.getAttributeValue("obfuscation");
 					String language = row.getAttributeValue("this_language");
@@ -41,8 +41,7 @@ public class XMLUtils {
 					String sourceOffset = row.getAttributeValue("source_offset");
 					String sourceLength = row.getAttributeValue("source_length");
 					
-					plagiarisms.add(new PlagiarismReference(filename, "detected-plagiarism", type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
-					return plagiarisms;
+					plagiarisms.add(new PlagiarismReference(filename, plagType, type, obfuscation, language, offset, length, sourceReference, sourceLanguage, sourceOffset, sourceLength));
 				}
 			}
 			

@@ -24,7 +24,7 @@ import org.jdom2.output.XMLOutputter;
 public class PlagiarismWorker extends Thread {
 
 	private BlockingQueue<PlagiarismJob> queue;
-	private String resultsDir;
+	private String resultsDir, parsedDir, testDir, trainDir;
 	private double plagiarismThreshold;
 	private ConcurrencyService concurrencyService;
 	private boolean running;
@@ -32,6 +32,9 @@ public class PlagiarismWorker extends Thread {
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, ConcurrencyService concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
+		parsedDir = cs.getParsedFilesDir();
+		testDir =cs.getTestDir();
+		trainDir = cs.getTrainDir();
 		this.resultsDir = cs.getResultsDir();
 		this.plagiarismThreshold = cs.getPlagiarismThreshold();
 		this.concurrencyService = concurrencyService;
@@ -48,6 +51,7 @@ public class PlagiarismWorker extends Thread {
 					break;
 				}
 				List<PlagiarismReference> plagReferences = findPlagiarism(job);
+//				List<PlagiarismReference> plagReferences = listCandidateReferences(job);
 				writeResults(job.getFile().getFileName().toString(), plagReferences);
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
@@ -66,12 +70,21 @@ public class PlagiarismWorker extends Thread {
 		}
 	}
 
+	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
+		List<PlagiarismReference> plagReferences = new ArrayList<>();
+		for (SentencePair pair : job.getTextPairs()) {
+			plagReferences.add(getPlagiarismReference(pair, pair.getSimilarity(), false));
+		}
+		
+		return plagReferences;
+	}
+	
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(SentencePair pair : job.getTextPairs()) {
-			Graph train = GraphUtils.getGraphFromFile(pair.getTrainFile(), pair.getTrainSentence());
-			Graph test = GraphUtils.getGraphFromFile(pair.getTestFile(), pair.getTestSentence());
+			Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+pair.getTrainFile(), pair.getTrainSentence());
+			Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+pair.getTestFile(), pair.getTestSentence());
 
 			GraphEditDistance ged = new GraphEditDistance(test, train);
 			double dist = ged.getDistance();
@@ -89,6 +102,7 @@ public class PlagiarismWorker extends Thread {
 		String sourceOffset = Integer.toString(pair.getTrainGraph().getOffset());
 		String sourceLength = Integer.toString(pair.getTrainGraph().getLength());
 		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
+//		String name = "detected-plagiarism";
 		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
 	}
 

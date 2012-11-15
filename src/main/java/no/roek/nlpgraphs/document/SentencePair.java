@@ -1,6 +1,7 @@
 package no.roek.nlpgraphs.document;
 
 import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.GraphUtils;
 
 public class SentencePair {
@@ -9,8 +10,12 @@ public class SentencePair {
 	private int trainSentence, testSentence;
 	private float similarity;
 	private Graph testGraph, trainGraph;
+	private String dir, testDir, trainDir;
 	
-	public SentencePair(String trainFile, int trainSentence, String testFile, int testSentence, float similarity) {
+	public SentencePair(ConfigService cs, String trainFile, int trainSentence, String testFile, int testSentence, float similarity) {
+		this.dir = cs.getParsedFilesDir();
+		this.testDir = cs.getTestDir();
+		this.trainDir = cs.getTrainDir();
 		this.trainFile = trainFile;
 		this.trainSentence = trainSentence;
 		this.testFile = testFile;
@@ -20,14 +25,14 @@ public class SentencePair {
 
 	public Graph getTrainGraph() {
 		if(trainGraph == null) {
-			trainGraph = GraphUtils.getGraphFromFile(trainFile, trainSentence);
+			trainGraph = GraphUtils.getGraphFromFile(dir+trainDir+trainFile, trainSentence);
 		}
 		return trainGraph;
 	}
 	
 	public Graph getTestGraph() {
 		if(testGraph == null) {
-			testGraph = GraphUtils.getGraphFromFile(testFile, testSentence);
+			testGraph = GraphUtils.getGraphFromFile(dir+testDir+testFile, testSentence);
 		}
 		
 		return testGraph;
