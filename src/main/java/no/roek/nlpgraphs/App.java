@@ -8,22 +8,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 import no.roek.nlpgraphs.candidate.retrieval.CandidateRetrievalService;
 import no.roek.nlpgraphs.candidate.retrieval.IndexBuilder;
 import no.roek.nlpgraphs.candidate.retrieval.SentenceRetrievalWorker;
-import no.roek.nlpgraphs.ged.PlagiarismJob;
-import no.roek.nlpgraphs.ged.PlagiarismWorker;
+import no.roek.nlpgraphs.detailed.retrieval.PlagiarismJob;
+import no.roek.nlpgraphs.detailed.retrieval.PlagiarismWorker;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
-import no.roek.nlpgraphs.preprocessing.DependencyProducer;
+import no.roek.nlpgraphs.preprocessing.DependencyParserWorker;
 import no.roek.nlpgraphs.preprocessing.ParseJob;
-import no.roek.nlpgraphs.preprocessing.PosTagProducer;
+import no.roek.nlpgraphs.preprocessing.PosTagWorker;
 
 public class App {
 	
 	private File[] unparsedFiles;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
-	private DependencyProducer[] dependencyParserThreads;
-	private PosTagProducer[] posTagThreads;
+	private DependencyParserWorker[] dependencyParserThreads;
+	private PosTagWorker[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
 	private int dependencyParserCount, posTagCount, plagThreadCount;
@@ -58,19 +58,19 @@ public class App {
 		}
 		posTagCount = cs.getPOSTaggerThreadCount();
 		parseQueue = new LinkedBlockingQueue<>(15);
-		posTagThreads = new PosTagProducer[posTagCount];
+		posTagThreads = new PosTagWorker[posTagCount];
 
 		for (int i = 0; i < posTagCount; i++) {
-			posTagThreads[i] = new PosTagProducer(posTagQueue, parseQueue);
+			posTagThreads[i] = new PosTagWorker(posTagQueue, parseQueue);
 			posTagThreads[i].setName("Postag-thread-"+i);
 			posTagThreads[i].start();
 		}
 
 		dependencyParserCount = cs.getMaltParserThreadCount();
 		progressPrinter = new ProgressPrinter(unparsedFiles.length);
-		dependencyParserThreads = new DependencyProducer[dependencyParserCount];
+		dependencyParserThreads = new DependencyParserWorker[dependencyParserCount];
 		for (int i = 0; i < dependencyParserCount; i++) {
-			dependencyParserThreads[i] =  new DependencyProducer(parseQueue, cs.getMaltParams(), this);
+			dependencyParserThreads[i] =  new DependencyParserWorker(parseQueue, cs.getMaltParams(), this);
 			dependencyParserThreads[i].setName("Dependency-parser-"+i);
 			dependencyParserThreads[i].start();
 		}
@@ -80,7 +80,7 @@ public class App {
 		return progressPrinter;
 	}
 
-	public synchronized void depParseJobDone(DependencyProducer parser, String text) {
+	public synchronized void depParseJobDone(DependencyParserWorker parser, String text) {
 		progressPrinter.printProgressbar(text);
 
 		if(progressPrinter.isDone()) {

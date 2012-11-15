@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.document.SentencePair;
-import no.roek.nlpgraphs.ged.PlagiarismJob;
+import no.roek.nlpgraphs.detailed.retrieval.PlagiarismJob;
+import no.roek.nlpgraphs.document.PlagiarismPassage;
 
 public class SentenceRetrievalWorker extends Thread {
 
@@ -42,7 +42,7 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(File file) {
 		PlagiarismJob plagJob = new PlagiarismJob(file.toPath());
 		try {
-			for(SentencePair sp : crs.getSimilarSentences(file.toString(), 50)) {
+			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), 50)) {
 				plagJob.addTextPair(sp);
 			}
 		} catch ( IOException e) {

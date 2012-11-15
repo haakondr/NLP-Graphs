@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.document.SentencePair;
+import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.GraphUtils;
@@ -101,7 +101,7 @@ public class CandidateRetrievalService {
 		return doc;
 	}
 
-	public List<SentencePair> getSimilarSentences(String filename, int retrievalCount) throws CorruptIndexException, IOException {
+	public List<PlagiarismPassage> getSimilarSentences(String filename, int retrievalCount) throws CorruptIndexException, IOException {
 		/**
 		 * Retrieves the n most similar sentences for every sentence in a file.
 		 */
@@ -115,7 +115,7 @@ public class CandidateRetrievalService {
 		//TODO: weight synonyms lower than exact match? How?
 		mlt.setFieldNames(new String[] {"LEMMAS"});
 
-		List<SentencePair> simDocs = new LinkedList<>();
+		List<PlagiarismPassage> simDocs = new LinkedList<>();
 		int n = 0;
 		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
 			if(testSentence.getLength()<80) {
@@ -128,7 +128,7 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					SentencePair sp = new SentencePair(cs, trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					PlagiarismPassage sp = new PlagiarismPassage(cs, trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 
 					n = simDocs.size();
@@ -144,7 +144,7 @@ public class CandidateRetrievalService {
 		return simDocs;
 	}
 
-	private int getIndexToInsert(ScoreDoc doc, List<SentencePair> simDocs, int n, int retrievalCount) {
+	private int getIndexToInsert(ScoreDoc doc, List<PlagiarismPassage> simDocs, int n, int retrievalCount) {
 		if(n == 0) {
 			return 0;
 		}

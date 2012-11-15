@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import no.roek.nlpgraphs.candidate.retrieval.CandidateRetrievalService;
-import no.roek.nlpgraphs.document.SentencePair;
-import no.roek.nlpgraphs.ged.PlagiarismReference;
+import no.roek.nlpgraphs.detailed.retrieval.PlagiarismReference;
+import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 import no.roek.nlpgraphs.misc.XMLUtils;
@@ -33,11 +33,11 @@ public class CandidateRetrievalTest {
 	public static void shouldRetrieveCorrectPassage() throws CorruptIndexException, IOException {
 		String filename = "suspicious-document00228.txt";
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(cs.getTrainDir()));
-		List<SentencePair> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 50);
+		List<PlagiarismPassage> passages = crs.getSimilarSentences(dir+cs.getTestDir()+filename, 50);
 		List<PlagiarismReference> references = XMLUtils.getPlagiarismReferences("src/test/resources/suspicious-document00228.xml");
 
 		int correct = 0;
-		for (SentencePair passage : passages) {
+		for (PlagiarismPassage passage : passages) {
 			if(containsPassage(passage, references)) {
 				correct++;
 			}
@@ -47,7 +47,7 @@ public class CandidateRetrievalTest {
 		shouldBeSorted(passages);
 	}
 
-	public static void shouldBeSorted(List<SentencePair> passages) {
+	public static void shouldBeSorted(List<PlagiarismPassage> passages) {
 		if(passages.size()>1) {
 			for (int i = 1; i < passages.size()-1; i++) {
 				assertEquals(true, passages.get(i).getSimilarity() <= passages.get(i-1).getSimilarity());
@@ -55,7 +55,7 @@ public class CandidateRetrievalTest {
 		}
 	}
 
-	public static boolean containsPassage(SentencePair passage, List<PlagiarismReference> references) {
+	public static boolean containsPassage(PlagiarismPassage passage, List<PlagiarismReference> references) {
 		for(PlagiarismReference ref : references) {
 			if(isMatch(passage, ref)) {
 				return true;
@@ -65,7 +65,7 @@ public class CandidateRetrievalTest {
 		return false;
 	}
 
-	public static boolean isMatch(SentencePair passage, PlagiarismReference ref) {
+	public static boolean isMatch(PlagiarismPassage passage, PlagiarismReference ref) {
 
 		
 		if(!passage.getTestFile().equals(ref.getFilename())) {
