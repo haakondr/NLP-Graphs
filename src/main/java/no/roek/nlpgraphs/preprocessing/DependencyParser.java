@@ -44,12 +44,13 @@ public class DependencyParser {
 		}
 	}
 
-	public JSONObject dependencyParse(ParseJob job, String outDir) throws MaltChainedException, NullPointerException {
-		JSONObject out = new JSONObject();
+	public void dependencyParse(ParseJob job, String outDir) throws MaltChainedException, NullPointerException {
 		try {
-			out.put("filename", job.getFilename());
-
-			JSONObject jsonSentences = new JSONObject();
+			File dir = new File(outDir+job.getParentDir()+job.getFilename());
+			if(!dir.exists()) {
+				dir.mkdir();
+			}
+			
 			for (NLPSentence sentence : job.getSentences()) {
 				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
 
@@ -65,59 +66,55 @@ public class DependencyParser {
 					jsonToken.put("pos", token[4]);
 					jsonToken.put("rel", token[6]);
 					jsonToken.put("deprel", token[7]);
-					//TODO: synonyms are omitted until they prove useful.
-//					jsonToken.put("synonyms", getSynonyms(token[2], token[4]));
 					jsonTokens.put(jsonToken);
 				}
 				jsonSentence.put("tokens", jsonTokens);
-				jsonSentences.put(Integer.toString(sentence.getNumber()), jsonSentence);
+				jsonSentence.put("filename", job.getFilename());
+				Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename()+"/"+sentence.getNumber(), jsonSentence.toString());
 			}
 
-			out.put("sentences", jsonSentences);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
-		Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename(), out.toString());
-		return out;
 	}
-
-	public JSONArray getSynonyms(String lemma, String pos) {
-		JSONArray jsonSynonyms = new JSONArray();
-		POS jwiPos = getJWIPOSTag(pos);
-		if(jwiPos!= null) {
-			IIndexWord idxWord = dict.getIndexWord(lemma, jwiPos);
-
-			if(idxWord!=null) {
-				for(IWordID wordId : idxWord.getWordIDs()) {
-					IWord word = dict.getWord(wordId);
-
-					for(IWord synonym : word.getSynset().getWords()) {
-						String temp = synonym.getLemma();
-						if(!temp.equalsIgnoreCase(lemma)) {
-							if(!temp.contains("_")) {
-								jsonSynonyms.put(synonym.getLemma());
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return jsonSynonyms;
-	}
-
-	private POS getJWIPOSTag(String pos) {
-		if(pos.equals("NN") || pos.equals("NNS")) {
-			return POS.NOUN;
-		}else if(pos.startsWith("VB")) {
-			return POS.VERB;
-		}else if(pos.startsWith("RB")) {
-			return POS.ADVERB;
-		}else if(pos.startsWith("JJ")) {
-			return POS.ADJECTIVE;
-		}
-
-		return null;
-	}
+	
+//TODO: synonyms are omitted untill they prove useful. Currently the synsets are too large
+//	public JSONArray getSynonyms(String lemma, String pos) {
+//		JSONArray jsonSynonyms = new JSONArray();
+//		POS jwiPos = getJWIPOSTag(pos);
+//		if(jwiPos!= null) {
+//			IIndexWord idxWord = dict.getIndexWord(lemma, jwiPos);
+//
+//			if(idxWord!=null) {
+//				for(IWordID wordId : idxWord.getWordIDs()) {
+//					IWord word = dict.getWord(wordId);
+//
+//					for(IWord synonym : word.getSynset().getWords()) {
+//						String temp = synonym.getLemma();
+//						if(!temp.equalsIgnoreCase(lemma)) {
+//							if(!temp.contains("_")) {
+//								jsonSynonyms.put(synonym.getLemma());
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		return jsonSynonyms;
+//	}
+//
+//	private POS getJWIPOSTag(String pos) {
+//		if(pos.equals("NN") || pos.equals("NNS")) {
+//			return POS.NOUN;
+//		}else if(pos.startsWith("VB")) {
+//			return POS.VERB;
+//		}else if(pos.startsWith("RB")) {
+//			return POS.ADVERB;
+//		}else if(pos.startsWith("JJ")) {
+//			return POS.ADJECTIVE;
+//		}
+//
+//		return null;
+//	}
 }

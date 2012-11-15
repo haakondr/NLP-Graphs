@@ -1,5 +1,6 @@
 package no.roek.nlpgraphs.misc;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,76 +24,26 @@ import com.google.gson.stream.JsonReader;
 
 public class GraphUtils {
 
-	//	public static Graph getGraph(String[] parsedTokens, NLPSentence sentence) {
-	//		Graph graph = new Graph();
-	//		graph.setFilename(sentence.getFilename());
-	//		graph.setLength(sentence.getLength());
-	//		graph.setOffset(sentence.getStart());
-	//		graph.setOriginalText(sentence.getText());
-	//		graph.setSentenceNumber(sentence.getNumber());
-	//
-	//		HashMap<String, List<String[]>> adjacent = new HashMap<>();
-	//
-	//		for(String wordString : parsedTokens) {
-	//			Node node = getNode(wordString, adjacent);
-	//			graph.addNode(node);
-	//		}
-	//
-	//		addEdges(graph, adjacent);
-	//
-	//		return graph;
-	//	}
-
-	//	public static Node getNode(String wordString, HashMap<String, List<String[]>> adjacent) {
-	//		String[] token = wordString.split("\t");
-	//		String id = token[0];
-	//		String word = token[1];
-	//		String lemma = token[2];
-	//		String pos = token[4];
-	//		String rel = token[6];
-	//		String deprel = token[7];
-	//
-	//		if(!adjacent.containsKey(id)) {
-	//			adjacent.put(id, new ArrayList<String[]>());
-	//		}
-	//
-	//		if(!isRelationToIdNull(rel)) {
-	//			adjacent.get(id).add(new String[] {rel, deprel});
-	//		}
-	//
-	//		return new Node(id, new String[] {word, lemma, pos});
-	//	}
-
-	//	private static boolean isRelationToIdNull(String rel) {
-	//		return rel.equals("0");
-	//	}
-
-
 	public static List<Graph> getGraphsFromFile(String filename) {
 		List<Graph> graphs = new ArrayList<>();
 		JsonReader jsonReader = null;
-		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
-
-			JsonParser jsonParser = new JsonParser();
-			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			JsonObject sentences = fileObject.get("sentences").getAsJsonObject();
-			for(Map.Entry<String,JsonElement> entry : sentences.entrySet()) {
-				JsonObject sentence = entry.getValue().getAsJsonObject();
-				graphs.add(parseGraph(sentence, filename));
-
-			}
-			//			for (JsonElement sentence : fileObject.get("sentences").getAsJsonArray()) {
-			//				graphs.add(parseGraph(sentence.getAsJsonObject(), filename));
-			//			}
-		} catch (IOException  e) {
-			e.printStackTrace();
-			return null;
-		} finally {
+		JsonParser jsonParser = new JsonParser();
+		
+		for(File sentenceFile : Fileutils.getFiles(filename+"/")) {
 			try {
-				jsonReader.close();
-			} catch(IOException e) {
+				jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(sentenceFile)));
+				
+				JsonObject jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
+				graphs.add(parseGraph(jsonSentence, jsonSentence.get("filename").getAsString()));
+			} catch (IOException  e) {
 				e.printStackTrace();
+				return null;
+			} finally {
+				try {
+					jsonReader.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -100,16 +51,13 @@ public class GraphUtils {
 	}
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
-		//TODO: partition files into sentence files, or at least partition them into parts? 
-		//Reading entire files this way causes way too many garbage collections, which hurts performance
 		JsonReader jsonReader = null;
-		JsonElement sentence = null;
+		JsonObject jsonSentence = null;
 		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename+"/"+sentenceNumber)));
 
 			JsonParser jsonParser = new JsonParser();
-			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
-			sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
+			jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -120,7 +68,7 @@ public class GraphUtils {
 			}
 		}
 		
-		return parseGraph(sentence.getAsJsonObject(), filename);
+		return parseGraph(jsonSentence, filename);
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {

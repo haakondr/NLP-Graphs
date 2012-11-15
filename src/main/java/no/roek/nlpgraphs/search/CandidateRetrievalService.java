@@ -86,7 +86,7 @@ public class CandidateRetrievalService {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				} 
+				}
 			}
 		}
 	}
