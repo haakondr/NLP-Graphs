@@ -5,11 +5,11 @@ import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import no.roek.nlpgraphs.candidate.retrieval.CandidateRetrievalService;
-import no.roek.nlpgraphs.candidate.retrieval.IndexBuilder;
-import no.roek.nlpgraphs.candidate.retrieval.SentenceRetrievalWorker;
-import no.roek.nlpgraphs.detailed.retrieval.PlagiarismJob;
-import no.roek.nlpgraphs.detailed.retrieval.PlagiarismWorker;
+import no.roek.nlpgraphs.candretrieval.CandidateRetrievalService;
+import no.roek.nlpgraphs.candretrieval.IndexBuilder;
+import no.roek.nlpgraphs.candretrieval.SentenceRetrievalWorker;
+import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
+import no.roek.nlpgraphs.detailedretrieval.PlagiarismWorker;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;

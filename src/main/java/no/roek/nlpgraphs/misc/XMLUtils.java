@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailed.retrieval.PlagiarismReference;
+import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
