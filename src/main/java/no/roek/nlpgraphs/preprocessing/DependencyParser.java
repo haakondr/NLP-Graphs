@@ -29,12 +29,12 @@ public class DependencyParser {
 	}
 
 	public void dependencyParse(ParseJob job, String outDir) throws MaltChainedException, NullPointerException {
+		JSONObject out = new JSONObject();
+		
 		try {
-			File dir = new File(outDir+job.getParentDir()+job.getFilename());
-			if(!dir.exists()) {
-				dir.mkdir();
-			}
-			
+			out.put("filename", job.getFilename());
+
+			JSONObject jsonSentences = new JSONObject();
 			for (NLPSentence sentence : job.getSentences()) {
 				String[] parsedSentences = maltService.parseTokens(sentence.getPostags());
 
@@ -53,12 +53,13 @@ public class DependencyParser {
 					jsonTokens.put(jsonToken);
 				}
 				jsonSentence.put("tokens", jsonTokens);
-				jsonSentence.put("filename", job.getFilename());
-				Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename()+"/"+sentence.getNumber(), jsonSentence.toString());
+				jsonSentences.put(Integer.toString(sentence.getNumber()), jsonSentence);
 			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+		Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename(), out.toString());
 	}
 }

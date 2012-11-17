@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
@@ -27,14 +29,19 @@ public class GraphUtils {
 	public static List<Graph> getGraphsFromFile(String filename) {
 		List<Graph> graphs = new ArrayList<>();
 		JsonReader jsonReader = null;
-		JsonParser jsonParser = new JsonParser();
 		
-		for(File sentenceFile : Fileutils.getFiles(filename+"/")) {
-			try {
-				jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(sentenceFile)));
-				
-				JsonObject jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
-				graphs.add(parseGraph(jsonSentence, jsonSentence.get("filename").getAsString()));
+		try{
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+			
+
+			JsonParser jsonParser = new JsonParser();
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			JsonObject sentences = fileObject.get("sentences").getAsJsonObject();
+			for(Map.Entry<String,JsonElement> entry : sentences.entrySet()) {
+				JsonObject sentence = entry.getValue().getAsJsonObject();
+				graphs.add(parseGraph(sentence, filename));
+			}
+		
 			} catch (IOException  e) {
 				e.printStackTrace();
 				return null;
@@ -45,19 +52,19 @@ public class GraphUtils {
 					e.printStackTrace();
 				}
 			}
-		}
 
 		return graphs;
 	}
 	
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
-		JsonObject jsonSentence = null;
+		JsonElement sentence = null;
 		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename+"/"+sentenceNumber)));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
-			jsonSentence = jsonParser.parse(jsonReader).getAsJsonObject();
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -68,7 +75,7 @@ public class GraphUtils {
 			}
 		}
 		
-		return parseGraph(jsonSentence, filename);
+		return parseGraph(sentence.getAsJsonObject(), filename);
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
