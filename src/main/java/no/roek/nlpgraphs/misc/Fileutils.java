@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import com.sun.media.sound.InvalidFormatException;
+
 
 public class Fileutils {
 
@@ -52,15 +54,15 @@ public class Fileutils {
 	public static void createParentFolders(String filename) {
 		new File(filename).getParentFile().mkdirs();
 	}
-	
+
 	public static File[] getFiles(Path dir) {
 		return dir.toFile().listFiles();
 	}
-	
+
 	public static File[] getFiles(String dir) {
 		return Paths.get(dir).toFile().listFiles();
 	}
-	
+
 	public static int getFileCount(String dir) {
 		return new File(dir).list().length;
 	}
@@ -81,7 +83,7 @@ public class Fileutils {
 	public static File[] getFileList(String dir) {
 		return getFileList(Paths.get(dir));
 	}
-	
+
 	public static File[] getFileList(Path dir) {
 		return getFiles(dir, dir).toArray(new File[0]);
 	}
@@ -138,25 +140,25 @@ public class Fileutils {
 		return chunks.toArray(new Path[0][0]);
 	}
 
-//	public static <T> List<T[]> getChunks(T[] files, int n) {
-//		List<T[]> chunks = new ArrayList<>();
-//
-//		int fileCount = files.length;
-//		int chunksize = fileCount / n;
-//		int i = 0;
-//
-//		while(i < fileCount) {
-//			if(i+chunksize*2 <= fileCount) {
-//				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
-//				i += chunksize;
-//			}else{
-//				chunks.add(Arrays.copyOfRange(files, i, fileCount));
-//				i = fileCount;
-//			}
-//		}
-//
-//		return chunks;
-//	}
+	//	public static <T> List<T[]> getChunks(T[] files, int n) {
+	//		List<T[]> chunks = new ArrayList<>();
+	//
+	//		int fileCount = files.length;
+	//		int chunksize = fileCount / n;
+	//		int i = 0;
+	//
+	//		while(i < fileCount) {
+	//			if(i+chunksize*2 <= fileCount) {
+	//				chunks.add(Arrays.copyOfRange(files, i, i+chunksize));
+	//				i += chunksize;
+	//			}else{
+	//				chunks.add(Arrays.copyOfRange(files, i, fileCount));
+	//				i = fileCount;
+	//			}
+	//		}
+	//
+	//		return chunks;
+	//	}
 
 	public static String getText(Path path) {
 		try {
@@ -170,6 +172,20 @@ public class Fileutils {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static String replaceFileExtention(String filename, String extention) {
+		String[] temp = filename.split(".");
+		if(temp.length == 2) {
+			return temp[0]+"."+extention;
+		}
+		try {
+			throw new InvalidFormatException("Invalid filename format (should be filename.extention): "+filename);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }

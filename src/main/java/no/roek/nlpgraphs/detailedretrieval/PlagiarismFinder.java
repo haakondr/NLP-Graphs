@@ -117,9 +117,7 @@ public class PlagiarismFinder {
 
 		FileWriter writer = null;
 		try {
-			Fileutils.createParentFolders(resultsDir+file);
-			//TODO: .xml file ending instead of .txt, so permeasures.py detects it
-			writer = new FileWriter(resultsDir+file);
+			writer = new FileWriter(resultsDir+Fileutils.replaceFileExtention(file, "xml"));
 			outputter.output(doc, writer);
 		} catch (IOException e) {
 			e.printStackTrace();
