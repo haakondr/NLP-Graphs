@@ -1,14 +1,14 @@
 package no.roek.nlpgraphs.detailedretrieval;
 
 public class PlagiarismReference {
-	private String filename, type, obfuscation,language, sourceReference, sourceLanguage;
+	private String filename, obfuscation,language, sourceReference, sourceLanguage;
 	private String offset, length, sourceOffset, sourceLength, name;
 	private double similarity;
 		
 	public PlagiarismReference(String filename, String name, String type, String obfuscation, String language, String offset, String length, String sourceReference, String sourceLanguage, String sourceOffset, String sourceLength) {
 		this.filename = filename;
 		this.name = name;
-		this.type = type;
+//		this.type = type;
 		this.obfuscation = obfuscation;
 		this.language = language;
 		this.sourceReference = sourceReference;
@@ -38,9 +38,9 @@ public class PlagiarismReference {
 		this(filename, name, Integer.toString(offset), Integer.toString(length), sourceReference, Integer.toString(sourceOffset), Integer.toString(sourceLength));
 	}
 
-	public String getType() {
-		return type;
-	}
+//	public String getType() {
+//		return type;
+//	}
 
 	public String getObfuscation() {
 		return obfuscation;

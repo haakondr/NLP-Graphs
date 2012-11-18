@@ -32,42 +32,56 @@ public class PlagiarismFinder {
 		this.plagiarismThreshold = cs.getPlagiarismThreshold();
 	}
 
-	public  List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
+	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
-		for(PlagiarismPassage pair : job.getTextPairs()) {
-			Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+pair.getTrainFile(), pair.getTrainSentence());
-			Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+pair.getTestFile(), pair.getTestSentence());
-
-			GraphEditDistance ged = new GraphEditDistance(test, train);
-			double dist = ged.getDistance();
-			plagReferences.add(getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold)));
+		for(PlagiarismPassage passage : job.getTextPairs()) {
+			plagReferences.add(findPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence()));
 		}
 
 		return plagReferences;
 	}
 
-	public List<PlagiarismReference> findPlagiarism(File trainFile, int trainSentence, File testFile, int testSentence) {
+	public List<PlagiarismReference> findAdjacentPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
+		List<PlagiarismReference> plagReferences = new ArrayList<>();
+		plagReferences.add(findPlagiarism(trainFile, trainSentence, testFile, testSentence));
+		plagReferences.addAll(findAdjacentPlagiarism(trainFile, trainSentence, testFile, testSentence, true));
+		plagReferences.addAll(findAdjacentPlagiarism(trainFile, trainSentence, testFile, testSentence, false));
+		
+		return plagReferences;
+	}
+
+	public List<PlagiarismReference> findAdjacentPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence, boolean ascending) {
+		List<PlagiarismReference> plagRefs = new ArrayList<>();
+		
+		int i = ascending ? 1 : -1;
+		PlagiarismReference plagRef = findPlagiarism(trainFile, trainSentence+i, testFile, testSentence+i);
+		if(plagRef != null) {
+			plagRefs.add(plagRef);
+		}
+		if(plagRef.getSimilarity() < plagiarismThreshold*0.8) {
+			plagRefs.addAll(findAdjacentPlagiarism(trainFile, trainSentence+i, testFile, testSentence+i, ascending));
+		}
+		
+		return plagRefs;
+	}
+	
+	public PlagiarismReference findPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
 		/**
 		 * Checks sentence pair for plagiarism using Graph Edit Distance algorithm.
 		 * Adjacent sentences are checked, if they exist, and added if they are above the plagiarism threshold
 		 */
-		List<PlagiarismReference> passages = new ArrayList<>();
-		if(trainFile.exists() && testFile.exists()) {
-			Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+trainFile, trainSentence);
-			Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+testFile, testSentence);
-
-			GraphEditDistance ged = new GraphEditDistance(test, train);
-			double dist = ged.getDistance();
-			passages.add(getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold)));
-			
-			if(dist<plagiarismThreshold) {
-				passages.addAll(findPlagiarism(trainFile, trainSentence-1, testFile, testSentence-1));
-				passages.addAll(findPlagiarism(trainFile, trainSentence+1, testFile, testSentence+1));
-			}
+		//TODO: alle test graphs er fra samme fil. hent inn alle i en dict eller noe
+		Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+trainFile, trainSentence);
+		Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+testFile, testSentence);
+		
+		if(train==null || test == null) {
+			return null;
 		}
 
-		return passages;
+		GraphEditDistance ged = new GraphEditDistance(test, train);
+		double dist = ged.getDistance();
+		return getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
 	}
 
 	public PlagiarismReference getPlagiarismReference(Graph train, Graph test, double similarity, boolean detectedPlagiarism) {

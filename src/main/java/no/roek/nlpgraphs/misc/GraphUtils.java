@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import no.roek.nlpgraphs.document.NLPSentence;
@@ -73,6 +74,10 @@ public class GraphUtils {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		if(sentence == null) {
+			return null;
 		}
 		
 		return parseGraph(sentence.getAsJsonObject(), filename);
