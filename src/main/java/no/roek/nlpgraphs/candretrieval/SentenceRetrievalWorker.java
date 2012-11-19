@@ -42,7 +42,7 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(File file) {
 		PlagiarismJob plagJob = new PlagiarismJob(file.toPath());
 		try {
-			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), 50)) {
+			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), 150)) {
 				plagJob.addTextPair(sp);
 			}
 		} catch ( IOException e) {

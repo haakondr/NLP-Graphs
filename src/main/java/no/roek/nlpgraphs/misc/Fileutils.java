@@ -175,17 +175,8 @@ public class Fileutils {
 	}
 
 	public static String replaceFileExtention(String filename, String extention) {
-		String[] temp = filename.split(".");
-		if(temp.length == 2) {
-			return temp[0]+"."+extention;
-		}
-		try {
-			throw new InvalidFormatException("Invalid filename format (should be filename.extention): "+filename);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+		int i = filename.lastIndexOf(".");
+		return filename.substring(0, i) +"."+ extention;
 	}
 
 }
