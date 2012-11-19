@@ -2,7 +2,7 @@ package no.roek.nlpgraphs.preprocessing;
 
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.App;
+import no.roek.nlpgraphs.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.ConfigService;
 
 import org.maltparser.MaltParserService;
@@ -11,11 +11,11 @@ import org.maltparser.core.exception.MaltChainedException;
 public class DependencyParserWorker extends Thread{
 	private final BlockingQueue<ParseJob> queue;
 	private String parsedFilesDir;
-	private App concurrencyService;
+	private PlagiarismSearch concurrencyService;
 	private boolean running;
 	private DependencyParser parser;
 	
-	public DependencyParserWorker(BlockingQueue<ParseJob> queue,  String maltParams, App concurrencyService) {
+	public DependencyParserWorker(BlockingQueue<ParseJob> queue,  String maltParams, PlagiarismSearch concurrencyService) {
 		this.queue = queue;
 		ConfigService cs = new ConfigService();
 		this.parsedFilesDir = cs.getParsedFilesDir();

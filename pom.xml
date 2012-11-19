@@ -28,7 +28,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<configuration>
 					<addClasspath>true</addClasspath>
-					<mainClass>no.roek.nlpgraphs.RunApp</mainClass>
+					<mainClass>no.roek.nlpgraphs.App</mainClass>
 				</configuration>
 			</plugin>
 			<plugin>

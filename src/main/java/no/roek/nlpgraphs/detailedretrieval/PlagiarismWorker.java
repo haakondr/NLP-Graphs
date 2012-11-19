@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.App;
+import no.roek.nlpgraphs.PlagiarismSearch;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
@@ -23,11 +23,11 @@ public class PlagiarismWorker extends Thread {
 
 	private BlockingQueue<PlagiarismJob> queue;
 	private PlagiarismFinder plagFinder;
-	private App concurrencyService;
+	private PlagiarismSearch concurrencyService;
 	private String resultsDir;
 	private boolean running;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, App concurrencyService) {
+	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, PlagiarismSearch concurrencyService) {
 		this.queue = queue;
 		this.plagFinder = new PlagiarismFinder();
 		this.concurrencyService = concurrencyService;

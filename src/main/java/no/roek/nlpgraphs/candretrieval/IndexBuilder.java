@@ -1,8 +1,9 @@
 package no.roek.nlpgraphs.candretrieval;
 
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.App;
+import no.roek.nlpgraphs.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class IndexBuilder extends Thread {
@@ -10,9 +11,9 @@ public class IndexBuilder extends Thread {
 	private BlockingQueue<String> documentQueue;
 	private CandidateRetrievalService crs;
 	private boolean running;
-	private App concurrencyService;
+	private PlagiarismSearch concurrencyService;
 
-	public IndexBuilder(BlockingQueue<String> documentQueue, CandidateRetrievalService crs, App concurrencyService) {
+	public IndexBuilder(BlockingQueue<String> documentQueue, CandidateRetrievalService crs, PlagiarismSearch concurrencyService) {
 		this.crs = crs;
 		this.documentQueue = documentQueue;
 		this.concurrencyService = concurrencyService;
@@ -27,7 +28,8 @@ public class IndexBuilder extends Thread {
 				if(filename.equals("die")) {
 					running = false;
 				}else {
-					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(filename));
+					
+					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(Paths.get(filename).getFileName().toString()));
 					concurrencyService.indexBuilderJobDone();
 				}
 			} catch (InterruptedException e) {
