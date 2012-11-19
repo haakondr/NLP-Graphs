@@ -1,1 +1,0 @@
-{"sentenceNumber":1,"length":15,"filename":"omg.txt","tokens":[{"id":"1","lemma":"Bob","deprel":"nsubj","word":"Bob","rel":"2","pos":"NNP"},{"id":"2","lemma":"kiss","deprel":"null","word":"kissed","rel":"0","pos":"VBD"},{"id":"3","lemma":"Mary","deprel":"dobj","word":"Mary","rel":"2","pos":"NNP"}],"offset":0}

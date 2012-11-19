@@ -55,6 +55,8 @@ public class DependencyParser {
 				jsonSentence.put("tokens", jsonTokens);
 				jsonSentences.put(Integer.toString(sentence.getNumber()), jsonSentence);
 			}
+			
+			out.put("sentences", jsonSentences);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
