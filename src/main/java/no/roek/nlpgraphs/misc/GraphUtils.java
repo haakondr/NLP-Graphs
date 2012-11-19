@@ -84,7 +84,7 @@ public class GraphUtils {
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
-		Graph graph = new Graph(filename);
+		Graph graph = new Graph(jsonGraph.get("filename").getAsString());
 		graph.setLength(jsonGraph.get("length").getAsInt());
 		graph.setOffset(jsonGraph.get("offset").getAsInt());
 //		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
