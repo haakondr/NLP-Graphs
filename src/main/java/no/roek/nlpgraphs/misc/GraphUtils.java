@@ -60,11 +60,12 @@ public class GraphUtils {
 	public static Graph getGraphFromFile(String filename, int sentenceNumber) {
 		JsonReader jsonReader = null;
 		JsonElement sentence = null;
+		JsonObject fileObject = null;
 		try {
 			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
 
 			JsonParser jsonParser = new JsonParser();
-			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
 			sentence = fileObject.get("sentences").getAsJsonObject().get(Integer.toString(sentenceNumber));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -80,11 +81,11 @@ public class GraphUtils {
 			return null;
 		}
 		
-		return parseGraph(sentence.getAsJsonObject(), filename);
+		return parseGraph(sentence.getAsJsonObject(), fileObject.get("filename").getAsString());
 	}
 
 	public static Graph parseGraph(JsonObject jsonGraph, String filename) {
-		Graph graph = new Graph(jsonGraph.get("filename").getAsString());
+		Graph graph = new Graph(filename);
 		graph.setLength(jsonGraph.get("length").getAsInt());
 		graph.setOffset(jsonGraph.get("offset").getAsInt());
 //		graph.setOriginalText(jsonGraph.get("originalText").getAsString());
