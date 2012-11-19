@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.detailedretrieval;
 
 import java.util.List;
 
+import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.GraphUtils;
@@ -106,18 +107,23 @@ public class GraphEditDistance {
 		List<String> attr1 = node1.getAttributes();
 		List<String> attr2 = node2.getAttributes();
 
-		int diff = 0;
-		for (int i = 0; i < attr1.size(); i++) {
+		double diff = 0, n = attr1.size();
+		for (int i = 0; i < n; i++) {
 			if(!attr1.get(i).equalsIgnoreCase(attr2.get(i))) {
 				diff ++;
 			}
 		}
 
-		return diff * SUBSTITUTE_COST;
+		return (diff/n) * SUBSTITUTE_COST;
 	}
 
 	private double getEdgeDiff(Node node1, Node node2) {
-		return GraphUtils.listDiff(g1.getEdges(node1.getId()), g2.getEdges(node2.getId()));
+		List<Edge> edges1 = g1.getEdges(node1.getId());
+		List<Edge> edges2 = g2.getEdges(node2.getId());
+		double diff =  GraphUtils.listDiff(edges1, edges2);
+		double len = (edges1.size() + edges2.size()) / 2;
+		
+		return diff / len;
 	}
 
 	public void printMatrix() {
