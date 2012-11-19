@@ -84,12 +84,11 @@ public class App {
 		progressPrinter.printProgressbar(text);
 
 		if(progressPrinter.isDone()) {
-			dependencyParserCount--;
-			parser.kill();
-		}
-
-		if(dependencyParserCount == 0) {
-			System.out.println("Preprocessing done. Starting next step..");
+			for(DependencyParserWorker thread : dependencyParserThreads) {
+				thread.kill();
+			}
+			
+			System.out.println("Preprocessing done. Starting plagiarism search (index building if needed)");
 			RunApp.main(null);
 		}
 	}
