@@ -3,14 +3,14 @@ package no.roek.nlpgraphs;
 public class App {
 
 	public static void main(String[] args) {
-		PlagiarismSearch app = new PlagiarismSearch();
+		PlagiarismSearch ps = new PlagiarismSearch();
 		
-		if(app.shouldPreprocess()) {
-			app.preprocess();
-		}else if(app.shouldCreateIndex()) {
-			app.createIndex();
+		if(ps.shouldPreprocess()) {
+			ps.preprocess();
+		}else if(ps.shouldCreateIndex()) {
+			ps.createIndex();
 		}else {
-			app.startPlagiarismSearch();
+			ps.startPlagiarismSearch();
 		}
 	}
 }

@@ -29,7 +29,7 @@ public class IndexBuilder extends Thread {
 					running = false;
 				}else {
 					
-					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(Paths.get(filename).getFileName().toString()));
+					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(filename));
 					concurrencyService.indexBuilderJobDone();
 				}
 			} catch (InterruptedException e) {

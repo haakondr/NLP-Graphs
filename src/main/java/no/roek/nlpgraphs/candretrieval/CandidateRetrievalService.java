@@ -95,7 +95,7 @@ public class CandidateRetrievalService {
 		Document doc = new Document();
 		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
 				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
-		doc.add(new Field("FILENAME", sentence.getFilename().toString(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+		doc.add(new Field("FILENAME", sentence.getFilename(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
 		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
 
 		return doc;
