@@ -50,6 +50,13 @@ public class Fileutils {
 			IOUtils.closeQuietly(writer);
 		}
 	}
+	
+	public static void mkdir(String dir) {
+		File d = new File(dir);
+		if(!d.exists()) {
+			d.mkdir();
+		}
+	}
 
 	public static void createParentFolders(String filename) {
 		new File(filename).getParentFile().mkdirs();

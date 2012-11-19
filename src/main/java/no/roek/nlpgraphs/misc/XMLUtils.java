@@ -1,5 +1,6 @@
 package no.roek.nlpgraphs.misc;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +21,6 @@ import org.jdom2.output.XMLOutputter;
 public class XMLUtils {
 
 	public static List<PlagiarismReference> getPlagiarismReferences(String annotationFile) {
-		Fileutils.createParentFolders(annotationFile);
 		List<PlagiarismReference> plagiarisms = new ArrayList<>();
 
 		SAXBuilder builder = new SAXBuilder();
@@ -68,6 +68,7 @@ public class XMLUtils {
 	}
 	
 	public static void writeResults(String dir, String file, List<PlagiarismReference> plagiarisms) {
+		Fileutils.mkdir(dir);
 		Element root = new Element("document");
 		root.setAttribute("reference", file);
 		for (PlagiarismReference plagiarismReference : plagiarisms) {
@@ -79,6 +80,11 @@ public class XMLUtils {
 			reference.setAttribute("source_reference", plagiarismReference.getSourceReference());
 			reference.setAttribute("source_offset", plagiarismReference.getSourceOffset());
 			reference.setAttribute("source_length", plagiarismReference.getSourceLength());
+			if(plagiarismReference.getName().equals("detected-plagiarism")) {
+				reference.setAttribute("ged_distance", Double.toString(plagiarismReference.getSimilarity()));
+			}else if(plagiarismReference.getName().equals("candidate-passage")) {
+				reference.setAttribute("candret_score", Double.toString(plagiarismReference.getSimilarity()));
+			}
 			root.addContent(reference);
 		}
 
