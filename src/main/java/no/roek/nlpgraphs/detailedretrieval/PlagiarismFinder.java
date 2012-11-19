@@ -60,7 +60,7 @@ public class PlagiarismFinder {
 		if(plagRef != null) {
 			plagRefs.add(plagRef);
 		}
-		if(plagRef.getSimilarity() < plagiarismThreshold*0.8) {
+		if(plagRef.getSimilarity() < plagiarismThreshold*1.3) {
 			plagRefs.addAll(findAdjacentPlagiarism(trainFile, trainSentence+i, testFile, testSentence+i, ascending));
 		}
 		
