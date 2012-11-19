@@ -76,7 +76,6 @@ public class XMLUtils {
 			reference.setAttribute("name", plagiarismReference.getName());
 			reference.setAttribute("this_offset", plagiarismReference.getOffset());
 			reference.setAttribute("this_length", plagiarismReference.getLength());
-			reference.setAttribute("obfuscation", Double.toString(plagiarismReference.getSimilarity()));
 			reference.setAttribute("source_reference", plagiarismReference.getSourceReference());
 			reference.setAttribute("source_offset", plagiarismReference.getSourceOffset());
 			reference.setAttribute("source_length", plagiarismReference.getSourceLength());

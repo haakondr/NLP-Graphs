@@ -140,7 +140,7 @@ public class PlagiarismSearch {
 		
 		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir())) {
 			try {
-				retrievalQueue.put(file.toPath().getFileName().toFile());
+				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
