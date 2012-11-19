@@ -20,6 +20,7 @@ import org.jdom2.output.XMLOutputter;
 public class XMLUtils {
 
 	public static List<PlagiarismReference> getPlagiarismReferences(String annotationFile) {
+		Fileutils.createParentFolders(annotationFile);
 		List<PlagiarismReference> plagiarisms = new ArrayList<>();
 
 		SAXBuilder builder = new SAXBuilder();
