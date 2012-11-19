@@ -29,8 +29,8 @@ public class PlagiarismFinder {
 		parsedDir = cs.getParsedFilesDir();
 		testDir =cs.getTestDir();
 		trainDir = cs.getTrainDir();
-		this.resultsDir = cs.getResultsDir();
-		this.plagiarismThreshold = cs.getPlagiarismThreshold();
+		resultsDir = cs.getResultsDir();
+		plagiarismThreshold = cs.getPlagiarismThreshold();
 	}
 
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {

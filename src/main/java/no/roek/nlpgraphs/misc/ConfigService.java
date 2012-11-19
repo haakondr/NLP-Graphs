@@ -54,8 +54,8 @@ public class ConfigService {
 		return Integer.parseInt(configFile.getProperty("DOCUMENT_RECALL"));
 	}
 
-	public int getPlagiarismThreshold() {
-		return Integer.parseInt(configFile.getProperty("PLAGIARISM_THRESHOLD"));
+	public double getPlagiarismThreshold() {
+		return Double.parseDouble(configFile.getProperty("PLAGIARISM_THRESHOLD"));
 	}
 
 	public String getMaltParams() {
