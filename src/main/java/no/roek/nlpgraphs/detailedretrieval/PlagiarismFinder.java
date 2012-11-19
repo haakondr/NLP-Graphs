@@ -17,6 +17,7 @@ import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.misc.XMLUtils;
 
 public class PlagiarismFinder {
 
@@ -81,50 +82,12 @@ public class PlagiarismFinder {
 
 		GraphEditDistance ged = new GraphEditDistance(test, train);
 		double dist = ged.getDistance();
-		return getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
+		return XMLUtils.getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
 	}
 
-	public PlagiarismReference getPlagiarismReference(Graph train, Graph test, double similarity, boolean detectedPlagiarism) {
-		String filename = test.getFilename();
-		String offset = Integer.toString(test.getOffset());
-		String length = Integer.toString(test.getLength());
-		String sourceReference = train.getFilename();
-		String sourceOffset = Integer.toString(train.getOffset());
-		String sourceLength = Integer.toString(train.getLength());
-		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
-		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
-	}
 
-	public void writeResults(String file, List<PlagiarismReference> plagiarisms) {
-		Element root = new Element("document");
-		root.setAttribute("reference", file);
-		for (PlagiarismReference plagiarismReference : plagiarisms) {
-			Element reference = new Element("feature");
-			reference.setAttribute("name", plagiarismReference.getName());
-			reference.setAttribute("this_offset", plagiarismReference.getOffset());
-			reference.setAttribute("this_length", plagiarismReference.getLength());
-			reference.setAttribute("obfuscation", Double.toString(plagiarismReference.getSimilarity()));
-			reference.setAttribute("source_reference", plagiarismReference.getSourceReference());
-			reference.setAttribute("source_offset", plagiarismReference.getSourceOffset());
-			reference.setAttribute("source_length", plagiarismReference.getSourceLength());
-			root.addContent(reference);
-		}
 
-		Document doc = new Document();
-		doc.setContent(root);
 
-		XMLOutputter outputter = new XMLOutputter();
-
-		FileWriter writer = null;
-		try {
-			writer = new FileWriter(resultsDir+Fileutils.replaceFileExtention(file, "xml"));
-			outputter.output(doc, writer);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			IOUtils.closeQuietly(writer);
-		}
-	}
 
 	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
 		/**
@@ -133,9 +96,11 @@ public class PlagiarismFinder {
 		 */
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		for (PlagiarismPassage pair : job.getTextPairs()) {
-			plagReferences.add(getPlagiarismReference(pair.getTrainGraph(), pair.getTestGraph(), pair.getSimilarity(), false));
+			plagReferences.add(XMLUtils.getPlagiarismReference(pair.getTrainGraph(), pair.getTestGraph(), pair.getSimilarity(), false));
 		}
 
 		return plagReferences;
 	}
+	
+
 }

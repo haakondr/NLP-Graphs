@@ -6,18 +6,23 @@ import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
+import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.Fileutils;
 
 public class SentenceRetrievalWorker extends Thread {
 
 	private BlockingQueue<PlagiarismJob> queue;
 	private BlockingQueue<File> retrievalQueue;
 	private CandidateRetrievalService crs;
+	private String candretDir;
 	
 
 	public SentenceRetrievalWorker(CandidateRetrievalService crs, BlockingQueue<File> retrievalQueue, BlockingQueue<PlagiarismJob> queue) {
 		this.queue = queue;
 		this.crs = crs;
 		this.retrievalQueue = retrievalQueue;
+		ConfigService cs = new ConfigService();
+		candretDir = cs.getCandRetDir();
 	}
 
 	@Override
@@ -30,7 +35,9 @@ public class SentenceRetrievalWorker extends Thread {
 					System.out.println("No files in queue. "+Thread.currentThread().getName()+" stopping..");
 					running = false;
 				}else {
-					queue.put(getParseJob(file));
+					PlagiarismJob job = getParseJob(file);
+					Fileutils.writeToFile(candretDir+file, job.toJson());
+					queue.put(job);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();

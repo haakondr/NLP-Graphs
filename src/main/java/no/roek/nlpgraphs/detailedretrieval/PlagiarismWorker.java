@@ -12,6 +12,7 @@ import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
+import no.roek.nlpgraphs.misc.XMLUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
@@ -23,12 +24,15 @@ public class PlagiarismWorker extends Thread {
 	private BlockingQueue<PlagiarismJob> queue;
 	private PlagiarismFinder plagFinder;
 	private App concurrencyService;
+	private String resultsDir;
 	private boolean running;
 
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, App concurrencyService) {
 		this.queue = queue;
 		this.plagFinder = new PlagiarismFinder();
 		this.concurrencyService = concurrencyService;
+		ConfigService cs = new ConfigService();
+		this.resultsDir = cs.getResultsDir();
 	}
 
 	@Override
@@ -42,7 +46,7 @@ public class PlagiarismWorker extends Thread {
 					break;
 				}
 				List<PlagiarismReference> plagReferences = plagFinder.findPlagiarism(job);
-				plagFinder.writeResults(job.getFile().getFileName().toString(), plagReferences);
+				XMLUtils.writeResults(resultsDir, job.getFile().getFileName().toString(), plagReferences);
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
 				e.printStackTrace();

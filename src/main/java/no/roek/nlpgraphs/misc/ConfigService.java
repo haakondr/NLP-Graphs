@@ -86,7 +86,7 @@ public class ConfigService {
 		return Integer.parseInt(configFile.getProperty("INDEX_BUILDER_THREADS"));
 	}
 	
-	public String getWordNetDir() {
-		return configFile.getProperty("WORDNET_DIR");
+	public String getCandRetDir() {
+		return configFile.getProperty("CANDRET_DIR");
 	}
 }
