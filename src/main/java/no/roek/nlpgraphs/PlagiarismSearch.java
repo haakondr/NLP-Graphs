@@ -134,7 +134,7 @@ public class PlagiarismSearch {
 
 	}
 
-	public void PlagiarismSearch() {
+	public void startPlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
 		

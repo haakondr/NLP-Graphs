@@ -10,7 +10,7 @@ public class App {
 		}else if(app.shouldCreateIndex()) {
 			app.createIndex();
 		}else {
-			app.PlagiarismSearch();
+			app.startPlagiarismSearch();
 		}
 	}
 }
