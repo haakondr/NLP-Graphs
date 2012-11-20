@@ -81,13 +81,15 @@ public class Edge {
 	public boolean equals(Object obj) {
 		if(getClass() == obj.getClass()) {
 			Edge other = (Edge) obj;
-			return (from.equals(other.getFrom())) && (to.equals(other.getTo()) && (attributes.equals(other.attributes)));
+//			return (from.equals(other.getFrom())) && (to.equals(other.getTo()) && (attributes.equals(other.attributes)));
+			return (from.equals(other.getFrom())) && (to.equals(other.getTo()));
 		}
 		return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return from.hashCode() * to.hashCode() * attributes.hashCode();
+//		return from.hashCode() * to.hashCode() * attributes.hashCode();
+		return from.hashCode() * to.hashCode();
 	}
 }

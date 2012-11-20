@@ -49,7 +49,7 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return this.id;
+		return this.id+"-"+attributes.get(0);
 	}
 
 	public void addAttribute(String attr) {
@@ -60,9 +60,19 @@ public class Node {
 	public  boolean equals(Object obj) {
 		if(getClass() == obj.getClass()) {
 			Node other = (Node) obj;
-			return attributes.equals(other.attributes);
+			return equalsAttributes(other.attributes);
 		}
 		return false;
+	}
+	
+	private boolean equalsAttributes(List<String> other) {
+		for (int i = 0; i < attributes.size(); i++) {
+			if(!attributes.get(i).equals(other.get(i))) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	@Override

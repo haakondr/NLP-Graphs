@@ -118,7 +118,7 @@ public class GraphUtils {
 			adj.get(id).add(new String[] {rel, deprel});
 		}
 
-		return new Node(id, new String[] {lemma, pos});
+		return new Node(id, new String[] {lemma});
 		//		return new Node(id, new String[] {word, lemma, pos}); 
 	}
 
@@ -126,7 +126,6 @@ public class GraphUtils {
 		for (Node node: graph.getNodes()) {
 			for (String[] edge : adj.get(node.getId())){
 				Node to = graph.getNode(edge[0]);
-				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 				graph.addEdge(new Edge(node.getId()+"_"+to.getId(), node, to, new String[] {edge[1]}));
 			}
 		}

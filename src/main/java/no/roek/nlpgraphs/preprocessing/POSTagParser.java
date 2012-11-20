@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.WordToken;
 import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
@@ -66,6 +67,21 @@ public class POSTagParser {
 			IOUtils.closeQuietly(reader);
 		}
 		return null;
+	}
+	
+	public String[] postagSentence(String sentence) {
+		String taggedSentence = tagger.tagString(sentence);
+		
+		List<String> tokens = new ArrayList<>();
+		int i = 1;
+		for(String token : taggedSentence.split(" ")) {
+			String[] temp = token.split("_");
+			String lemma = lemmatiser.lemma(temp[0], temp[1]);
+			tokens.add(i+"\t"+temp[0]+"\t"+lemma+"\t"+temp[1]+"\t"+temp[1]+"\t_");
+			i++;
+		}
+		
+		return tokens.toArray(new String[0]);
 	}
 	
 	private List<NLPSentence> getSentences(DocumentPreprocessor dp, String filename) {

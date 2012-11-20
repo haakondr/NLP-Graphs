@@ -38,7 +38,7 @@ public class GraphEditDistanceTest {
 		
 		ged = new GraphEditDistance(g1, g2, 1, 1, 1);
 		
-		double dist = ged.getDistance();
+		double dist = ged.getNormalizedDistance();
 		assertEquals(2, (int)dist);
 	}
 	

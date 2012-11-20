@@ -81,7 +81,7 @@ public class PlagiarismFinder {
 		}
 
 		GraphEditDistance ged = new GraphEditDistance(test, train);
-		double dist = ged.getDistance();
+		double dist = ged.getNormalizedDistance();
 		return XMLUtils.getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
 	}
 
