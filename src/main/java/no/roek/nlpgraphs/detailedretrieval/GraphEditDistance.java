@@ -1,14 +1,11 @@
 package no.roek.nlpgraphs.detailedretrieval;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.misc.GraphUtils;
 
 import com.konstantinosnedas.HungarianAlgorithm;
 
@@ -106,25 +103,32 @@ public class GraphEditDistance {
 		 * Bottom left node insertions. 
 		 * Bottom right represents delete -> delete operations which should have any cost, and is filled with zeros.
 		 */
-		int n = Math.max(g1.getNodes().size(), g2.getNodes().size());
-
-		double[][] costMatrix = new double[n*2][n*2];
-
+		int n = g1.getNodes().size();
+		int m = g2.getNodes().size();
+		
+		double[][] costMatrix = new double[n+m][n+m];
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+					costMatrix[i][j] = getSubstituteCost(g1.getNode(i), g2.getNode(j));
+			}
+		}
+		
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				costMatrix[i+n][j] = getInsertCost(i, j);
+			}
+		}
+		
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
-				try {
-					costMatrix[i][j] = getSubstituteCost(g1.getNode(i), g2.getNode(j));
-				}catch (IndexOutOfBoundsException e) {
-					costMatrix[i][j] = INSERT_COST;
-				}
-				costMatrix[i+n][j] = getInsertCost(i, j);
-				costMatrix[i][j+n] = getDeleteCost(i, j);
+				costMatrix[j][i+m] = getDeleteCost(i, j);
 			}
 		}
 
 		return costMatrix;
 	}
-
+	
 	private double getInsertCost(int i, int j) {
 		if(i == j) {
 			return INSERT_COST;
