@@ -19,6 +19,7 @@ import no.roek.nlpgraphs.preprocessing.POSTagParser;
 
 public class GED {
 
+	//TODO: move most of these classes to utility classes?
 	public static void main(String[] args) {
 		String[] texts = getInputTexts(args);
 		POSTagParser postagger = new POSTagParser();
@@ -38,27 +39,27 @@ public class GED {
 		
 	}
 	
-	private static void printNodes(Graph g) {
+	public static void printNodes(Graph g) {
 		for(Node n : g.getNodes()) {
 			System.out.print(n.getAttributes().get(0)+"\t");
 		}
 		System.out.println();
 	}
 	
-	private static void printEdges(Graph g) {
+	public static void printEdges(Graph g) {
 		for(Node n : g.getNodes()) {
 			System.out.print(g.getEdges(n));
 		}
 		System.out.println();
 	}
 	
-	private static Graph getGraph(String text, POSTagParser postagger, DependencyParser depParser) {
+	public static Graph getGraph(String text, POSTagParser postagger, DependencyParser depParser) {
 		JsonObject jsonFile = depParser.parseSentence(postagger.postagSentence(text));
 		JsonObject jsonSentence = jsonFile.get("sentences").getAsJsonObject();
 		return GraphUtils.parseGraph(jsonSentence, "filename");
 	}
 
-	private static String[] getInputTexts(String[] args)  {
+	public static String[] getInputTexts(String[] args)  {
 		String text1="", text2="";
 		if(args.length!=2) {
 			InputStreamReader converter = new InputStreamReader(System.in);

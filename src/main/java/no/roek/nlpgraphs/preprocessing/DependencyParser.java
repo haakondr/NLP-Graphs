@@ -39,7 +39,7 @@ public class DependencyParser {
 		JSONObject out = dependencyParse(job);
 		Fileutils.writeToFile(outDir+job.getParentDir()+job.getFilename(), out.toString());
 	}
-
+	
 	public JSONObject dependencyParse(ParseJob job) throws MaltChainedException, NullPointerException {
 		JSONObject out = new JSONObject();
 
@@ -85,7 +85,7 @@ public class DependencyParser {
 	public JsonObject parseSentence(String[] postagString) {
 		JsonObject out = new JsonObject();
 		try {
-			
+			JsonObject jsonSentences = new JsonObject();
 			JsonObject jsonSentence = new JsonObject();
 			jsonSentence.addProperty("sentenceNumber", 1);
 			jsonSentence.addProperty("offset", 0);
@@ -107,7 +107,8 @@ public class DependencyParser {
 				jsonTokens.add(jsonToken);
 			}
 			jsonSentence.add("tokens", jsonTokens);
-			out.add("sentences", jsonSentence);
+			jsonSentences.add("1", jsonSentence);
+			out.add("sentences", jsonSentences);
 		} catch (MaltChainedException e) {
 			e.printStackTrace();
 		}

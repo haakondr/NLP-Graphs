@@ -47,7 +47,7 @@ public class Fileutils {
 			IOUtils.closeQuietly(writer);
 		}
 	}
-	
+
 	public static void mkdir(String dir) {
 		File d = new File(dir);
 		if(!d.exists()) {
@@ -56,7 +56,10 @@ public class Fileutils {
 	}
 
 	public static void createParentFolders(String filename) {
-		new File(filename).getParentFile().mkdirs();
+		File f = new File(filename);
+		if(f.getParentFile() != null) {
+			new File(filename).getParentFile().mkdirs();
+		}
 	}
 
 	public static File[] getFiles(Path dir) {
@@ -99,9 +102,9 @@ public class Fileutils {
 		for (File file : files) {
 			String outFile = outDir+Paths.get(dir).relativize(file.toPath());
 			if(fileExtention != null) {
-				 outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
+				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
 			}
-			
+
 			if(!new File(outFile).exists()) {
 				out.add(file);
 			}
@@ -109,12 +112,12 @@ public class Fileutils {
 
 		return out.toArray(new File[0]);
 	}
-	
+
 	public static File[] getFilesNotDone(String dir, String outDir) {
 		return getFilesNotDone(dir, outDir, null);
 	}
-	
-	
+
+
 
 	public static File[][] getChunks(File[] files, int n) {
 		List<File[]> chunks = new ArrayList<>();
