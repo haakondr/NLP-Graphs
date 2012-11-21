@@ -27,6 +27,8 @@ public class GED {
 		
 		Graph g1 = getGraph(texts[0], postagger, depParser);
 		Graph g2 = getGraph(texts[1], postagger, depParser);
+		printNodes(g1);
+		printNodes(g2);
 		
 		GraphEditDistance ged = new GraphEditDistance(g1, g2);
 		
@@ -36,6 +38,8 @@ public class GED {
 		for(String editPath : ged.getEditPath(true)) {
 			System.out.println(editPath);
 		}
+		
+		ged.printMatrix();
 		
 	}
 	

@@ -236,7 +236,7 @@ public class GraphEditDistance {
 				if(costMatrix[i][j] == Double.MAX_VALUE) {
 					System.out.print("inf\t");
 				}else{
-					System.out.print(costMatrix[i][j]+"\t");
+					System.out.print(String.format("%.2f", costMatrix[i][j])+"\t");
 				}
 			}
 			System.out.println();
