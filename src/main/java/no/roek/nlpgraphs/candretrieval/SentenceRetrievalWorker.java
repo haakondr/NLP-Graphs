@@ -37,7 +37,7 @@ public class SentenceRetrievalWorker extends Thread {
 				}else {
 					PlagiarismJob job = getParseJob(file);
 					Fileutils.writeToFile(candretDir+file.toPath().getFileName().toString(), job.toJson());
-//					queue.put(job);
+					queue.put(job);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
