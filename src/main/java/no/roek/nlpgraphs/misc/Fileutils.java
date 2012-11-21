@@ -96,18 +96,28 @@ public class Fileutils {
 	}
 
 
-	public static File[] getFilesNotDone(String dir, String outDir) {
+	public static File[] getFilesNotDone(String dir, String outDir, String fileExtention) {
 		File[] files = getFileList(dir);
 		List<File> out = new ArrayList<File>();
 		for (File file : files) {
-			File outFile = new File(outDir+Paths.get(dir).relativize(file.toPath()));
-			if(!outFile.exists()) {
+			String outFile = outDir+Paths.get(dir).relativize(file.toPath());
+			if(fileExtention != null) {
+				 outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
+			}
+			
+			if(!new File(outFile).exists()) {
 				out.add(file);
 			}
 		}
 
 		return out.toArray(new File[0]);
 	}
+	
+	public static File[] getFilesNotDone(String dir, String outDir) {
+		return getFilesNotDone(dir, outDir, null);
+	}
+	
+	
 
 	public static File[][] getChunks(File[] files, int n) {
 		List<File[]> chunks = new ArrayList<>();

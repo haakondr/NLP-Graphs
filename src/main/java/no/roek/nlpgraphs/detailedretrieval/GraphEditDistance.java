@@ -178,6 +178,7 @@ public class GraphEditDistance {
 		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
 		 * @param edges1	The first list of edges
 		 * @param edges2	The second list of edges
+		 * @param fromGraph The graph which contains edges1
 		 * @param toGraph	The graph which contains edges2
 		 */
 		List<Edge> edgeDiff = new ArrayList<>();
@@ -192,14 +193,18 @@ public class GraphEditDistance {
 
 	private boolean contains(Edge e1, List<Edge> edges, Graph fromGraph, Graph toGraph) {
 		for (Edge e2 : edges) {
-			if(e1.equals(e2) || isConnectingToSameNode(e1, e2, toGraph) || isConnectingToSameNode(e2, e1, fromGraph)) {
+			if(e1.equals(e2) || isConnectedToSameNodeOneStepAhead(e1, e2, toGraph) || isConnectedToSameNodeOneStepAhead(e2, e1, fromGraph)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private boolean isConnectingToSameNode(Edge e1, Edge e2, Graph g) {
+	private boolean isConnectedToSameNodeOneStepAhead(Edge e1, Edge e2, Graph g) {
+		/**
+		 * Checks if edge e2 leads to the same node as edge e1
+		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
+		 */
 		List<Edge> nextEdges = g.getEdges(e2.getTo());
 		if(nextEdges==null) {
 			return false;

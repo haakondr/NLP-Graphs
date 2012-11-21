@@ -138,7 +138,7 @@ public class PlagiarismSearch {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
 		
-		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir())) {
+		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir(), "xml")) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
