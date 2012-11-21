@@ -55,7 +55,7 @@ public class GED {
 	
 	public static Graph getGraph(String text, POSTagParser postagger, DependencyParser depParser) {
 		JsonObject jsonFile = depParser.parseSentence(postagger.postagSentence(text));
-		JsonObject jsonSentence = jsonFile.get("sentences").getAsJsonObject();
+		JsonObject jsonSentence = jsonFile.get("sentences").getAsJsonObject().get("1").getAsJsonObject();
 		return GraphUtils.parseGraph(jsonSentence, "filename");
 	}
 

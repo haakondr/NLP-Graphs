@@ -193,18 +193,22 @@ public class GraphEditDistance {
 
 	private boolean contains(Edge e1, List<Edge> edges, Graph fromGraph, Graph toGraph) {
 		for (Edge e2 : edges) {
-			if(e1.equals(e2) || isConnectedToSameNodeOneStepAhead(e1, e2, toGraph) || isConnectedToSameNodeOneStepAhead(e2, e1, fromGraph)) {
+			if(e1.equals(e2) || leadsToSameNode(e1, e2, toGraph) || leadsToSameNode(e2, e1, fromGraph)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private boolean isConnectedToSameNodeOneStepAhead(Edge e1, Edge e2, Graph g) {
+	private boolean leadsToSameNode(Edge e1, Edge e2, Graph g, int recursiveCalls) {
 		/**
 		 * Checks if edge e2 leads to the same node as edge e1
 		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
 		 */
+		if(recursiveCalls>2) {
+			return false;
+		}
+		
 		List<Edge> nextEdges = g.getEdges(e2.getTo());
 		if(nextEdges==null) {
 			return false;
@@ -213,8 +217,15 @@ public class GraphEditDistance {
 			if(e1.getTo().equals(next.getTo()) && e1.getFrom().equals(e2.getFrom())){
 				return true;
 			}
+			if(leadsToSameNode(e1, next, g, recursiveCalls+1)) {
+				return true;
+			}
 		}
 		return false;
+	}
+	
+	private boolean leadsToSameNode(Edge e1, Edge e2, Graph g) {
+		return leadsToSameNode(e1, e2, g, 0);
 	}
 
 	public void printMatrix() {
