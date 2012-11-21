@@ -157,13 +157,13 @@ public class PlagiarismSearch {
 			worker.start();
 		}
 		
-		plagThreadCount = cs.getPlagiarismThreads();
-		plagThreads = new PlagiarismWorker[plagThreadCount];
-		for (int i = 0; i < plagThreadCount; i++) {
-			plagThreads[i] = new PlagiarismWorker(plagQueue, this);
-			plagThreads[i].setName("Plagiarism-thread-"+i);
-			plagThreads[i].start();
-		}
+//		plagThreadCount = cs.getPlagiarismThreads();
+//		plagThreads = new PlagiarismWorker[plagThreadCount];
+//		for (int i = 0; i < plagThreadCount; i++) {
+//			plagThreads[i] = new PlagiarismWorker(plagQueue, this);
+//			plagThreads[i].setName("Plagiarism-thread-"+i);
+//			plagThreads[i].start();
+//		}
 	}
 
 	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
