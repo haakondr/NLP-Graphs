@@ -15,9 +15,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import com.sun.media.sound.InvalidFormatException;
-
-
 public class Fileutils {
 
 	public static void writeToFile(String filename, String[] lines) {
