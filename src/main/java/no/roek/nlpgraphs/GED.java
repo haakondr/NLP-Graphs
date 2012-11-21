@@ -38,9 +38,6 @@ public class GED {
 		for(String editPath : ged.getEditPath(true)) {
 			System.out.println(editPath);
 		}
-		
-		ged.printMatrix();
-		
 	}
 	
 	public static void printNodes(Graph g) {
