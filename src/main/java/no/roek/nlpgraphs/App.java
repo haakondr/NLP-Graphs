@@ -10,18 +10,11 @@ public class App {
 		PlagiarismSearch ps = new PlagiarismSearch();
 
 		switch(getChoice()) {
-			case 1: GED.main(args);
-			case 2: ps.preprocess();
-			case 3: ps.createIndex();
-			case 4: ps.startPlagiarismSearch();
-			case 5: ps.startPlagiarismSearchWithoutCandret();
-		}
-		if(ps.shouldPreprocess()) {
-			ps.preprocess();
-		}else if(ps.shouldCreateIndex()) {
-			ps.createIndex();
-		}else {
-			ps.startPlagiarismSearch();
+		case 1: GED.main(args);
+		case 2: ps.preprocess();
+		case 3: ps.createIndex();
+		case 4: ps.startPlagiarismSearch();
+		case 5: ps.startPlagiarismSearchWithoutCandret();
 		}
 	}
 
@@ -42,7 +35,17 @@ public class App {
 			System.out.println("5: start detailed analysis with candidate retrieval results written to file.");
 
 			String action = in.readLine();
-			choice = Integer.parseInt(action);
+			try {
+				if(choice >0 && choice < 6) {
+					choice = Integer.parseInt(action);
+				}else {
+					System.out.println("invalid choice, try again");
+					return getChoice();
+				}
+			}catch(NumberFormatException e) {
+				System.out.println("Invalid choice, try again..");
+				return getChoice();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
