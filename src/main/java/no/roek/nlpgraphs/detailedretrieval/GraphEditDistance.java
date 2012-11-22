@@ -208,8 +208,10 @@ public class GraphEditDistance {
 		/**
 		 * Checks if edge e2 leads to the same node as edge e1
 		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
+		 * A limit of 3 recursive calls has been set, to avoid unpredictable runtime. 
+		 * Edges leading to a node many steps ahead are probably not that similar anyway.
 		 */
-		if(recursiveCalls>2) {
+		if(recursiveCalls>3) {
 			return false;
 		}
 		
