@@ -156,6 +156,28 @@ public class PlagiarismSearch {
 			worker.setName("SentenceRetrieval-Thread-"+i);
 			worker.start();
 		}
+
+		startPlagiarismSearch(plagQueue);
+	}
+
+	public void startPlagiarismSearchWithoutCandret() {
+		System.out.println("starting plagiarism search with candidate retrieval results read from file..");
+		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
+		for(File candretFile : Fileutils.getFiles(cs.getCandRetDir())) {
+			PlagiarismJob job = new PlagiarismJob(candretFile.toPath());
+			job.setTextPairs(Fileutils.getPassages(candretFile.toString(), cs));
+			try {
+				plagQueue.put(job);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		progressPrinter = new ProgressPrinter(plagQueue.size());
+		startPlagiarismSearch(plagQueue);
+	}
+	
+	private void startPlagiarismSearch(BlockingQueue<PlagiarismJob> plagQueue) {
 		
 		plagThreadCount = cs.getPlagiarismThreads();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
@@ -165,7 +187,7 @@ public class PlagiarismSearch {
 			plagThreads[i].start();
 		}
 	}
-
+	
 	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
