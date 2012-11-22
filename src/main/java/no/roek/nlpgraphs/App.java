@@ -36,8 +36,9 @@ public class App {
 
 			String action = in.readLine();
 			try {
-				if(choice >0 && choice < 6) {
-					choice = Integer.parseInt(action);
+				choice = Integer.parseInt(action);
+				if(choice > 0 && choice < 6) {
+					return choice;
 				}else {
 					System.out.println("invalid choice, try again");
 					return getChoice();
