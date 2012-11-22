@@ -74,7 +74,7 @@ public class PlagiarismPassage {
 		return similarity;
 	}
 
-	public void setSimilarity(float similarity) {
+	public void setSimilarity(double similarity) {
 		this.similarity = similarity;
 	}
 }
