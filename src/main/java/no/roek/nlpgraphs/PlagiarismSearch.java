@@ -178,7 +178,6 @@ public class PlagiarismSearch {
 	}
 	
 	private void startPlagiarismSearch(BlockingQueue<PlagiarismJob> plagQueue) {
-		
 		plagThreadCount = cs.getPlagiarismThreads();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {

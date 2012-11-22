@@ -210,7 +210,7 @@ public class Fileutils {
 		List<PlagiarismPassage> passages = new ArrayList<>();
 		JsonReader jsonReader = null;
 		try {
-			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(cs.getCandRetDir()+candretFile)));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(candretFile)));
 			JsonParser parser = new JsonParser();
 			JsonObject fileObject = parser.parse(jsonReader).getAsJsonObject();
 			for(JsonElement temp : fileObject.get("passages").getAsJsonArray()) {
