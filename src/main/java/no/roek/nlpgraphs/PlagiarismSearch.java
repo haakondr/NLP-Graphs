@@ -19,7 +19,6 @@ import no.roek.nlpgraphs.preprocessing.PosTagWorker;
 
 public class PlagiarismSearch {
 	
-	private File[] unparsedFiles;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
 	private DependencyParserWorker[] dependencyParserThreads;
@@ -37,14 +36,10 @@ public class PlagiarismSearch {
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
 		parsedFilesDir = cs.getParsedFilesDir();
-		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
-	}
-
-	public boolean shouldPreprocess() {
-		return (unparsedFiles.length != 0);
 	}
 
 	public void preprocess() {
+		File[] unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
 		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
 
 		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
