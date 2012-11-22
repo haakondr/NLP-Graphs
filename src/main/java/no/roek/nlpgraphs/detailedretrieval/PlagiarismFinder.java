@@ -96,7 +96,7 @@ public class PlagiarismFinder {
 		 */
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 		for (PlagiarismPassage pair : job.getTextPairs()) {
-			plagReferences.add(XMLUtils.getPlagiarismReference(pair.getTrainGraph(), pair.getTestGraph(), pair.getSimilarity(), false));
+			plagReferences.add(XMLUtils.getPlagiarismReference(pair.getTrainGraph(), pair.getTestGraph(), false));
 		}
 
 		return plagReferences;
