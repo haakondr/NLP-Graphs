@@ -78,16 +78,21 @@ public class DatabaseService {
 	public List<String> getUnparsedFiles(File[] files) {
 		List<String> unparsedFiles = new ArrayList<>();
 		Set<String> parsedFiles = db.getCollectionNames();
-		for(String parsedFile : parsedFiles) {
-			for(File f : files) {
-				System.out.println(parsedFile+" "+f.toString());
-				if(!f.getName().equals(parsedFile)) {
-					unparsedFiles.add(f.toPath().getFileName().toString());
-				}
+		for(File f : files) {
+			if(contains(f, parsedFiles)) {
+				unparsedFiles.add(f.toPath().getFileName().toString());
 			}
 		}
 
 		return unparsedFiles;
 	}
 
+	private boolean contains(File file, Set<String> parsedFiles) {
+		for(String parsedFile : parsedFiles) {
+			if(file.toPath().getFileName().toString().equals(parsedFile)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
