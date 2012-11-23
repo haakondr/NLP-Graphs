@@ -33,7 +33,7 @@ public class ProgressPrinter {
 	    System.out.print("\r" + bar.toString()+" | "+text);
 	}
 	
-	public boolean isDone() {
+	public synchronized boolean isDone() {
 		return current >= total;
 	}
 }
