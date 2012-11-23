@@ -80,6 +80,7 @@ public class DatabaseService {
 		Set<String> parsedFiles = db.getCollectionNames();
 		for(File f : files) {
 			for(String parsedFile : parsedFiles) {
+				System.out.println(parsedFile+" "+f.toString());
 				if(!f.getName().equals(parsedFile)) {
 					unparsedFiles.add(f.toPath().getFileName().toString());
 				}
