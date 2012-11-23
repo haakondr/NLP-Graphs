@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 
@@ -105,7 +106,24 @@ public class Fileutils {
 		return getFiles(dir, dir).toArray(new File[0]);
 	}
 
+	
+	public static String[] getFilesNotDone(Set<String> files, String outDir, String fileExtention) {
+		List<String> out = new ArrayList<String>();
+		for (String file : files) {
+			String outFile = outDir+file;
+			if(fileExtention != null) {
+				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
+			}
 
+			if(!new File(outFile).exists()) {
+				out.add(file);
+			}
+		}
+
+		return out.toArray(new String[0]);
+	}
+
+	
 	public static String[] getFilesNotDone(List<String> files, String outDir, String fileExtention) {
 		List<String> out = new ArrayList<String>();
 		for (String file : files) {

@@ -20,8 +20,7 @@ import no.roek.nlpgraphs.preprocessing.ParseJob;
 import no.roek.nlpgraphs.preprocessing.PosTagWorker;
 
 public class PlagiarismSearch {
-	
-//	private File[] unparsedFiles;
+
 	private DatabaseService db;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
@@ -35,17 +34,12 @@ public class PlagiarismSearch {
 	private CandidateRetrievalService  crs;
 
 	public PlagiarismSearch() {
-		this.db = new DatabaseService();
 		cs = new ConfigService();
 		dataDir = cs.getDataDir();
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
-//		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
+		db = new DatabaseService();
 	}
-
-//	public boolean shouldPreprocess() {
-//		return (unparsedFiles.length != 0);
-//	}
 
 	public void preprocess() {
 		List<String> files = db.getUnparsedFiles(Fileutils.getFileList(dataDir));
@@ -60,6 +54,7 @@ public class PlagiarismSearch {
 				e.printStackTrace();
 			}
 		}
+		
 		posTagCount = cs.getPOSTaggerThreadCount();
 		parseQueue = new LinkedBlockingQueue<>(15);
 		posTagThreads = new PosTagWorker[posTagCount];
@@ -104,7 +99,7 @@ public class PlagiarismSearch {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for (String f : db.getTrainFiles()) {
+		for (String f : db.getFiles("source-document")) {
 			try {
 				documentQueue.put(f);
 			} catch (InterruptedException e) {
@@ -142,7 +137,7 @@ public class PlagiarismSearch {
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 		
-		for (String file : Fileutils.getFilesNotDone(db.getTestFiles(), cs.getResultsDir(), "xml")) {
+		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {

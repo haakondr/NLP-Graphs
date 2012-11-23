@@ -18,12 +18,15 @@ import com.mongodb.WriteConcern;
 
 public class DatabaseService {
 
-	private DB db;
+	private DB suspiciousDB, sourceDB;
+	
 	public DatabaseService() {
 		try {
 			Mongo m = new Mongo("localhost");
 			m.setWriteConcern(WriteConcern.SAFE);
-			db = m.getDB("nlp-graphs");
+			suspiciousDB = m.getDB("suspicious-documents");
+			sourceDB = m.getDB("source-documents");
+			
 		} catch (UnknownHostException e) {
 			System.out.println("Database not found");
 			e.printStackTrace();
@@ -31,7 +34,7 @@ public class DatabaseService {
 	}
 
 	public void addSentence(String filename, BasicDBObject dbSentence) {
-		DBCollection coll = db.getCollection(filename);
+		DBCollection coll =getDB(filename).getCollection(filename);
 		coll.insert(dbSentence);
 	}
 
@@ -40,44 +43,37 @@ public class DatabaseService {
 	}
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
-		DBCollection coll = db.getCollection(filename);
+		DBCollection coll = getDB(filename).getCollection(filename);
 		BasicDBObject query = new BasicDBObject();
 		query.put("sentenceNumber", sentenceNumber);
 
 		//TODO: test if only one is returned
 		return (BasicDBObject)coll.findOne(query);
 	}
+	
+	public DB getDB(String filename) {
+		if(filename.startsWith("source-document")) {
+			return sourceDB;
+		}else if(filename.startsWith("suspicious-document")) {
+			return suspiciousDB;
+		}else {
+			return null;
+		}
+	}
 
 	public void addIndex(String filename) {
-		DBCollection coll = db.getCollection(filename);
+		DBCollection coll = getDB(filename).getCollection(filename);
 		coll.ensureIndex(new BasicDBObject("sentenceNumber", 1).append("unique", true));
 	}
 
-	public List<String> getTrainFiles() {
-		List<String> trainFiles = new ArrayList<>();
-		for(String file : db.getCollectionNames()) {
-			if(file.startsWith("source-document")) {
-				trainFiles.add(file);
-			}
-		}
-
-		return trainFiles;
-	}
-
-	public List<String> getTestFiles() {
-		List<String> testFiles = new ArrayList<>();
-		for(String file : db.getCollectionNames()) {
-			if(file.startsWith("suspicious-document")) {
-				testFiles.add(file);
-			}
-		}
-
-		return testFiles;
+	public Set<String> getFiles(String dbname) {
+		return getDB(dbname).getCollectionNames();
 	}
 
 	public List<String> getUnparsedFiles(File[] files) {
 		List<String> unparsedFiles = new ArrayList<>();
-		Set<String> parsedFiles = db.getCollectionNames();
+		Set<String> parsedFiles = suspiciousDB.getCollectionNames();
+		parsedFiles.addAll(sourceDB.getCollectionNames());
 		for(File f : files) {
 			if(!contains(f, parsedFiles)) {
 				unparsedFiles.add(f.toString());

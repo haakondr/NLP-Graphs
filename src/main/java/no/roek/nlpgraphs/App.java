@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import no.roek.nlpgraphs.misc.DatabaseService;
+
 public class App {
 
 	public static void main(String[] args) {
@@ -13,7 +15,7 @@ public class App {
 		if(choice==1) {
 			GED.main(args);
 		}else if(choice==2) {
-			ps.preprocess();
+			ps.preprocess();			
 		}else if(choice==3) {
 			ps.createIndex();
 		}else if(choice==4) {
@@ -22,7 +24,7 @@ public class App {
 			ps.startPlagiarismSearchWithoutCandret();
 		}
 	}
-
+	
 	public static int getChoice()  {
 		InputStreamReader converter = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(converter);

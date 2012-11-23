@@ -34,6 +34,7 @@ public class DependencyParser {
 	public BasicDBObject parseSentence(NLPSentence sentence) {
 		BasicDBObject obj = new BasicDBObject();
 		try {
+			obj.put("id", sentence.getFilename()+"-"+sentence.getNumber());
 			obj.put("filename", sentence.getFilename());
 			obj.put("sentenceNumber", sentence.getNumber());
 			obj.put("offset", sentence.getStart());
