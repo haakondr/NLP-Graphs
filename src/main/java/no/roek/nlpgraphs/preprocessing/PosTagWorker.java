@@ -29,7 +29,6 @@ public class PosTagWorker extends Thread {
 			try {
 				String file = unparsedFiles.poll(20, TimeUnit.SECONDS);
 				if(file != null) {
-					new File(file).getParentFile().mkdirs();
 					ParseJob parseJob = parser.posTagFile(Paths.get(file));
 					queue.put(parseJob);
 				}else {
