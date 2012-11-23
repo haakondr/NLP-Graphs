@@ -2,8 +2,10 @@ package no.roek.nlpgraphs.misc;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,7 +15,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.PlagiarismPassage;
+
 import org.apache.commons.io.IOUtils;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 public class Fileutils {
 
@@ -195,4 +205,34 @@ public class Fileutils {
 		return filename.substring(0, i) +"."+ extention;
 	}
 
+	public static List<PlagiarismPassage> getPassages(String candretFile, ConfigService cs) {
+		List<PlagiarismPassage> passages = new ArrayList<>();
+		JsonReader jsonReader = null;
+		try {
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(candretFile)));
+			JsonParser parser = new JsonParser();
+			JsonObject fileObject = parser.parse(jsonReader).getAsJsonObject();
+			for(JsonElement temp : fileObject.get("passages").getAsJsonArray()) {
+				JsonObject jsonPassage = temp.getAsJsonObject();
+				String trainFile = jsonPassage.get("trainFile").getAsString();
+				int trainSentence = jsonPassage.get("trainSentence").getAsInt();
+				String testFile = jsonPassage.get("testFile").getAsString();
+				int testSentence = jsonPassage.get("testSentence").getAsInt();
+				double similarity = jsonPassage.get("candretScore").getAsDouble();
+
+				passages.add(new PlagiarismPassage(cs, trainFile, trainSentence, testFile, testSentence, similarity));
+			}
+		
+		}catch(IOException e) {
+			e.printStackTrace();
+		}finally{
+			try{
+				jsonReader.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return passages;
+	}
 }

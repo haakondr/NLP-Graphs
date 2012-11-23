@@ -10,6 +10,7 @@ import no.roek.nlpgraphs.PlagiarismSearch;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.misc.XMLUtils;
@@ -27,9 +28,9 @@ public class PlagiarismWorker extends Thread {
 	private String resultsDir;
 	private boolean running;
 
-	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, PlagiarismSearch concurrencyService) {
+	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, PlagiarismSearch concurrencyService, DatabaseService db) {
 		this.queue = queue;
-		this.plagFinder = new PlagiarismFinder();
+		this.plagFinder = new PlagiarismFinder(db);
 		this.concurrencyService = concurrencyService;
 		ConfigService cs = new ConfigService();
 		this.resultsDir = cs.getResultsDir();
@@ -47,6 +48,7 @@ public class PlagiarismWorker extends Thread {
 				}
 //				List<PlagiarismReference> plagReferences = plagFinder.findPlagiarism(job);
 //				XMLUtils.writeResults(resultsDir, job.getFile().getFileName().toString(), plagReferences);
+				XMLUtils.writeResults(resultsDir, job.getFile().getFileName().toString(), plagFinder.listCandidateReferences(job));
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
 				e.printStackTrace();

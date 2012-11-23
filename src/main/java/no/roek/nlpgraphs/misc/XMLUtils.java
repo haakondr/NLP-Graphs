@@ -57,6 +57,13 @@ public class XMLUtils {
 	}
 	
 	public static PlagiarismReference getPlagiarismReference(Graph train, Graph test, double similarity, boolean detectedPlagiarism) {
+		PlagiarismReference ref = getPlagiarismReference(train, test, detectedPlagiarism);
+		ref.setSimilarity(similarity);
+		
+		return ref;
+	}
+	
+	public static PlagiarismReference getPlagiarismReference(Graph train, Graph test, boolean detectedPlagiarism) {
 		String filename = test.getFilename();
 		String offset = Integer.toString(test.getOffset());
 		String length = Integer.toString(test.getLength());
@@ -64,7 +71,7 @@ public class XMLUtils {
 		String sourceOffset = Integer.toString(train.getOffset());
 		String sourceLength = Integer.toString(train.getLength());
 		String name = detectedPlagiarism ? "detected-plagiarism" : "candidate-passage";
-		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength, similarity);
+		return new PlagiarismReference(filename, name, offset, length, sourceReference, sourceOffset, sourceLength);
 	}
 	
 	public static void writeResults(String dir, String file, List<PlagiarismReference> plagiarisms) {

@@ -8,11 +8,11 @@ public class PlagiarismPassage {
 
 	private String trainFile, testFile;
 	private int trainSentence, testSentence;
-	private float similarity;
+	private double similarity;
 	private Graph testGraph, trainGraph;
 	private String dir, testDir, trainDir;
 	
-	public PlagiarismPassage(ConfigService cs, String trainFile, int trainSentence, String testFile, int testSentence, float similarity) {
+	public PlagiarismPassage(ConfigService cs, String trainFile, int trainSentence, String testFile, int testSentence, double similarity) {
 		this.dir = cs.getParsedFilesDir();
 		this.testDir = cs.getTestDir();
 		this.trainDir = cs.getTrainDir();
@@ -23,20 +23,20 @@ public class PlagiarismPassage {
 		this.similarity = similarity;
 	}
 
-	public Graph getTrainGraph() {
-		if(trainGraph == null) {
-			trainGraph = GraphUtils.getGraphFromFile(dir+trainDir+trainFile, trainSentence);
-		}
-		return trainGraph;
-	}
+//	public Graph getTrainGraph() {
+//		if(trainGraph == null) {
+//			trainGraph = GraphUtils.getGraphFromFile(dir+trainDir+trainFile, trainSentence);
+//		}
+//		return trainGraph;
+//	}
 	
-	public Graph getTestGraph() {
-		if(testGraph == null) {
-			testGraph = GraphUtils.getGraphFromFile(dir+testDir+testFile, testSentence);
-		}
-		
-		return testGraph;
-	}
+//	public Graph getTestGraph() {
+//		if(testGraph == null) {
+//			testGraph = GraphUtils.getGraphFromFile(dir+testDir+testFile, testSentence);
+//		}
+//		
+//		return testGraph;
+//	}
 	
 	public String getTrainFile() {
 		return trainFile;
@@ -70,11 +70,11 @@ public class PlagiarismPassage {
 		this.testSentence = testSentence;
 	}
 
-	public float getSimilarity() {
+	public double getSimilarity() {
 		return similarity;
 	}
 
-	public void setSimilarity(float similarity) {
+	public void setSimilarity(double similarity) {
 		this.similarity = similarity;
 	}
 }
