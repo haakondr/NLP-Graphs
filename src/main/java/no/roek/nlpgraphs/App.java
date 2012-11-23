@@ -51,6 +51,6 @@ public class App {
 			e.printStackTrace();
 		}
 
-		return choice;
+		return null;
 	}
 }
