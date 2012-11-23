@@ -29,30 +29,30 @@ public class DatabaseService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addSentence(String filename, BasicDBObject dbSentence) {
 		DBCollection coll = db.getCollection(filename);
 		coll.insert(dbSentence);
 	}
-	
+
 	public BasicDBObject getSentence(String filename, int sentenceNumber) {
 		return getSentence(filename, Integer.toString(sentenceNumber));
 	}
-	
+
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
 		DBCollection coll = db.getCollection(filename);
 		BasicDBObject query = new BasicDBObject();
 		query.put("sentenceNumber", sentenceNumber);
-		
+
 		//TODO: test if only one is returned
 		return (BasicDBObject)coll.findOne(query);
 	}
-	
+
 	public void addIndex(String filename) {
 		DBCollection coll = db.getCollection(filename);
 		coll.ensureIndex(new BasicDBObject("sentenceNumber", 1).append("unique", true));
 	}
-	
+
 	public List<String> getTrainFiles() {
 		List<String> trainFiles = new ArrayList<>();
 		for(String file : db.getCollectionNames()) {
@@ -60,10 +60,10 @@ public class DatabaseService {
 				trainFiles.add(file);
 			}
 		}
-		
+
 		return trainFiles;
 	}
-	
+
 	public List<String> getTestFiles() {
 		List<String> testFiles = new ArrayList<>();
 		for(String file : db.getCollectionNames()) {
@@ -71,23 +71,23 @@ public class DatabaseService {
 				testFiles.add(file);
 			}
 		}
-		
+
 		return testFiles;
 	}
-	
+
 	public List<String> getUnparsedFiles(File[] files) {
 		List<String> unparsedFiles = new ArrayList<>();
 		Set<String> parsedFiles = db.getCollectionNames();
-		for(File f : files) {
-			for(String parsedFile : parsedFiles) {
+		for(String parsedFile : parsedFiles) {
+			for(File f : files) {
 				System.out.println(parsedFile+" "+f.toString());
 				if(!f.getName().equals(parsedFile)) {
 					unparsedFiles.add(f.toPath().getFileName().toString());
 				}
 			}
 		}
-		
+
 		return unparsedFiles;
 	}
-	
+
 }
