@@ -7,12 +7,14 @@ import java.io.InputStreamReader;
 import org.json.JSONObject;
 
 import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
 
 
 import no.roek.nlpgraphs.detailedretrieval.GraphEditDistance;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.POSTagParser;
@@ -21,6 +23,7 @@ public class GED {
 
 	//TODO: move most of these classes to utility classes?
 	public static void main(String[] args) {
+		
 		String[] texts = getInputTexts(args);
 		POSTagParser postagger = new POSTagParser();
 		DependencyParser depParser = new DependencyParser();
@@ -55,9 +58,8 @@ public class GED {
 	}
 	
 	public static Graph getGraph(String text, POSTagParser postagger, DependencyParser depParser) {
-		JsonObject jsonFile = depParser.parseSentence(postagger.postagSentence(text));
-		JsonObject jsonSentence = jsonFile.get("sentences").getAsJsonObject().get("1").getAsJsonObject();
-		return GraphUtils.parseGraph(jsonSentence, "filename");
+		BasicDBObject dbObj = depParser.parseSentence(postagger.postagSentence(text), "test", 0,0,0);
+		return GraphUtils.getGraph(dbObj);
 	}
 
 	public static String[] getInputTexts(String[] args)  {

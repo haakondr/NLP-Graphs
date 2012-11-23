@@ -3,6 +3,10 @@ package no.roek.nlpgraphs.graph;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 public class Node {
 
 	private String id;
@@ -78,5 +82,17 @@ public class Node {
 	@Override
 	public int hashCode() {
 		return attributes.hashCode();
+	}
+	
+	public BasicDBObject toDBObject() {
+		BasicDBObject obj = new BasicDBObject();
+		obj.put("id", id);
+		BasicDBList dbAttributes = new BasicDBList();
+		for(String attr : attributes) {
+			dbAttributes.add(attr);
+		}
+		obj.put("attributes", dbAttributes);
+	
+		return obj;
 	}
 }

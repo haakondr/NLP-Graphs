@@ -2,6 +2,7 @@ package no.roek.nlpgraphs;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -11,6 +12,7 @@ import no.roek.nlpgraphs.candretrieval.SentenceRetrievalWorker;
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismWorker;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.preprocessing.DependencyParserWorker;
@@ -19,7 +21,8 @@ import no.roek.nlpgraphs.preprocessing.PosTagWorker;
 
 public class PlagiarismSearch {
 	
-	private File[] unparsedFiles;
+//	private File[] unparsedFiles;
+	private DatabaseService db;
 	private LinkedBlockingQueue<ParseJob> parseQueue;
 	private ConfigService cs;
 	private DependencyParserWorker[] dependencyParserThreads;
@@ -28,28 +31,29 @@ public class PlagiarismSearch {
 	private IndexBuilder[] indexBuilderThreads;
 	private int dependencyParserCount, posTagCount, plagThreadCount;
 	private ProgressPrinter progressPrinter;
-	private String dataDir, trainDir, testDir, parsedFilesDir;
+	private String dataDir, trainDir, testDir;
 	private CandidateRetrievalService  crs;
 
 	public PlagiarismSearch() {
+		this.db = new DatabaseService();
 		cs = new ConfigService();
 		dataDir = cs.getDataDir();
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
-		parsedFilesDir = cs.getParsedFilesDir();
-		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
+//		this.unparsedFiles = Fileutils.getFilesNotDone(dataDir, cs.getParsedFilesDir());
 	}
 
-	public boolean shouldPreprocess() {
-		return (unparsedFiles.length != 0);
-	}
+//	public boolean shouldPreprocess() {
+//		return (unparsedFiles.length != 0);
+//	}
 
 	public void preprocess() {
-		System.out.println("Starting preprocessing of "+unparsedFiles.length+" files.");
+		List<String> files = db.getUnparsedFiles(Fileutils.getFileList(dataDir));
+		System.out.println("Starting preprocessing of "+files.size()+" files.");
 
-		BlockingQueue<File> posTagQueue = new LinkedBlockingQueue<>();
+		BlockingQueue<String> posTagQueue = new LinkedBlockingQueue<>();
 
-		for (File file : unparsedFiles) {
+		for (String file : files) {
 			try {
 				posTagQueue.put(file);
 			} catch (InterruptedException e) {
@@ -67,10 +71,10 @@ public class PlagiarismSearch {
 		}
 
 		dependencyParserCount = cs.getMaltParserThreadCount();
-		progressPrinter = new ProgressPrinter(unparsedFiles.length);
+		progressPrinter = new ProgressPrinter(files.size());
 		dependencyParserThreads = new DependencyParserWorker[dependencyParserCount];
 		for (int i = 0; i < dependencyParserCount; i++) {
-			dependencyParserThreads[i] =  new DependencyParserWorker(parseQueue, cs.getMaltParams(), this);
+			dependencyParserThreads[i] =  new DependencyParserWorker(parseQueue, cs.getMaltParams(), this, db);
 			dependencyParserThreads[i].setName("Dependency-parser-"+i);
 			dependencyParserThreads[i].start();
 		}
@@ -100,9 +104,9 @@ public class PlagiarismSearch {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for (File f : Fileutils.getFiles(parsedFilesDir+trainDir)) {
+		for (String f : db.getTrainFiles()) {
 			try {
-				documentQueue.put(f.toString());
+				documentQueue.put(f);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -136,9 +140,9 @@ public class PlagiarismSearch {
 
 	public void startPlagiarismSearch() {
 		System.out.println("starting plagiarism search..");
-		BlockingQueue<File> retrievalQueue = new LinkedBlockingQueue<>();
+		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 		
-		for (File file : Fileutils.getFilesNotDone(parsedFilesDir+testDir, cs.getResultsDir(), "xml")) {
+		for (String file : Fileutils.getFilesNotDone(db.getTestFiles(), cs.getResultsDir(), "xml")) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {

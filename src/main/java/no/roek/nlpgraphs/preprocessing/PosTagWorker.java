@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.preprocessing;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -11,11 +12,11 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 public class PosTagWorker extends Thread {
 
 	private final BlockingQueue<ParseJob> queue;
-	private BlockingQueue<File> unparsedFiles;
+	private BlockingQueue<String> unparsedFiles;
 	private POSTagParser parser;
 		
 	
-	public PosTagWorker(BlockingQueue<File> unparsedFiles, BlockingQueue<ParseJob> queue){
+	public PosTagWorker(BlockingQueue<String> unparsedFiles, BlockingQueue<ParseJob> queue){
 		this.queue = queue;
 		this.unparsedFiles = unparsedFiles;
 		this.parser = new POSTagParser();
@@ -26,10 +27,10 @@ public class PosTagWorker extends Thread {
 		boolean running = true;
 		while(running) {
 			try {
-				File file = unparsedFiles.poll(20, TimeUnit.SECONDS);
+				String file = unparsedFiles.poll(20, TimeUnit.SECONDS);
 				if(file != null) {
-					file.getParentFile().mkdirs();
-					ParseJob parseJob = parser.posTagFile(file.toPath());
+					new File(file).getParentFile().mkdirs();
+					ParseJob parseJob = parser.posTagFile(Paths.get(file));
 					queue.put(parseJob);
 				}else {
 					running = false;

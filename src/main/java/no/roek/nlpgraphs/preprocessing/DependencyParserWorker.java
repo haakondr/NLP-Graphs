@@ -4,23 +4,23 @@ import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.DatabaseService;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 public class DependencyParserWorker extends Thread{
 	private final BlockingQueue<ParseJob> queue;
-	private String parsedFilesDir;
 	private PlagiarismSearch concurrencyService;
 	private boolean running;
 	private DependencyParser parser;
+	private DatabaseService db;
 	
-	public DependencyParserWorker(BlockingQueue<ParseJob> queue,  String maltParams, PlagiarismSearch concurrencyService) {
+	public DependencyParserWorker(BlockingQueue<ParseJob> queue,  String maltParams, PlagiarismSearch concurrencyService, DatabaseService db) {
 		this.queue = queue;
-		ConfigService cs = new ConfigService();
-		this.parsedFilesDir = cs.getParsedFilesDir();
 		this.concurrencyService = concurrencyService;
 		this.parser = new DependencyParser();
+		this.db = db;
 	}
 
 	@Override
@@ -29,9 +29,10 @@ public class DependencyParserWorker extends Thread{
 		while(running) {
 			try {
 				ParseJob job = queue.take();
-				parser.dependencyParse(job, parsedFilesDir);
+				db.addIndex(job.getFilename());
+				parser.dependencyParse(job, db);
 				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
-			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
+			} catch (InterruptedException | NullPointerException e) {
 				e.printStackTrace();
 				running = false;
 			}

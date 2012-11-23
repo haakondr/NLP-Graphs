@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+
 import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.WordToken;
 
 public class Graph {
 
@@ -17,6 +21,13 @@ public class Graph {
 	public Graph(String filename) {
 		this();
 		this.filename = filename;
+	}
+	
+	public Graph(String filename, int sentenceNumber, int offset, int length) {
+		this(filename);
+		this.offset = offset;
+		this.length = length;
+		this.sentenceNumber = sentenceNumber;
 	}
 
 	public Graph() {
@@ -137,4 +148,19 @@ public class Graph {
 //		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
 		return new NLPSentence(filename, sentenceNumber, offset, length);
 	}
+	
+//	public BasicDBObject toDBObject() {
+//		BasicDBObject obj = new BasicDBObject();
+//		obj.put("filename", filename);
+//		obj.put("sentenceNumber", sentenceNumber);
+//		obj.put("offset", offset);
+//		obj.put("length", length);
+//		BasicDBList dbTokens = new BasicDBList();
+//		for(Node node : nodes) {
+//			dbTokens.add(node.toDBObject());
+//		}
+//		obj.put("tokens", dbTokens);
+//		
+//		return obj;
+//	}
 }

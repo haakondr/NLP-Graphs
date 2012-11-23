@@ -96,11 +96,10 @@ public class Fileutils {
 	}
 
 
-	public static File[] getFilesNotDone(String dir, String outDir, String fileExtention) {
-		File[] files = getFileList(dir);
-		List<File> out = new ArrayList<File>();
-		for (File file : files) {
-			String outFile = outDir+Paths.get(dir).relativize(file.toPath());
+	public static String[] getFilesNotDone(List<String> files, String outDir, String fileExtention) {
+		List<String> out = new ArrayList<String>();
+		for (String file : files) {
+			String outFile = outDir+file;
 			if(fileExtention != null) {
 				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
 			}
@@ -110,11 +109,11 @@ public class Fileutils {
 			}
 		}
 
-		return out.toArray(new File[0]);
+		return out.toArray(new String[0]);
 	}
 
-	public static File[] getFilesNotDone(String dir, String outDir) {
-		return getFilesNotDone(dir, outDir, null);
+	public static String[] getFilesNotDone(List<String> files, String outDir) {
+		return getFilesNotDone(files, outDir, null);
 	}
 
 
