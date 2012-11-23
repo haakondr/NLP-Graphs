@@ -92,8 +92,8 @@ public class PlagiarismSearch {
 				thread.kill();
 			}
 			
-			System.out.println("Preprocessing done. Starting plagiarism search (index building if needed)");
-			App.main(null);
+//			System.out.println("Preprocessing done. Starting plagiarism search (index building if needed)");
+//			App.main(null);
 		}
 	}
 
