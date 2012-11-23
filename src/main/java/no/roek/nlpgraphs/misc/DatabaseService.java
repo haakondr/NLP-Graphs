@@ -79,7 +79,7 @@ public class DatabaseService {
 		List<String> unparsedFiles = new ArrayList<>();
 		Set<String> parsedFiles = db.getCollectionNames();
 		for(File f : files) {
-			if(contains(f, parsedFiles)) {
+			if(!contains(f, parsedFiles)) {
 				unparsedFiles.add(f.toPath().getFileName().toString());
 			}
 		}
