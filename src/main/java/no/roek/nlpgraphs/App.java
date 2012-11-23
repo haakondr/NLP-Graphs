@@ -9,12 +9,17 @@ public class App {
 	public static void main(String[] args) {
 		PlagiarismSearch ps = new PlagiarismSearch();
 
-		switch(getChoice()) {
-		case 1: GED.main(args);
-		case 2: ps.preprocess();
-		case 3: ps.createIndex();
-		case 4: ps.startPlagiarismSearch();
-		case 5: ps.startPlagiarismSearchWithoutCandret();
+		int choice = getChoice();
+		if(choice==1) {
+			GED.main(args);
+		}else if(choice==2) {
+			ps.preprocess();
+		}else if(choice==3) {
+			ps.createIndex();
+		}else if(choice==4) {
+			ps.startPlagiarismSearch();
+		}else if(choice==5) {
+			ps.startPlagiarismSearchWithoutCandret();
 		}
 	}
 
@@ -51,6 +56,6 @@ public class App {
 			e.printStackTrace();
 		}
 
-		return null;
+		return -1;
 	}
 }
