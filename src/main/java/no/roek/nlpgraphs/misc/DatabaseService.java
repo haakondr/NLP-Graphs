@@ -12,20 +12,27 @@ import no.roek.nlpgraphs.document.NLPSentence;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 
 public class DatabaseService {
 
-	private DB suspiciousDB, sourceDB;
+	private DB db;
+	private final String sourceCollection = "source-sentences";
+	private final String suspiciousCollection = "suspicious-sentences";
+	private final String suspiciousDocsCollection = "suspicious-documents";
+	private final String sourceDocsCollection = "source-documents";
 	
 	public DatabaseService() {
 		try {
 			Mongo m = new Mongo("localhost");
 			m.setWriteConcern(WriteConcern.SAFE);
-			suspiciousDB = m.getDB("suspicious-documents");
-			sourceDB = m.getDB("source-documents");
+			addIndex(sourceCollection);
+			addIndex(suspiciousCollection);
+			addIndex(suspiciousDocsCollection);
+			addIndex(sourceDocsCollection);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("Database not found");
@@ -33,9 +40,18 @@ public class DatabaseService {
 		}
 	}
 
-	public void addSentence(String filename, BasicDBObject dbSentence) {
-		DBCollection coll =getDB(filename).getCollection(filename);
+	public void addSentence(BasicDBObject dbSentence) {
+		String collName = getSentenceColl(dbSentence.getString("filename"));
+		DBCollection coll = db.getCollection(collName);
 		coll.insert(dbSentence);
+	}
+	
+	public void addDocument(String filename) {
+		BasicDBObject dbObject = new BasicDBObject();
+		dbObject.put("filename", filename);
+		String collName = getDocumentColl(filename);
+		DBCollection coll = db.getCollection(collName);
+		coll.insert(dbObject);
 	}
 
 	public BasicDBObject getSentence(String filename, int sentenceNumber) {
@@ -43,52 +59,78 @@ public class DatabaseService {
 	}
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
-		DBCollection coll = getDB(filename).getCollection(filename);
+		DBCollection coll = db.getCollection(getSentenceColl(filename));
 		BasicDBObject query = new BasicDBObject();
-		query.put("sentenceNumber", sentenceNumber);
+		query.put("id", filename+"-"+sentenceNumber);
 
 		//TODO: test if only one is returned
 		return (BasicDBObject)coll.findOne(query);
 	}
 	
-	public DB getDB(String filename) {
+	private String getSentenceColl(String filename) {
 		if(filename.startsWith("source-document")) {
-			return sourceDB;
+			return sourceCollection;
 		}else if(filename.startsWith("suspicious-document")) {
-			return suspiciousDB;
+			return suspiciousCollection;
+		}else {
+			return null;
+		}
+	}
+	
+	private String getDocumentColl(String filename) {
+		if(filename.startsWith("source-document")) {
+			return sourceDocsCollection;
+		}else if(filename.startsWith("suspicious-document")) {
+			return suspiciousDocsCollection;
 		}else {
 			return null;
 		}
 	}
 
-	public void addIndex(String filename) {
-		DBCollection coll = getDB(filename).getCollection(filename);
-		coll.ensureIndex(new BasicDBObject("sentenceNumber", 1).append("unique", true));
+	private void addIndex(String collection) {
+		DBCollection coll = db.getCollection(collection);
+		coll.ensureIndex(new BasicDBObject("id", 1).append("unique", true));
 	}
 
-	public Set<String> getFiles(String dbname) {
-		return getDB(dbname).getCollectionNames();
+	public List<String> getFiles() {
+		List<String> files = new ArrayList<>();
+		files.addAll(getFiles(sourceDocsCollection));
+		files.addAll(getFiles(suspiciousDocsCollection));
+		
+		return files;
 	}
-
-	public List<String> getUnparsedFiles(File[] files) {
-		List<String> unparsedFiles = new ArrayList<>();
-		Set<String> parsedFiles = suspiciousDB.getCollectionNames();
-		parsedFiles.addAll(sourceDB.getCollectionNames());
-		for(File f : files) {
-			if(!contains(f, parsedFiles)) {
-				unparsedFiles.add(f.toString());
-			}
+	
+	public List<String> getFiles(String collection) {
+		List<String> files = new ArrayList<>();
+		DBCollection coll = db.getCollection(collection);
+		DBCursor cursor = coll.find();
+		while(cursor.hasNext()) {
+			files.add(cursor.next().get("filename").toString());
 		}
+		
+		cursor.close();
+		return files;
+	}
 
+	public List<String> getUnparsedFiles(String[] files) {
+		List<String> unparsedFiles = new ArrayList<>();
+		BasicDBObject query = new BasicDBObject();
+		query.put("filename", new BasicDBObject("$nin", files));
+		
+		DBCursor cursor = db.getCollection(sourceDocsCollection).find(query);
+		unparsedFiles.addAll(getAll(cursor));
+		DBCursor cursor2 = db.getCollection(suspiciousDocsCollection).find(query);
+		unparsedFiles.addAll(getAll(cursor2));
+		
 		return unparsedFiles;
 	}
-
-	private boolean contains(File file, Set<String> parsedFiles) {
-		for(String parsedFile : parsedFiles) {
-			if(file.toPath().getFileName().toString().equals(parsedFile)) {
-				return true;
-			}
+	
+	private List<String> getAll(DBCursor cursor) {
+		List<String> strings = new ArrayList<>();
+		while(cursor.hasNext()) {
+			strings.add(cursor.next().toString());
 		}
-		return false;
+		
+		return strings;
 	}
 }

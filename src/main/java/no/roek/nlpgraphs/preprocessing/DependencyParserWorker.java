@@ -30,6 +30,7 @@ public class DependencyParserWorker extends Thread{
 			try {
 				ParseJob job = queue.take();
 				parser.dependencyParse(job, db);
+				db.addDocument(job.getFilename());
 				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
 			} catch (InterruptedException | NullPointerException e) {
 				e.printStackTrace();

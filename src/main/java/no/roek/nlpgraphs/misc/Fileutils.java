@@ -98,6 +98,16 @@ public class Fileutils {
 		return tasks;
 	}
 
+	public static String[] getFileNames(String  dir) {
+		List<String> filenames = new ArrayList<>();
+		File[] files = getFileList(dir);
+		for (File file : files) {
+			filenames.add(file.getName());
+		}
+		
+		return filenames.toArray(new String[0]);
+	}
+	
 	public static File[] getFileList(String dir) {
 		return getFileList(Paths.get(dir));
 	}

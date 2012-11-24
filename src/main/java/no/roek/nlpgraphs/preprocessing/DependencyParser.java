@@ -27,7 +27,7 @@ public class DependencyParser {
 
 	public void dependencyParse(ParseJob job, DatabaseService db) {
 		for(NLPSentence sentence : job.getSentences()) {
-			db.addSentence(job.getFilename(), parseSentence(sentence));
+			db.addSentence(parseSentence(sentence));
 		}
 	}
 
