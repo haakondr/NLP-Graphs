@@ -2,7 +2,7 @@ package no.roek.nlpgraphs;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -42,7 +42,7 @@ public class PlagiarismSearch {
 	}
 
 	public void preprocess() {
-		List<String> files = db.getUnparsedFiles(Fileutils.getFileNames(dataDir));
+		Set<String> files = db.getUnparsedFiles(Fileutils.getFileNames(dataDir));
 		System.out.println("Starting preprocessing of "+files.size()+" files.");
 
 		BlockingQueue<String> posTagQueue = new LinkedBlockingQueue<>();

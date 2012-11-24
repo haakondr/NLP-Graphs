@@ -19,12 +19,12 @@ import java.util.Set;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 
 import org.apache.commons.io.IOUtils;
+import org.maltparser.core.helper.HashSet;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 public class Fileutils {
 
@@ -98,14 +98,14 @@ public class Fileutils {
 		return tasks;
 	}
 
-	public static String[] getFileNames(String  dir) {
-		List<String> filenames = new ArrayList<>();
+	public static Set<String> getFileNames(String  dir) {
+		Set<String> filenames = new HashSet<>();
 		File[] files = getFileList(dir);
 		for (File file : files) {
 			filenames.add(file.getName());
 		}
 		
-		return filenames.toArray(new String[0]);
+		return filenames;
 	}
 	
 	public static File[] getFileList(String dir) {

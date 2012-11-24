@@ -116,7 +116,7 @@ public class DatabaseService {
 		return files;
 	}
 
-	public Set<String> getUnparsedFiles(String[] files) {
+	public Set<String> getUnparsedFiles(Set<String> files) {
 		Set<String> parsedFiles = new HashSet<>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("filename", new BasicDBObject("$nin", files));
@@ -126,10 +126,9 @@ public class DatabaseService {
 		DBCursor cursor2 = db.getCollection(suspiciousDocsCollection).find(query);
 		parsedFiles.addAll(getAll(cursor2));
 		
-		Set<String> unparsedFiles = new HashSet<String>(Arrays.asList(files));
-		unparsedFiles.removeAll(parsedFiles);
+		files.removeAll(parsedFiles);
 		
-		return unparsedFiles;
+		return files;
 	}
 	
 	private Set<String> getAll(DBCursor cursor) {
