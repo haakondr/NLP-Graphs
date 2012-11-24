@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -114,21 +116,24 @@ public class DatabaseService {
 		return files;
 	}
 
-	public List<String> getUnparsedFiles(String[] files) {
-		List<String> unparsedFiles = new ArrayList<>();
+	public Set<String> getUnparsedFiles(String[] files) {
+		Set<String> parsedFiles = new HashSet<>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("filename", new BasicDBObject("$nin", files));
 		
 		DBCursor cursor = db.getCollection(sourceDocsCollection).find(query);
-		unparsedFiles.addAll(getAll(cursor));
+		parsedFiles.addAll(getAll(cursor));
 		DBCursor cursor2 = db.getCollection(suspiciousDocsCollection).find(query);
-		unparsedFiles.addAll(getAll(cursor2));
+		parsedFiles.addAll(getAll(cursor2));
+		
+		Set<String> unparsedFiles = new HashSet<String>(Arrays.asList(files));
+		unparsedFiles.removeAll(parsedFiles);
 		
 		return unparsedFiles;
 	}
 	
-	private List<String> getAll(DBCursor cursor) {
-		List<String> strings = new ArrayList<>();
+	private Set<String> getAll(DBCursor cursor) {
+		Set<String> strings = new HashSet<>();
 		while(cursor.hasNext()) {
 			strings.add(cursor.next().toString());
 		}
