@@ -57,9 +57,17 @@ public class DatabaseService {
 		DBCollection coll = db.getCollection(collName);
 		coll.insert(dbObject);
 	}
-
+	
+	
 	public BasicDBObject getSentence(String filename, int sentenceNumber) {
 		return getSentence(filename, Integer.toString(sentenceNumber));
+	}
+	
+	public BasicDBObject getSentence(String sentenceId) {
+		int i = sentenceId.lastIndexOf("-");
+		String sentenceNumber = sentenceId.substring(i+1);
+		String filename = sentenceId.substring(0, i);
+		return getSentence(filename, sentenceNumber);
 	}
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
@@ -101,6 +109,18 @@ public class DatabaseService {
 		files.addAll(getFiles(sourceDocsCollection));
 		files.addAll(getFiles(suspiciousDocsCollection));
 		
+		return files;
+	}
+	
+	public Set<String> getAll(String collection, String field) {
+		Set<String> files = new HashSet<>();
+		DBCollection coll = db.getCollection(collection);
+		DBCursor cursor = coll.find();
+		while(cursor.hasNext()) {
+			files.add(cursor.next().get(field).toString());
+		}
+		
+		cursor.close();
 		return files;
 	}
 	

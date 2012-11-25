@@ -40,8 +40,12 @@ public class App {
 			System.out.println("3: build index required for the candidate retrieval phase");
 			System.out.println("4: start detailed analysis - graph edit distance plagiarism search. (both indexing and preprocessing have to be done)");
 			System.out.println("5: start detailed analysis with candidate retrieval results written to file.");
-
+			System.out.println("exit: exits the application");
 			String action = in.readLine();
+			if(action.equalsIgnoreCase("exit")) {
+				System.out.println("Exiting..");
+				System.exit(0);
+			}
 			try {
 				choice = Integer.parseInt(action);
 				if(choice > 0 && choice < 6) {

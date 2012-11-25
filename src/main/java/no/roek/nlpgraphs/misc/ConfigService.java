@@ -89,4 +89,8 @@ public class ConfigService {
 	public String getCandRetDir() {
 		return configFile.getProperty("CANDRET_DIR");
 	}
+	
+	public String getIndexDir() {
+		return configFile.getProperty("INDEX_DIR");
+	}
 }
