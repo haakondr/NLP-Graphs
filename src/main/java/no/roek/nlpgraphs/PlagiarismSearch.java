@@ -43,8 +43,12 @@ public class PlagiarismSearch {
 
 	public void preprocess() {
 		Set<String> files = db.getUnparsedFiles(Fileutils.getFileNames(dataDir));
+		if(files.size() == 0) {
+			System.out.println("All files are parsed. Exiting");
+			System.exit(0);
+		}
 		System.out.println("Starting preprocessing of "+files.size()+" files.");
-
+		
 		BlockingQueue<String> posTagQueue = new LinkedBlockingQueue<>();
 
 		for (String file : files) {
