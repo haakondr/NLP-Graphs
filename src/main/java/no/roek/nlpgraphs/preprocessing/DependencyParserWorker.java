@@ -29,8 +29,8 @@ public class DependencyParserWorker extends Thread{
 		while(running) {
 			try {
 				ParseJob job = queue.take();
-				db.addIndex(job.getFilename());
 				parser.dependencyParse(job, db);
+				db.addDocument(job.getFilename());
 				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
 			} catch (InterruptedException | NullPointerException e) {
 				e.printStackTrace();

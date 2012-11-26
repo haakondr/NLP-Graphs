@@ -14,16 +14,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 
 import org.apache.commons.io.IOUtils;
+import org.maltparser.core.helper.HashSet;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.sun.imageio.plugins.common.InputStreamAdapter;
 
 public class Fileutils {
 
@@ -97,6 +98,16 @@ public class Fileutils {
 		return tasks;
 	}
 
+	public static Set<String> getFileNames(String  dir) {
+		Set<String> filenames = new HashSet<>();
+		File[] files = getFileList(dir);
+		for (File file : files) {
+			filenames.add(file.getName());
+		}
+		
+		return filenames;
+	}
+	
 	public static File[] getFileList(String dir) {
 		return getFileList(Paths.get(dir));
 	}
@@ -105,7 +116,24 @@ public class Fileutils {
 		return getFiles(dir, dir).toArray(new File[0]);
 	}
 
+	
+	public static String[] getFilesNotDone(Set<String> files, String outDir, String fileExtention) {
+		List<String> out = new ArrayList<String>();
+		for (String file : files) {
+			String outFile = outDir+file;
+			if(fileExtention != null) {
+				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
+			}
 
+			if(!new File(outFile).exists()) {
+				out.add(file);
+			}
+		}
+
+		return out.toArray(new String[0]);
+	}
+
+	
 	public static String[] getFilesNotDone(List<String> files, String outDir, String fileExtention) {
 		List<String> out = new ArrayList<String>();
 		for (String file : files) {

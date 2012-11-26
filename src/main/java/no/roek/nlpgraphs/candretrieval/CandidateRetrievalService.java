@@ -30,19 +30,24 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+
 
 public class CandidateRetrievalService {
 
 	private FSDirectory index;
 	private IndexWriterConfig indexWriterConfig;
 	private IndexWriter writer;
-	private static final String INDEX_DIR = "lucene/";
+	private String INDEX_DIR;
 	private ConfigService cs;
 
 	public CandidateRetrievalService(Path dir)  {
+		cs = new ConfigService();
+		INDEX_DIR = cs.getIndexDir();
 		indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, new StandardAnalyzer(Version.LUCENE_36));
 		File indexDir = new File(INDEX_DIR+dir.getFileName().toString());
-		cs = new ConfigService();
+		
 
 		try {
 			if(indexDir.exists()) {
@@ -72,34 +77,73 @@ public class CandidateRetrievalService {
 		}
 	}
 
-	public void addDocument(List<NLPSentence> sentences) {
-		/**
-		 * Adds all sentences from a list to the index.
-		 * Should be thread safe and can be called from multiple threads simultaneously.
-		 */
-		for (NLPSentence nlpSentence : sentences) {
-			if(nlpSentence.getLength() > 80) {
-				Document doc = getSentence(nlpSentence);
-				try {
-					writer.addDocument(doc);
-				} catch (CorruptIndexException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	public void addSentence(BasicDBObject dbSentence) {
+		String filename = dbSentence.getString("filename");
+		String sentenceNumber = dbSentence.getString("sentenceNumber");
+		BasicDBList dbTokens = (BasicDBList) dbSentence.get("tokens");
+		StringBuilder sb = new StringBuilder();
+		for (Object temp : dbTokens) {
+			BasicDBObject dbToken = (BasicDBObject) temp;
+			sb.append(dbToken.getString("lemma")+" ");
+		}
+		
+		addSentence(filename, sentenceNumber, sb.toString());
+	}
+	
+	public void addSentence(String filename, String sentenceNumber, String lemmas) {
+		if(lemmas.length() > 80) {
+			Document sentence = getSentence(filename, sentenceNumber, lemmas);
+			try{
+				writer.addDocument(sentence);
+			} catch (CorruptIndexException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
 		}
 	}
-
-	public Document getSentence(NLPSentence sentence) {
+	
+	public Document getSentence(String filename, String sentenceNumber, String lemmas) {
 		Document doc = new Document();
-		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
+		
+		doc.add(new Field("LEMMAS", lemmas, org.apache.lucene.document.Field.Store.NO, 
 				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
-		doc.add(new Field("FILENAME", sentence.getFilename(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
-		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+		doc.add(new Field("FILENAME", filename, org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+		doc.add(new Field("SENTENCE_NUMBER", sentenceNumber, org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
 
 		return doc;
 	}
+	
+	
+	
+//	public void addDocument(List<NLPSentence> sentences) {
+//		/**
+//		 * Adds all sentences from a list to the index.
+//		 * Should be thread safe and can be called from multiple threads simultaneously.
+//		 */
+//		for (NLPSentence nlpSentence : sentences) {
+//			if(nlpSentence.getLength() > 80) {
+//				Document doc = getSentence(nlpSentence);
+//				try {
+//					writer.addDocument(doc);
+//				} catch (CorruptIndexException e) {
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
+
+//	public Document getSentence(NLPSentence sentence) {
+//		Document doc = new Document();
+//		doc.add(new Field("LEMMAS", sentence.getLemmas(), org.apache.lucene.document.Field.Store.NO, 
+//				org.apache.lucene.document.Field.Index.ANALYZED, org.apache.lucene.document.Field.TermVector.YES));
+//		doc.add(new Field("FILENAME", sentence.getFilename(), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+//		doc.add(new Field("SENTENCE_NUMBER", Integer.toString(sentence.getNumber()), org.apache.lucene.document.Field.Store.YES, org.apache.lucene.document.Field.Index.NO));
+//
+//		return doc;
+//	}
 
 	public List<PlagiarismPassage> getSimilarSentences(String filename, int retrievalCount) throws CorruptIndexException, IOException {
 		/**

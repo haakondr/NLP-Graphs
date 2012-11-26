@@ -27,13 +27,14 @@ public class DependencyParser {
 
 	public void dependencyParse(ParseJob job, DatabaseService db) {
 		for(NLPSentence sentence : job.getSentences()) {
-			db.addSentence(job.getFilename(), parseSentence(sentence));
+			db.addSentence(parseSentence(sentence));
 		}
 	}
 
 	public BasicDBObject parseSentence(NLPSentence sentence) {
 		BasicDBObject obj = new BasicDBObject();
 		try {
+			obj.put("id", sentence.getFilename()+"-"+sentence.getNumber());
 			obj.put("filename", sentence.getFilename());
 			obj.put("sentenceNumber", sentence.getNumber());
 			obj.put("offset", sentence.getStart());

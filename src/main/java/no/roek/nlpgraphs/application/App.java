@@ -14,7 +14,7 @@ public class App {
 		if(choice==1) {
 			GED.main(args);
 		}else if(choice==2) {
-			ps.preprocess();
+			ps.preprocess();			
 		}else if(choice==3) {
 			ps.createIndex();
 		}else if(choice==4) {
@@ -23,7 +23,7 @@ public class App {
 			ps.startPlagiarismSearchWithoutCandret();
 		}
 	}
-
+	
 	public static int getChoice()  {
 		InputStreamReader converter = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(converter);
@@ -39,8 +39,12 @@ public class App {
 			System.out.println("3: build index required for the candidate retrieval phase");
 			System.out.println("4: start detailed analysis - graph edit distance plagiarism search. (both indexing and preprocessing have to be done)");
 			System.out.println("5: start detailed analysis with candidate retrieval results written to file.");
-
+			System.out.println("exit: exits the application");
 			String action = in.readLine();
+			if(action.equalsIgnoreCase("exit")) {
+				System.out.println("Exiting..");
+				System.exit(0);
+			}
 			try {
 				choice = Integer.parseInt(action);
 				if(choice > 0 && choice < 6) {
