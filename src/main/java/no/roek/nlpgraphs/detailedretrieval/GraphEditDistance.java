@@ -7,7 +7,6 @@ import java.util.Set;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.misc.SetUtils;
 
 import com.konstantinosnedas.HungarianAlgorithm;
 
