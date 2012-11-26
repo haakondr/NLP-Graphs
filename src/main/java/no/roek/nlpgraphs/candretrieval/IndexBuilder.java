@@ -3,7 +3,7 @@ package no.roek.nlpgraphs.candretrieval;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.PlagiarismSearch;
+import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class IndexBuilder extends Thread {

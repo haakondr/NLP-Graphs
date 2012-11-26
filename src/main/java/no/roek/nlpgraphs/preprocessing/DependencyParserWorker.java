@@ -2,7 +2,7 @@ package no.roek.nlpgraphs.preprocessing;
 
 import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.PlagiarismSearch;
+import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
 

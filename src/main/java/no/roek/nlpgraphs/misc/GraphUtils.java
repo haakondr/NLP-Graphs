@@ -42,7 +42,7 @@ public class GraphUtils {
 			adj.get(id).add(new String[] {rel, deprel});
 		}
 
-		return new Node(id, new String[] {lemma});
+		return new Node(id, new String[] {lemma, pos});
 	}
 
 	public static void addEdges(Graph graph, HashMap<String, List<String[]>> adj) {
