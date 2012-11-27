@@ -9,40 +9,35 @@ public class Edge {
 	private String id;
 	private Node from;
 	private Node to;
-//	private String to, from;
+	private String label;
 	private List<String> attributes;
 	
-	public Edge(String id, Node from, Node to, List<String> attributes) {
+	public Edge(String id, Node from, Node to, String label) {
 		this.id = id;
 		this.from = from;
 		this.to = to;
+		this.label = label;
+		this.attributes = new ArrayList<>();
+	}
+	
+	public Edge(String id, Node from, Node to, String label, List<String> attributes) {
+		this(id, from, to, label);
 		this.attributes = attributes;
 	}
 	
-	public Edge(String id, Node from, Node to, String[] attributes) {
-		this(id, from, to, Arrays.asList(attributes));
+	public Edge(String id, Node from, Node to, String label, String[] attributes) {
+		this(id, from, to, label, Arrays.asList(attributes));
 	}
 	
-//	public Edge(String id, String from, String to, List<String> attributes) {
-//		this.id = id;
-//		this.from = from;
-//		this.to = to;
-//		this.attributes = attributes;
-//	}
-	
-//	public Edge(String id, String from, String to) {
-//		this(id, from, to, new ArrayList<String>());
-//	}
-	public Edge(String id, Node from, Node to) {
-		this(id, from, to, new ArrayList<String>());
-	}
 	
 	public String getId() {
 		return id;
 	}
-	
-	
 
+	public String getLabel() {
+		return label;
+	}
+	
 	public Node getFrom() {
 		return from;
 	}
@@ -52,14 +47,6 @@ public class Edge {
 	}
 	
 
-//	public String getTo() {
-//		return to;
-//	}
-//
-//	public String getFrom() {
-//		return from;
-//	}
-
 	public List<String> getAttributes() {
 		return attributes;
 	}
@@ -68,10 +55,6 @@ public class Edge {
 		attributes.add(attr);
 	}
 	
-//	@Override
-//	public String toString() {
-//		return from.getId()+"-"+to.getId();
-//	}
 	@Override
 	public String toString() {
 		return from + "-" +to;
@@ -81,9 +64,7 @@ public class Edge {
 	public boolean equals(Object obj) {
 		if(getClass() == obj.getClass()) {
 			Edge other = (Edge) obj;
-//			return (from.equals(other.getFrom())) && (to.equals(other.getTo()) && (attributes.equals(other.attributes)));
-//			return (from.equals(other.getFrom())) && (to.equals(other.getTo()));
-			return attributesEqual(other) && from.equals(other.from);
+			return label.equals(other.getLabel());
 		}
 		return false;
 	}
@@ -99,8 +80,6 @@ public class Edge {
 	
 	@Override
 	public int hashCode() {
-//		return from.hashCode() * to.hashCode() * attributes.hashCode();
-//		return from.hashCode() * to.hashCode();
-		return attributes.hashCode();
+		return label.hashCode();
 	}
 }

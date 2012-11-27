@@ -14,9 +14,9 @@ import com.konstantinosnedas.HungarianAlgorithm;
 public class GraphEditDistance {
 
 	private double[][] costMatrix;
-	private final double SUBSTITUTE_COST;
-	private final double INSERT_COST;
-	private final double DELETE_COST;
+	protected final double SUBSTITUTE_COST;
+	protected final double INSERT_COST;
+	protected final double DELETE_COST;
 	private Graph g1, g2;
 
 
@@ -26,7 +26,7 @@ public class GraphEditDistance {
 		this.DELETE_COST = delCost;
 		this.g1 = g1;
 		this.g2 = g2;
-		this.costMatrix = createCostMatrix(g1, g2);
+
 	}
 
 	public GraphEditDistance(Graph g1, Graph g2) {
@@ -46,6 +46,7 @@ public class GraphEditDistance {
 		/**
 		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
 		 */
+		this.costMatrix = createCostMatrix(g1, g2);
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
 
 		double sum = 0; 
@@ -57,6 +58,9 @@ public class GraphEditDistance {
 	}
 	
 	public double[][] getCostMatrix() {
+		if(costMatrix==null) {
+			this.costMatrix = createCostMatrix(g1, g2);
+		}
 		return costMatrix;
 	}
 	
@@ -152,6 +156,10 @@ public class GraphEditDistance {
 		//TODO: add deprel weights
 		List<Edge> edges1 = g1.getEdges(node1);
 		List<Edge> edges2 = g2.getEdges(node2);
+		if(edges1.size() == 0 || edges2.size() == 0) {
+			//TODO: return the weight for each edge here
+			return edges1.size() + edges2.size();
+		}
 		int n = edges1.size();
 		int m = edges2.size();
 		double[][] edgeCostMatrix = new double[n+m][m+n];
@@ -183,6 +191,9 @@ public class GraphEditDistance {
 	}
 
 	public double getEdgeEditCost(Edge edge1, Edge edge2) {
+		if(edge1.equals(edge2)) {
+			return 0;
+		}
 		return 1;
 		//TODO: lookup [deprel1][deprel2] cost here
 	}

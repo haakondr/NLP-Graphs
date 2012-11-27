@@ -93,4 +93,8 @@ public class ConfigService {
 	public String getIndexDir() {
 		return configFile.getProperty("INDEX_DIR");
 	}
+	
+	public String getWordNetDir() {
+		return configFile.getProperty("WORDNET_DIR");
+	}
 }

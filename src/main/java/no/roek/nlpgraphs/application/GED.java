@@ -14,6 +14,7 @@ import com.mongodb.BasicDBObject;
 
 
 import no.roek.nlpgraphs.detailedretrieval.GraphEditDistance;
+import no.roek.nlpgraphs.detailedretrieval.SynonymGraphEditDistance;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
@@ -38,7 +39,8 @@ public class GED {
 
 		GraphEditDistance ged = new GraphEditDistance(g1, g2);
 
-//		ged.printMatrix();
+		//		ged.printMatrix();
+		printLatexEditPath(g1, g2, ged.getCostMatrix());
 		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
 		System.out.println("Edit path:");
@@ -49,7 +51,7 @@ public class GED {
 
 	public static void printNodes(Graph g) {
 		for(Node n : g.getNodes()) {
-			System.out.print(n.getAttributes().get(0)+","+n.getAttributes().get(1)+"\t");
+			System.out.print(n.getLabel()+","+n.getAttributes().get(0)+"\t");
 		}
 		System.out.println();
 	}
@@ -111,10 +113,31 @@ public class GED {
 		return editPaths;
 	}
 
+	private static void printLatexEditPath(Graph g1, Graph g2, double[][] costMatrix) {
+		int[][] assignment = HungarianAlgorithm.hgAlgorithm(costMatrix, "min");
+
+
+		System.out.println("\\textbf{Edit operation} & \\textbf{cost} \\\\");
+		System.out.println("\\hline");
+
+		for (int i = 0; i < assignment.length; i++) {
+			String from = getEditPathAttribute(assignment[i][0], g1);
+			from  = from.equals("ε") ? "\\epsilon" : from;
+			String to = getEditPathAttribute(assignment[i][1], g2);
+			to = to.equals("ε") ? "\\epsilon" : to;
+
+			double cost = costMatrix[assignment[i][0]][assignment[i][1]];
+			String costString = String.format("%.2f", cost);
+			if(cost != 0) {
+				System.out.println("($"+from+" \\rightarrow "+to+"$) & "+costString+" \\\\");
+			}
+		}
+	}
+
 	private static String getEditPathAttribute(int nodeNumber, Graph g) {
 		if(nodeNumber < g.getNodes().size()) {
 			Node n= g.getNode(nodeNumber);
-			return n.getAttributes().get(0);
+			return n.getLabel();
 		}else {
 			return "ε";
 		}
@@ -134,13 +157,13 @@ public class GED {
 				System.out.println(" \\\\");
 			}
 		}
-		
+
 		System.out.println("\\hline");
-		
+
 		for (int i = 0; i < g1.getSize(); i++) {
 			for (int j = 0; j < g2.getSize(); j++) {
 				if(j == 0) {
-					System.out.println(g1.getNode(i)+" & ");
+					System.out.print(g1.getNode(i)+" & ");
 				}
 				System.out.print(getCostString(i, j, assignment, costMatrix));
 				if(j< g2.getSize()-1) {

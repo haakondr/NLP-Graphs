@@ -55,7 +55,7 @@ public class Graph {
 	}
 
 	public void addEdge(Edge edge) {
-		edges.get(edge.getTo().getId()).add(edge);
+//		edges.get(edge.getTo().getId()).add(edge);
 		edges.get(edge.getFrom().getId()).add(edge);
 	}
 
