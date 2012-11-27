@@ -39,6 +39,7 @@ public class GED {
 		GraphEditDistance ged = new GraphEditDistance(g1, g2);
 
 //		ged.printMatrix();
+		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
 		System.out.println("Edit path:");
 		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
