@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,23 +25,38 @@ public class PlagiarismThresholdAnalyser {
 		DependencyParser depParser = new DependencyParser();
 		Map<String, Double> posEditWeights = EditWeightService.getEditWeights(cs.getPosSubFile(), cs.getPosInsdelFile());
 		Map<String, Double> deprelEditWeights = EditWeightService.getInsDelCosts(cs.getDeprelInsdelFile());
-		
+
 		List<Double> plagiarismDistances = new ArrayList<>();
-		
-		for (File file : Fileutils.getFiles("resources/plagiarised_passages/")) {
-			List<String> lines = Fileutils.getTextLines("resources/"+file.toString());
-			Graph g1 = getGraph(lines.get(0), postagger, depParser);
-			Graph g2 = getGraph(lines.get(0), postagger, depParser);
+
+
+		List<String> lines = Fileutils.getTextLines("resources/plag_passages.txt");
+		int i = 0, n = lines.size();
+		while(hasNext(i, n)) {
+			Graph g1 = getGraph(lines.get(i), postagger, depParser);
+			Graph g2 = getGraph(lines.get(i+1), postagger, depParser);
 			GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
-			plagiarismDistances.add(ged.getNormalizedDistance());
+			double dist = ged.getNormalizedDistance();
+			plagiarismDistances.add(dist);
+			System.out.println("--------------- GED: "+dist);
+			System.out.println(g1.getTextString());
+			System.out.println(g2.getTextString());
+			i+=3;
+		}
+
+		double temp = 0;
+		for (double double1 : plagiarismDistances) {
+			temp += double1;
 		}
 		
-		for (Double double1 : plagiarismDistances) {
-			System.out.println(double1);
-		}
-		
+		System.out.println("avg: "+temp / plagiarismDistances.size());
 	}
 	
+	private static boolean hasNext(int current, int n) {
+		return (current+2)<=n;
+	}
+
+
+
 	public static Graph getGraph(String text, POSTagParser postagger, DependencyParser depParser) {
 		BasicDBObject dbObj = depParser.parseSentence(postagger.postagSentence(text), "test", 0,0,0);
 		return GraphUtils.getGraph(dbObj);
