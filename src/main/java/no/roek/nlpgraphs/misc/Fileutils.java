@@ -214,6 +214,17 @@ public class Fileutils {
 	//		return chunks;
 	//	}
 
+	public static List<String> getTextLines(String path) {
+		List<String> lines = null;
+		try {
+			lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return lines;
+	}
+	
 	public static String getText(Path path) {
 		try {
 			List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);

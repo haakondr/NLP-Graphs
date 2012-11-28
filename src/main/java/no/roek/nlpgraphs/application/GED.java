@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -14,11 +15,12 @@ import com.mongodb.BasicDBObject;
 
 
 import no.roek.nlpgraphs.detailedretrieval.GraphEditDistance;
-import no.roek.nlpgraphs.detailedretrieval.SynonymGraphEditDistance;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
+import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
+import no.roek.nlpgraphs.misc.EditWeightService;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.POSTagParser;
@@ -27,6 +29,7 @@ public class GED {
 
 	//TODO: move most of these classes to utility classes?
 	public static void main(String[] args) {
+		ConfigService cs = new ConfigService();
 
 		String[] texts = getInputTexts(args);
 		POSTagParser postagger = new POSTagParser();
@@ -37,16 +40,21 @@ public class GED {
 		printNodes(g1);
 		printNodes(g2);
 
-		GraphEditDistance ged = new GraphEditDistance(g1, g2);
+		Map<String, Double> posEditWeights = EditWeightService.getEditWeights(cs.getPosSubFile(), cs.getPosInsdelFile());
+		Map<String, Double> deprelEditWeights = EditWeightService.getInsDelCosts(cs.getDeprelInsdelFile());
+		GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
 
-		//		ged.printMatrix();
-		printLatexEditPath(g1, g2, ged.getCostMatrix());
-		printLatexMatrix(g1, g2, ged.getCostMatrix());
+		//				ged.printMatrix();
+//		printLatexEditPath(g1, g2, ged.getCostMatrix());
+//		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
 		System.out.println("Edit path:");
-		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
-			System.out.println(editPath);
-		}
+//		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
+//			System.out.println(editPath);
+//		}
+//		for(String freeEdit : getFreeEdits(g1, g2, ged.getCostMatrix())) {
+//			System.out.print(freeEdit+", ");
+//		}
 	}
 
 	public static void printNodes(Graph g) {
@@ -92,25 +100,33 @@ public class GED {
 	}
 
 	public static List<String> getEditPath(Graph g1, Graph g2, double[][] costMatrix, boolean printCost) {
+		return getAssignment(g1, g2, costMatrix, true, printCost);
+	}
+	
+	public static List<String> getFreeEdits(Graph g1, Graph g2, double[][] costMatrix) {
+		return getAssignment(g1, g2, costMatrix, false, false);
+	}
+
+	public static List<String> getAssignment(Graph g1, Graph g2, double[][] costMatrix, boolean editPath, boolean printCost) {
 		List<String> editPaths = new ArrayList<>();
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(costMatrix, "min");
-
 
 		for (int i = 0; i < assignment.length; i++) {
 			String from = getEditPathAttribute(assignment[i][0], g1);
 			String to = getEditPathAttribute(assignment[i][1], g2);
 
 			double cost = costMatrix[assignment[i][0]][assignment[i][1]];
-			if(cost != 0) {
+			if(cost != 0 && editPath) {
 				if(printCost) {
 					editPaths.add("("+from+" -> "+to+") = "+cost);
-				}else {
-					editPaths.add("("+from+" -> "+to+")");
 				}
+			}else if(cost == 0 && !editPath) {
+				editPaths.add("("+from+" -> "+to+")");
 			}
 		}
 
 		return editPaths;
+
 	}
 
 	private static void printLatexEditPath(Graph g1, Graph g2, double[][] costMatrix) {

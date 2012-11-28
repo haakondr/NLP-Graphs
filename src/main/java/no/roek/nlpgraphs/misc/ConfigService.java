@@ -97,4 +97,16 @@ public class ConfigService {
 	public String getWordNetDir() {
 		return configFile.getProperty("WORDNET_DIR");
 	}
+	
+	public String getPosSubFile() {
+		return configFile.getProperty("POS_SUB_FILE");
+	}
+	
+	public String getPosInsdelFile() {
+		return configFile.getProperty("POS_INSDEL_FILE");
+	}
+	
+	public String getDeprelInsdelFile() {
+		return configFile.getProperty("DEPREL_INSDEL_FILE");
+	}
 }

@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.jdom2.Document;
@@ -16,6 +18,7 @@ import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
+import no.roek.nlpgraphs.misc.EditWeightService;
 import no.roek.nlpgraphs.misc.Fileutils;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.misc.XMLUtils;
@@ -25,7 +28,7 @@ public class PlagiarismFinder {
 	private String parsedDir, testDir, trainDir, resultsDir;
 	private double plagiarismThreshold;
 	private DatabaseService db;
-	
+	private Map<String, Double> posEditWeights, deprelEditWeights;
 	
 	public PlagiarismFinder(DatabaseService db) {
 		this.db = db;
@@ -35,6 +38,8 @@ public class PlagiarismFinder {
 		trainDir = cs.getTrainDir();
 		resultsDir = cs.getResultsDir();
 		plagiarismThreshold = cs.getPlagiarismThreshold();
+		posEditWeights = EditWeightService.getEditWeights(cs.getPosSubFile(), cs.getPosInsdelFile());
+		deprelEditWeights = EditWeightService.getInsDelCosts(cs.getDeprelInsdelFile());
 	}
 
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
@@ -85,7 +90,7 @@ public class PlagiarismFinder {
 			return null;
 		}
 
-		GraphEditDistance ged = new GraphEditDistance(test, train);
+		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
 		double dist = ged.getNormalizedDistance();
 		return XMLUtils.getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
 	}
@@ -105,6 +110,4 @@ public class PlagiarismFinder {
 
 		return plagReferences;
 	}
-	
-
 }

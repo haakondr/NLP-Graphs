@@ -31,6 +31,9 @@ public class GraphUtils {
 		String id = token.getString("id");
 		String lemma = token.getString("lemma");
 		String pos = token.getString("pos");
+		if(pos.equals(",")) {
+			pos = "punct";
+		}
 		String rel = token.getString("rel");
 		String deprel = token.getString("deprel");
 
