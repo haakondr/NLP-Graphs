@@ -108,7 +108,7 @@ public class Graph {
 	public String getTextString() {
 		StringBuffer sb = new StringBuffer();
 		for(Node node : nodes) {
-			sb.append(node.getAttributes().get(0)+" ");
+			sb.append(node+" ");
 		}
 		
 		return sb.toString();
