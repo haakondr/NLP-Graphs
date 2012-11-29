@@ -83,6 +83,7 @@ public class DatabaseService {
 	}
 	
 	private String getSentenceColl(String filename) {
+		System.out.println(filename);
 		if(filename.startsWith("source-document")) {
 			return sourceCollection;
 		}else if(filename.startsWith("suspicious-document")) {
