@@ -49,9 +49,9 @@ public class GED {
 		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
 		System.out.println("Edit path:");
-//		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
-//			System.out.println(editPath);
-//		}
+		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
+			System.out.println(editPath);
+		}
 //		for(String freeEdit : getFreeEdits(g1, g2, ged.getCostMatrix())) {
 //			System.out.print(freeEdit+", ");
 //		}
