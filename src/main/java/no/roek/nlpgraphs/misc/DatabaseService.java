@@ -132,7 +132,7 @@ public class DatabaseService {
 		DBCursor cursor = coll.find();
 		while(cursor.hasNext()) {
 			DBObject temp = cursor.next();
-			PlagiarismJob job = new PlagiarismJob(temp.get("file").toString());
+			PlagiarismJob job = new PlagiarismJob(temp.get("id").toString());
 			BasicDBList passages = (BasicDBList)temp.get("passages");
 
 			for (Object obj : passages) {
