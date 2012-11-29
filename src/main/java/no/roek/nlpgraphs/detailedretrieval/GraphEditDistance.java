@@ -193,14 +193,22 @@ public class GraphEditDistance {
 		return sum / ((n+m));
 	}
 	
+	public double getDeprelWeight(Edge edge) {
+		Double weight = deprelEditWeights.get(edge.getLabel());
+		if(weight == null) {
+			return 1;
+		}
+		return weight;
+	}
+	
 	public double getMaxEdgeDiff(List<Edge> edges1, List<Edge> edges2) {
 		double diff = 0;
 		for (Edge edge : edges2) {
-			diff += deprelEditWeights.get(edge.getLabel());
+			diff += getDeprelWeight(edge);
 		}
 		
 		for (Edge edge : edges1) {
-			diff += deprelEditWeights.get(edge.getLabel());
+			diff += getDeprelWeight(edge);
 		}
 		
 		return diff;
@@ -208,14 +216,14 @@ public class GraphEditDistance {
 
 	public double getEdgeInsertCost(int i, int j, Edge edge2) {
 		if(i==j) {
-			return deprelEditWeights.get(edge2.getLabel()) * INSERT_COST;
+			return getDeprelWeight(edge2) * INSERT_COST;
 		}
 		return Double.MAX_VALUE;
 	}
 
 	public double getEdgeDeleteCost(int i, int j, Edge edge1) {
 		if(i==j) {
-			return deprelEditWeights.get(edge1.getLabel()) * DELETE_COST;
+			return getDeprelWeight(edge1) * DELETE_COST;
 		}
 		return Double.MAX_VALUE;
 	}

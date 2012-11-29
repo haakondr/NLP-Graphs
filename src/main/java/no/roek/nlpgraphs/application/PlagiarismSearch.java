@@ -165,17 +165,9 @@ public class PlagiarismSearch {
 	}
 
 	public void startPlagiarismSearchWithoutCandret() {
-		System.out.println("starting plagiarism search with candidate retrieval results read from file..");
+		System.out.println("starting plagiarism search with candidate retrieval results from the database..");
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
-		for(File candretFile : Fileutils.getFiles(cs.getCandRetDir())) {
-			PlagiarismJob job = new PlagiarismJob(candretFile.toPath());
-			job.setTextPairs(Fileutils.getPassages(candretFile.toString(), cs));
-			try {
-				plagQueue.put(job);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		db.retrieveAllPassages(plagQueue);
 
 		progressPrinter = new ProgressPrinter(plagQueue.size());
 		startPlagiarismSearch(plagQueue);

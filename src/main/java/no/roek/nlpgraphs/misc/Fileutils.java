@@ -244,7 +244,7 @@ public class Fileutils {
 		return filename.substring(0, i) +"."+ extention;
 	}
 
-	public static List<PlagiarismPassage> getPassages(String candretFile, ConfigService cs) {
+	public static List<PlagiarismPassage> getPassages(String candretFile) {
 		List<PlagiarismPassage> passages = new ArrayList<>();
 		JsonReader jsonReader = null;
 		try {
@@ -259,7 +259,7 @@ public class Fileutils {
 				int testSentence = jsonPassage.get("testSentence").getAsInt();
 				double similarity = jsonPassage.get("candretScore").getAsDouble();
 
-				passages.add(new PlagiarismPassage(cs, trainFile, trainSentence, testFile, testSentence, similarity));
+				passages.add(new PlagiarismPassage(trainFile, trainSentence, testFile, testSentence, similarity));
 			}
 		
 		}catch(IOException e) {

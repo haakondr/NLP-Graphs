@@ -172,7 +172,7 @@ public class CandidateRetrievalService {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					PlagiarismPassage sp = new PlagiarismPassage(cs, trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					PlagiarismPassage sp = new PlagiarismPassage(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 
 					n = simDocs.size();

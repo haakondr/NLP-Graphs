@@ -9,13 +9,8 @@ public class PlagiarismPassage {
 	private String trainFile, testFile;
 	private int trainSentence, testSentence;
 	private double similarity;
-	private Graph testGraph, trainGraph;
-	private String dir, testDir, trainDir;
 	
-	public PlagiarismPassage(ConfigService cs, String trainFile, int trainSentence, String testFile, int testSentence, double similarity) {
-		this.dir = cs.getParsedFilesDir();
-		this.testDir = cs.getTestDir();
-		this.trainDir = cs.getTrainDir();
+	public PlagiarismPassage(String trainFile, int trainSentence, String testFile, int testSentence, double similarity) {
 		this.trainFile = trainFile;
 		this.trainSentence = trainSentence;
 		this.testFile = testFile;

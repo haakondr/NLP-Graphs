@@ -28,19 +28,18 @@ public class PlagiarismThresholdAnalyser {
 
 		List<Double> plagiarismDistances = new ArrayList<>();
 
-
-		List<String> lines = Fileutils.getTextLines("resources/plag_passages.txt");
-		int i = 0, n = lines.size();
-		while(hasNext(i, n)) {
-			Graph g1 = getGraph(lines.get(i), postagger, depParser);
-			Graph g2 = getGraph(lines.get(i+1), postagger, depParser);
-			GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
-			double dist = ged.getNormalizedDistance();
-			plagiarismDistances.add(dist);
-			System.out.println("--------------- GED: "+dist);
-			System.out.println(g1.getTextString());
-			System.out.println(g2.getTextString());
-			i+=3;
+		
+		for(File file : Fileutils.getFiles("resources/plagiarised_passages/")) {
+			List<String> lines = Fileutils.getTextLines(file.toString());
+			int i = 0, n = lines.size();
+			while(hasNext(i, n)) {
+				Graph g1 = getGraph(lines.get(i), postagger, depParser);
+				Graph g2 = getGraph(lines.get(i+1), postagger, depParser);
+				GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
+				double dist = ged.getNormalizedDistance();
+				plagiarismDistances.add(dist);
+				i+=3;
+			}
 		}
 
 		double temp = 0;
@@ -48,7 +47,7 @@ public class PlagiarismThresholdAnalyser {
 			temp += double1;
 		}
 		
-		System.out.println("avg: "+temp / plagiarismDistances.size());
+		System.out.println("avg: "+temp / plagiarismDistances.size()+" for "+plagiarismDistances.size()+" passages");
 	}
 	
 	private static boolean hasNext(int current, int n) {

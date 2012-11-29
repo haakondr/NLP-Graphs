@@ -8,9 +8,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
+import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.PlagiarismPassage;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -121,6 +125,29 @@ public class DatabaseService {
 		
 		cursor.close();
 		return files;
+	}
+	
+	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue) {
+		DBCollection coll = db.getCollection(candidateCollection);
+		DBCursor cursor = coll.find();
+		while(cursor.hasNext()) {
+			DBObject temp = cursor.next();
+			PlagiarismJob job = new PlagiarismJob(temp.get("file").toString());
+			BasicDBList passages = (BasicDBList)temp.get("passages");
+
+			for (Object obj : passages) {
+				BasicDBObject dbObject = (BasicDBObject) obj;
+				PlagiarismPassage passage = new PlagiarismPassage(dbObject.getString("source_file"), dbObject.getInt("source_sentence"), 
+						dbObject.getString("suspicious_file"), dbObject.getInt("suspicious_sentence"), dbObject.getDouble("candret_score"));
+				job.addTextPair(passage);
+				
+			}
+			try {
+				queue.put(job);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public Set<String> getFiles(String collection) {
