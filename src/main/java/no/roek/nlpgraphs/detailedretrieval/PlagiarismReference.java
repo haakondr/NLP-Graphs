@@ -89,4 +89,20 @@ public class PlagiarismReference {
 	public String getName() {
 		return name;
 	}
+	
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}
+	
+	public void setLength(String length) {
+		this.length = length;
+	}
+	
+	public void setSourceOffset(String offset) {
+		this.sourceOffset = offset;
+	}
+	
+	public void setSourceLength(String length) {
+		this.sourceLength = length;
+	}
 }

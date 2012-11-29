@@ -29,7 +29,7 @@ public class PlagiarismFinder {
 	private double plagiarismThreshold;
 	private DatabaseService db;
 	private Map<String, Double> posEditWeights, deprelEditWeights;
-	
+
 	public PlagiarismFinder(DatabaseService db) {
 		this.db = db;
 		ConfigService cs = new ConfigService();
@@ -46,44 +46,21 @@ public class PlagiarismFinder {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(PlagiarismPassage passage : job.getTextPairs()) {
-			plagReferences.add(findPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence()));
+			PlagiarismReference ref = findPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
+			if(ref != null) {
+				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), false);
+				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), true);
+				plagReferences.add(ref);
+			}
 		}
 
 		return plagReferences;
 	}
 
-	public List<PlagiarismReference> findAdjacentPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
-		List<PlagiarismReference> plagReferences = new ArrayList<>();
-		plagReferences.add(findPlagiarism(trainFile, trainSentence, testFile, testSentence));
-		plagReferences.addAll(findAdjacentPlagiarism(trainFile, trainSentence, testFile, testSentence, true));
-		plagReferences.addAll(findAdjacentPlagiarism(trainFile, trainSentence, testFile, testSentence, false));
-		
-		return plagReferences;
-	}
-
-	public List<PlagiarismReference> findAdjacentPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence, boolean ascending) {
-		List<PlagiarismReference> plagRefs = new ArrayList<>();
-		
-		int i = ascending ? 1 : -1;
-		PlagiarismReference plagRef = findPlagiarism(trainFile, trainSentence+i, testFile, testSentence+i);
-		if(plagRef != null) {
-			plagRefs.add(plagRef);
-		}
-		if(plagRef.getSimilarity() < plagiarismThreshold*1.3) {
-			plagRefs.addAll(findAdjacentPlagiarism(trainFile, trainSentence+i, testFile, testSentence+i, ascending));
-		}
-		
-		return plagRefs;
-	}
-	
 	public PlagiarismReference findPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
 		/**
 		 * Checks sentence pair for plagiarism using Graph Edit Distance algorithm.
-		 * Adjacent sentences are checked, if they exist, and added if they are above the plagiarism threshold
 		 */
-		//TODO: alle test graphs er fra samme fil. hent inn alle i en dict eller noe
-//		Graph train = GraphUtils.getGraphFromFile(parsedDir+trainDir+trainFile, trainSentence);
-//		Graph test = GraphUtils.getGraphFromFile(parsedDir+testDir+testFile, testSentence);
 		Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
 		Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
 		if(train==null || test == null) {
@@ -92,8 +69,31 @@ public class PlagiarismFinder {
 
 		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
 		double dist = ged.getNormalizedDistance();
-		return XMLUtils.getPlagiarismReference(train, test, dist, (dist < plagiarismThreshold));
+		if(dist < plagiarismThreshold) {
+			return XMLUtils.getPlagiarismReference(train, test, true);
+		}else {
+			return null;
+		}
 	}
+
+	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
+		int i = ascending ? 1 : -1;
+		PlagiarismReference adjRef = findPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
+		ref.setOffset(adjRef.getOffset());
+		ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
+		ref.setSourceOffset(adjRef.getSourceOffset());
+		ref.setSourceLength(getNewLength(ref.getSourceOffset(), ref.getSourceLength(), adjRef.getSourceOffset(), i));
+	}
+
+	public String getNewLength(String offsetString, String lengthString, String newOffsetString, int ascending) {
+		int offset = Integer.parseInt(offsetString);
+		int len = Integer.parseInt(lengthString);
+		int newOffset = Integer.parseInt(newOffsetString);
+
+		int newLen =  len + ((offset - newOffset) * ascending);
+		return Integer.toString(newLen);
+	}
+
 
 	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
 		/**
