@@ -160,7 +160,7 @@ public class GraphEditDistance {
 		List<Edge> edges1 = g1.getEdges(node1);
 		List<Edge> edges2 = g2.getEdges(node2);
 		if(edges1.size() == 0 || edges2.size() == 0) {
-			return getMaxEdgeDiff(edges1, edges2);
+			return getWeightSum(edges1) + getWeightSum(edges2);
 		}
 		
 		int n = edges1.size();
@@ -201,17 +201,13 @@ public class GraphEditDistance {
 		return weight;
 	}
 	
-	public double getMaxEdgeDiff(List<Edge> edges1, List<Edge> edges2) {
-		double diff = 0;
-		for (Edge edge : edges2) {
-			diff += getDeprelWeight(edge);
+	public double getWeightSum(List<Edge> edges) {
+		double sum = 0;
+		for (Edge edge : edges) {
+			sum += getDeprelWeight(edge);
 		}
 		
-		for (Edge edge : edges1) {
-			diff += getDeprelWeight(edge);
-		}
-		
-		return diff;
+		return sum;
 	}
 
 	public double getEdgeInsertCost(int i, int j, Edge edge2) {
