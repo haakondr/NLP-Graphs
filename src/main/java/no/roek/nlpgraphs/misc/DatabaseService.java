@@ -22,10 +22,10 @@ import com.mongodb.WriteConcern;
 public class DatabaseService {
 
 	private DB db;
-	private final String sourceCollection = "source_sentences";
-	private final String suspiciousCollection = "suspicious_sentences";
-	private final String suspiciousDocsCollection = "suspicious_documents";
-	private final String sourceDocsCollection = "source_documents";
+	private final String sourceCollection = "source-sentences";
+	private final String suspiciousCollection = "suspicious-sentences";
+	private final String suspiciousDocsCollection = "suspicious-documents";
+	private final String sourceDocsCollection = "source-documents";
 	private final String candidateCollection = "candidate_passages";
 	
 	public DatabaseService() {
