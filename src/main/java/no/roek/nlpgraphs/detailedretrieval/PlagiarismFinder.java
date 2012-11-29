@@ -46,7 +46,7 @@ public class PlagiarismFinder {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(PlagiarismPassage passage : job.getTextPairs()) {
-			PlagiarismReference ref = findPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
+			PlagiarismReference ref = getPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
 			if(ref != null) {
 				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), false);
 				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), true);
@@ -57,9 +57,9 @@ public class PlagiarismFinder {
 		return plagReferences;
 	}
 
-	public PlagiarismReference findPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
+	public PlagiarismReference getPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
 		/**
-		 * Checks sentence pair for plagiarism using Graph Edit Distance algorithm.
+		 * Checks the given sentence pair for plagiarism with the graph edit distance algorithm
 		 */
 		Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
 		Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
@@ -78,7 +78,7 @@ public class PlagiarismFinder {
 
 	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
 		int i = ascending ? 1 : -1;
-		PlagiarismReference adjRef = findPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
+		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
 		ref.setOffset(adjRef.getOffset());
 		ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
 		ref.setSourceOffset(adjRef.getSourceOffset());
