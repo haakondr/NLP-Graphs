@@ -5,52 +5,108 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
+
+
 public class ConfigService {
-	
-	public static String getProperty(String property) {
-		Properties configFile = new Properties();
-		InputStream is;
-		try {
+
+	private Properties configFile;
+	private InputStream is;
+
+	public ConfigService() {
+		configFile = new Properties();
+		try{
 			is = new FileInputStream("app.properties");
-
 			configFile.load(is);
-
-			return configFile.getProperty(property);
+			is.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+		} finally {
+			IOUtils.closeQuietly(is);
 		}
 	}
-	
-	public static String getParsedFilesDir() {
-		return getProperty("PARSED_DIR");
+
+	public String getParsedFilesDir() {
+		return configFile.getProperty("PARSED_DIR");
+	}
+
+	public String getDataDir() {
+		return configFile.getProperty("DATA_DIR");
+	}
+
+	public String getTestDir() {
+		return configFile.getProperty("TEST_DIR");
+	}
+
+	public String getTrainDir() {
+		return configFile.getProperty("TRAIN_DIR");
+	}
+
+	public String getAnnotationsDir() {
+		return configFile.getProperty("ANNOTATIONS_DIR");
+	}
+
+	public String getResultsDir() {
+		return configFile.getProperty("RESULTS_DIR");
+	}
+
+	public int getDocumentRecall() {
+		return Integer.parseInt(configFile.getProperty("DOCUMENT_RECALL"));
+	}
+
+	public double getPlagiarismThreshold() {
+		return Double.parseDouble(configFile.getProperty("PLAGIARISM_THRESHOLD"));
+	}
+
+	public String getMaltParams() {
+		return configFile.getProperty("MALT_PARAMS");
+	}
+
+	public String getPOSTaggerParams() {
+		return configFile.getProperty("POSTAGGER_PARAMS");
+	}
+
+	public int getPOSTaggerThreadCount() {
+		return Integer.parseInt(configFile.getProperty("POSTAGGER_THREADS"));
+	}
+
+	public int getMaltParserThreadCount() {
+		return Integer.parseInt(configFile.getProperty("MALTPARSER_THREADS"));
+	}
+
+	public int getPlagiarismThreads() {
+		return Integer.parseInt(configFile.getProperty("PLAGIARISM_SEARCHER_THREADS"));
+	}
+
+	public int getSentenceRetrievalThreads() {
+		return Integer.parseInt(configFile.getProperty("SENTENCE_RETRIEVAL_THREADS"));
 	}
 	
-	public static String getDataDir() {
-		return getProperty("DATA_DIR");
+	public int getIndexBuilderThreads() {
+		return Integer.parseInt(configFile.getProperty("INDEX_BUILDER_THREADS"));
 	}
 	
-	public static String getTestDir() {
-		return getProperty("TEST_DIR");
+	public String getCandRetDir() {
+		return configFile.getProperty("CANDRET_DIR");
 	}
 	
-	public static String getTrainDir() {
-		return getProperty("TRAIN_DIR");
+	public String getIndexDir() {
+		return configFile.getProperty("INDEX_DIR");
 	}
 	
-	public static String getAnnotationsDir() {
-		return getProperty("ANNOTATIONS_DIR");
+	public String getWordNetDir() {
+		return configFile.getProperty("WORDNET_DIR");
 	}
 	
-	public static String getResultsDir() {
-		return getProperty("RESULTS_DIR");
+	public String getPosSubFile() {
+		return configFile.getProperty("POS_SUB_FILE");
 	}
 	
-	public static int getDocumentRecall() {
-		return Integer.parseInt(getProperty("DOCUMENT_RECALL"));
+	public String getPosInsdelFile() {
+		return configFile.getProperty("POS_INSDEL_FILE");
 	}
 	
-	public static int getPlagiarismThreshold() {
-		return Integer.parseInt(getProperty("PLAGIARISM_THRESHOLD"));
+	public String getDeprelInsdelFile() {
+		return configFile.getProperty("DEPREL_INSDEL_FILE");
 	}
 }

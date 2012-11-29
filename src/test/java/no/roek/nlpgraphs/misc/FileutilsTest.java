@@ -2,38 +2,23 @@ package no.roek.nlpgraphs.misc;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import no.roek.nlpgraphs.document.DocumentFile;
-
-import org.junit.Before;
 import org.junit.Test;
 
+import com.sun.media.sound.InvalidFormatException;
 
 public class FileutilsTest {
 
-	private Path dir;
-	
-	@Before
-	public void setup() {
-		dir = Paths.get("src/test/resources/documents");
-	}
-	
 	@Test
-	public void shouldSetRelativePath() {
-		Path lol = Paths.get("src/test/resources/documents/lol.txt");
-		assertEquals(lol.getFileName().toString(), "lol.txt");
-		assertEquals(dir.relativize(lol), lol.getFileName());
+	public void shouldChangeFileExtention() {
+		String xml = Fileutils.replaceFileExtention("test.txt", "xml");
+		assertEquals("test.xml", xml);
 		
-		DocumentFile file = new DocumentFile(Paths.get("src/test/resources/documents/omg.txt"), dir);
-		assertEquals("omg.txt", file.getRelPath().toString());
+		
 	}
 	
 	@Test
-	public void shouldGetFiles() {
-		File[] files = Fileutils.getFiles(dir);
-		assertEquals(18, files.length);
+	public void shouldNotChangeFileExtention() {
+		String xml = Fileutils.replaceFileExtention("test.omg/txt.txt", "xml");
+		assertEquals("test.omg/txt.xml", xml);
 	}
 }

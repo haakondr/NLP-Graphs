@@ -1,116 +1,74 @@
 package no.roek.nlpgraphs.misc;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import no.roek.nlpgraphs.document.NLPSentence;
-import edu.stanford.nlp.ling.Word;
+import no.roek.nlpgraphs.document.WordToken;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 public class SentenceUtils {
 
-	public static List<NLPSentence> getSentences(String filename) {
+	public static List<NLPSentence> getSentencesFromParsedFile(String filename) {
+		List<NLPSentence> sentences = new ArrayList<>();
+		JsonReader jsonReader = null;
+
 		try {
-			FileInputStream fstream = new FileInputStream(filename);
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(filename)));
+			JsonParser jsonParser = new JsonParser();
 
-			StringBuilder wordBuilder = new StringBuilder();
-			StringBuilder sentenceBuilder = new StringBuilder();
-			List<NLPSentence> sentences = new ArrayList<NLPSentence>();
-			List<Word> words = new ArrayList<>();
-
-			int character = 1, offset = 1, sentenceNumber = 1, sentenceStart = 0;
-			while((character = reader.read()) != -1) {
-				char c = (char) character;
-
-				sentenceBuilder = stripWhitespaceBeforeText(sentenceBuilder);
-
-				if(isWordDelimiter(c)) {
-					wordBuilder = createWord(wordBuilder, words, offset);
-				}
-
-				if(!isNewLine(c)) {
-					wordBuilder.append((char) c);
-					sentenceBuilder.append((char) c);
-				}else {
-					if(!isSentenceDelimiter(c)) {
-						wordBuilder = createWord(wordBuilder, words, offset);
-						sentenceBuilder.append(" ");
-					}
-				}
-
-				if(isSentenceDelimiter(c)) {
-					String previousWord;
-					if(words.size()== 0) {
-						previousWord = "placeholder";
-					}else {
-						previousWord = words.get(words.size()-1).word();
-					}
-					if((sentenceBuilder.toString().trim().length() > 1) && !isWordWithPunctation(previousWord)) {
-						sentences.add(new NLPSentence(sentenceNumber, sentenceStart, sentenceBuilder.toString(), words));
-						createWord(wordBuilder, words, offset);
-						words = new ArrayList<Word>();
-						sentenceBuilder = new StringBuilder();
-						wordBuilder = new StringBuilder();
-						sentenceNumber++;
-						sentenceStart = offset+1;
-					}
-				}
-				//TODO: should offset be before or after creating sentence?
-				offset++;
+			JsonObject fileObject = jsonParser.parse(jsonReader).getAsJsonObject();
+			JsonObject jsonSentences = fileObject.get("sentences").getAsJsonObject();
+			for(Map.Entry<String,JsonElement> entry : jsonSentences.entrySet()) {
+				JsonObject sentence = entry.getValue().getAsJsonObject();
+				sentences.add(getSentence(sentence, fileObject.get("filename").getAsString()));
 			}
-			if(wordBuilder.toString().trim().length()>0) {
-				words.add(new Word(wordBuilder.toString()));
-				sentences.add(new NLPSentence(sentenceNumber, offset, sentenceBuilder.toString(), words));
-				sentenceNumber++;
-			}
-			reader.close();
-
-			return sentences;
-		}catch (IOException e) {
+			
+			
+		} catch (IOException  e) {
 			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public static StringBuilder stripWhitespaceBeforeText(StringBuilder sentenceBuilder) {
-		if(sentenceBuilder.toString().trim().length() == 0) {
-			return new StringBuilder();
-		}
-		return sentenceBuilder;
-	}
-	public static StringBuilder createWord(StringBuilder wordBuilder, List<Word> words, int offset) {
-		if(wordBuilder.toString().trim().length() > 0) {
-			words.add(new Word(wordBuilder.toString().trim(), offset-wordBuilder.length(), offset));
-			return new StringBuilder();
+			return null;
+		} finally {
+			try {
+				jsonReader.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 
-		return wordBuilder;
+		return sentences;
 	}
 
-	public static boolean isNewLine(char c) {
-		return (c == '\n' || c == '\r');
+	public static NLPSentence getSentence(JsonObject jsonSentence, String filename) {
+		int number = jsonSentence.get("sentenceNumber").getAsInt();
+		int offset = jsonSentence.get("offset").getAsInt();
+		int length = jsonSentence.get("length").getAsInt();
+
+		List<WordToken> tokens = new ArrayList<>();
+		for(JsonElement jsonToken : jsonSentence.get("tokens").getAsJsonArray()) {
+			tokens.add(getToken(jsonToken.getAsJsonObject()));
+		}
+
+		return new NLPSentence(filename, number, offset, length, tokens);
 	}
 
-	public static boolean isSentenceDelimiter(char c) {
-		return c == '.' || c == '!' || c == '?';
+	public static WordToken getToken(JsonObject jsonToken) {
+		String word = jsonToken.get("word").getAsString();
+		String lemma = jsonToken.get("lemma").getAsString();
+		String pos = jsonToken.get("pos").getAsString();
+		return new WordToken(word, lemma, pos);
 	}
 
-	public static boolean isWordDelimiter(char c ) {
-		return !Character.isLetter(c) && !Character.isDigit(c) || (c == 10) || (c == 13);
-	}
-
-	public static boolean isPartOfWord(char c) {
-		return Character.isLetter(c) || Character.isDigit(c);
-	}
-
-	public static boolean isWordWithPunctation(String s) {
-		return s.equalsIgnoreCase("Mr") || s.equalsIgnoreCase("Mrs") || s.equalsIgnoreCase("ca");
+	public static boolean isAlmostEqual(int a, int b) {
+		return Math.abs(a-b)< 10;
 	}
 }

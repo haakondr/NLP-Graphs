@@ -1,0 +1,1 @@
+This is an example of dependencies within a sentence. I am at home eating breakfast. We are eating dinner.

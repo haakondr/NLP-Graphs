@@ -2,29 +2,45 @@ package no.roek.nlpgraphs.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.document.WordToken;
 
 public class Graph {
 
 	private String filename, originalText;
 	private int offset, length, sentenceNumber;
 	private List<Node> nodes;
-	private HashMap<String, List<Edge>> adjacent;
+	private HashMap<String, List<Edge>> edges;
 
 
 	public Graph(String filename) {
 		this();
 		this.filename = filename;
 	}
+	
+	public Graph(String filename, int sentenceNumber, int offset, int length) {
+		this(filename);
+		this.offset = offset;
+		this.length = length;
+		this.sentenceNumber = sentenceNumber;
+	}
 
 	public Graph() {
 		nodes = new ArrayList<Node>();
-		this.adjacent = new HashMap<>();
+		this.edges = new HashMap<>();
 	}
 
 	public void addNode(Node node) {
-		if(!adjacent.containsKey(node.getId())) {
-			adjacent.put(node.getId(), new ArrayList<Edge>());
+		if(!edges.containsKey(node.getId())) {
+			edges.put(node.getId(), new ArrayList<Edge>());
 		}
 		nodes.add(node);
 	}
@@ -34,13 +50,13 @@ public class Graph {
 	}
 
 
-	public HashMap<String, List<Edge>> getAdjacent() {
-		return adjacent;
+	public HashMap<String, List<Edge>> getEdges() {
+		return edges;
 	}
 
 	public void addEdge(Edge edge) {
-		adjacent.get(edge.getTo().getId()).add(edge);
-		adjacent.get(edge.getFrom().getId()).add(edge);
+//		edges.get(edge.getTo().getId()).add(edge);
+		edges.get(edge.getFrom().getId()).add(edge);
 	}
 
 	public List<Edge> getEdges(Node node) {
@@ -48,7 +64,7 @@ public class Graph {
 	}
 
 	public List<Edge> getEdges(String nodeId) {
-		return adjacent.get(nodeId);
+		return edges.get(nodeId);
 	}
 
 	public void removeNode(int i) {
@@ -85,9 +101,19 @@ public class Graph {
 		return filename;
 	}
 
-	public String getOriginalText() {
-		return originalText;
+//	public String getOriginalText() {
+//		return originalText;
+//	}
+	
+	public String getTextString() {
+		StringBuffer sb = new StringBuffer();
+		for(Node node : nodes) {
+			sb.append(node+" ");
+		}
+		
+		return sb.toString();
 	}
+	
 
 	public void setOriginalText(String originalText) {
 		this.originalText = originalText;
@@ -120,4 +146,24 @@ public class Graph {
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
+	
+	public NLPSentence toSentence() {
+//		return new NLPSentence(filename, sentenceNumber, offset, length, originalText);
+		return new NLPSentence(filename, sentenceNumber, offset, length);
+	}
+	
+//	public BasicDBObject toDBObject() {
+//		BasicDBObject obj = new BasicDBObject();
+//		obj.put("filename", filename);
+//		obj.put("sentenceNumber", sentenceNumber);
+//		obj.put("offset", offset);
+//		obj.put("length", length);
+//		BasicDBList dbTokens = new BasicDBList();
+//		for(Node node : nodes) {
+//			dbTokens.add(node.toDBObject());
+//		}
+//		obj.put("tokens", dbTokens);
+//		
+//		return obj;
+//	}
 }
