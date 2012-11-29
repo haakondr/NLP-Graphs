@@ -89,4 +89,24 @@ public class ConfigService {
 	public String getCandRetDir() {
 		return configFile.getProperty("CANDRET_DIR");
 	}
+	
+	public String getIndexDir() {
+		return configFile.getProperty("INDEX_DIR");
+	}
+	
+	public String getWordNetDir() {
+		return configFile.getProperty("WORDNET_DIR");
+	}
+	
+	public String getPosSubFile() {
+		return configFile.getProperty("POS_SUB_FILE");
+	}
+	
+	public String getPosInsdelFile() {
+		return configFile.getProperty("POS_INSDEL_FILE");
+	}
+	
+	public String getDeprelInsdelFile() {
+		return configFile.getProperty("DEPREL_INSDEL_FILE");
+	}
 }

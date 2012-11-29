@@ -77,6 +77,10 @@ public class PlagiarismReference {
 	public double getSimilarity() {
 		return similarity;
 	}
+	
+	public void setSimilarity(double sim) {
+		this.similarity = sim;
+	}
 
 	public String getFilename() {
 		return filename;

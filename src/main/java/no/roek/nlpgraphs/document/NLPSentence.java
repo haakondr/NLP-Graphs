@@ -10,14 +10,18 @@ import no.roek.nlpgraphs.misc.SentenceUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {
 
-	private int number, start, length;
-	private String filename, text;
+	protected int number, start, length;
+	protected String filename, text;
 	private String[] postags;
-	private List<WordToken> words;
+	protected List<WordToken> words;
 
 	public NLPSentence(String filename, int number, int start, int length, List<WordToken> words, String[] postags) {
 		this(filename, number, start, length);

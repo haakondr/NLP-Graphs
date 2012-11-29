@@ -2,8 +2,10 @@ package no.roek.nlpgraphs.misc;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,8 +14,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import no.roek.nlpgraphs.document.PlagiarismPassage;
 
 import org.apache.commons.io.IOUtils;
+import org.maltparser.core.helper.HashSet;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
 public class Fileutils {
 
@@ -87,6 +98,16 @@ public class Fileutils {
 		return tasks;
 	}
 
+	public static Set<String> getFileNames(String  dir) {
+		Set<String> filenames = new HashSet<>();
+		File[] files = getFileList(dir);
+		for (File file : files) {
+			filenames.add(file.getName());
+		}
+		
+		return filenames;
+	}
+	
 	public static File[] getFileList(String dir) {
 		return getFileList(Paths.get(dir));
 	}
@@ -95,12 +116,11 @@ public class Fileutils {
 		return getFiles(dir, dir).toArray(new File[0]);
 	}
 
-
-	public static File[] getFilesNotDone(String dir, String outDir, String fileExtention) {
-		File[] files = getFileList(dir);
-		List<File> out = new ArrayList<File>();
-		for (File file : files) {
-			String outFile = outDir+Paths.get(dir).relativize(file.toPath());
+	
+	public static String[] getFilesNotDone(Set<String> files, String outDir, String fileExtention) {
+		List<String> out = new ArrayList<String>();
+		for (String file : files) {
+			String outFile = outDir+file;
 			if(fileExtention != null) {
 				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
 			}
@@ -110,11 +130,28 @@ public class Fileutils {
 			}
 		}
 
-		return out.toArray(new File[0]);
+		return out.toArray(new String[0]);
 	}
 
-	public static File[] getFilesNotDone(String dir, String outDir) {
-		return getFilesNotDone(dir, outDir, null);
+	
+	public static String[] getFilesNotDone(List<String> files, String outDir, String fileExtention) {
+		List<String> out = new ArrayList<String>();
+		for (String file : files) {
+			String outFile = outDir+file;
+			if(fileExtention != null) {
+				outFile = Fileutils.replaceFileExtention(outFile, fileExtention);
+			}
+
+			if(!new File(outFile).exists()) {
+				out.add(file);
+			}
+		}
+
+		return out.toArray(new String[0]);
+	}
+
+	public static String[] getFilesNotDone(List<String> files, String outDir) {
+		return getFilesNotDone(files, outDir, null);
 	}
 
 
@@ -177,6 +214,17 @@ public class Fileutils {
 	//		return chunks;
 	//	}
 
+	public static List<String> getTextLines(String path) {
+		List<String> lines = null;
+		try {
+			lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return lines;
+	}
+	
 	public static String getText(Path path) {
 		try {
 			List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
@@ -196,4 +244,34 @@ public class Fileutils {
 		return filename.substring(0, i) +"."+ extention;
 	}
 
+	public static List<PlagiarismPassage> getPassages(String candretFile) {
+		List<PlagiarismPassage> passages = new ArrayList<>();
+		JsonReader jsonReader = null;
+		try {
+			jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(candretFile)));
+			JsonParser parser = new JsonParser();
+			JsonObject fileObject = parser.parse(jsonReader).getAsJsonObject();
+			for(JsonElement temp : fileObject.get("passages").getAsJsonArray()) {
+				JsonObject jsonPassage = temp.getAsJsonObject();
+				String trainFile = jsonPassage.get("trainFile").getAsString();
+				int trainSentence = jsonPassage.get("trainSentence").getAsInt();
+				String testFile = jsonPassage.get("testFile").getAsString();
+				int testSentence = jsonPassage.get("testSentence").getAsInt();
+				double similarity = jsonPassage.get("candretScore").getAsDouble();
+
+				passages.add(new PlagiarismPassage(trainFile, trainSentence, testFile, testSentence, similarity));
+			}
+		
+		}catch(IOException e) {
+			e.printStackTrace();
+		}finally{
+			try{
+				jsonReader.close();
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return passages;
+	}
 }

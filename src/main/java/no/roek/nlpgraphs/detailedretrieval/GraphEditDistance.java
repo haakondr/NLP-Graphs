@@ -2,6 +2,8 @@ package no.roek.nlpgraphs.detailedretrieval;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
@@ -13,23 +15,24 @@ import com.konstantinosnedas.HungarianAlgorithm;
 public class GraphEditDistance {
 
 	private double[][] costMatrix;
-	private final double SUBSTITUTE_COST;
-	private final double INSERT_COST;
-	private final double DELETE_COST;
+	protected final double SUBSTITUTE_COST;
+	protected final double INSERT_COST;
+	protected final double DELETE_COST;
 	private Graph g1, g2;
+	private Map<String, Double> posEditWeights, deprelEditWeights;
 
-
-	public GraphEditDistance(Graph g1, Graph g2, double subCost, double insCost, double delCost) {
+	public GraphEditDistance(Graph g1, Graph g2, double subCost, double insCost, double delCost, Map<String, Double> posEditWeights, Map<String, Double> deprelEditWeights) {
 		this.SUBSTITUTE_COST = subCost;
 		this.INSERT_COST = insCost;
 		this.DELETE_COST = delCost;
 		this.g1 = g1;
 		this.g2 = g2;
-		this.costMatrix = createCostMatrix(g1, g2);
+		this.posEditWeights = posEditWeights;
+		this.deprelEditWeights = deprelEditWeights;
 	}
 
-	public GraphEditDistance(Graph g1, Graph g2) {
-		this(g1, g2, 1, 1, 1);
+	public GraphEditDistance(Graph g1, Graph g2, Map<String, Double> posEditWeights, Map<String, Double> deprelEditWeights) {
+		this(g1, g2, 2, 1, 1, posEditWeights, deprelEditWeights);
 	}
 
 	public double getNormalizedDistance() {
@@ -37,7 +40,7 @@ public class GraphEditDistance {
 		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
 		 * The distance is normalized on graph length
 		 */
-		double graphLength = (g1.getLength()+g2.getLength())/2;
+		double graphLength = (g1.getSize()+g2.getSize())/2;
 		return getDistance() / graphLength;
 	}
 
@@ -45,6 +48,7 @@ public class GraphEditDistance {
 		/**
 		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
 		 */
+		this.costMatrix = createCostMatrix(g1, g2);
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
 
 		double sum = 0; 
@@ -55,35 +59,11 @@ public class GraphEditDistance {
 		return sum;
 	}
 
-	public List<String> getEditPath(boolean printCost) {
-		List<String> editPaths = new ArrayList<>();
-		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
-
-
-		for (int i = 0; i < assignment.length; i++) {
-			String from = getEditPathAttribute(assignment[i][0], g1);
-			String to = getEditPathAttribute(assignment[i][1], g2);
-
-			double cost = costMatrix[assignment[i][0]][assignment[i][1]];
-			if(cost != 0) {
-				if(printCost) {
-					editPaths.add("("+from+" -> "+to+") = "+cost);
-				}else {
-					editPaths.add("("+from+" -> "+to+")");
-				}
-			}
+	public double[][] getCostMatrix() {
+		if(costMatrix==null) {
+			this.costMatrix = createCostMatrix(g1, g2);
 		}
-
-		return editPaths;
-	}
-
-	private String getEditPathAttribute(int nodeNumber, Graph g) {
-		if(nodeNumber < g.getNodes().size()) {
-			Node n= g.getNode(nodeNumber);
-			return n.getAttributes().get(0);
-		}else {
-			return "ε";
-		}
+		return costMatrix;
 	}
 
 	//	public double getDistance() {
@@ -99,27 +79,28 @@ public class GraphEditDistance {
 		/**
 		 * Creates the cost matrix used as input to Munkres algorithm.
 		 * The matrix consists of 4 sectors: upper left, upper right, bottom left, bottom right.
-		 * Upper left represents the cost of all N x N node substitutions. Upper right node deletions
+		 * Upper left represents the cost of all N x M node substitutions. 
+		 * Upper right node deletions
 		 * Bottom left node insertions. 
 		 * Bottom right represents delete -> delete operations which should have any cost, and is filled with zeros.
 		 */
 		int n = g1.getNodes().size();
 		int m = g2.getNodes().size();
-		
+
 		double[][] costMatrix = new double[n+m][n+m];
-		
+
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
-					costMatrix[i][j] = getSubstituteCost(g1.getNode(i), g2.getNode(j));
+				costMatrix[i][j] = getSubstituteCost(g1.getNode(i), g2.getNode(j));
 			}
 		}
-		
+
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < m; j++) {
 				costMatrix[i+n][j] = getInsertCost(i, j);
 			}
 		}
-		
+
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				costMatrix[j][i+m] = getDeleteCost(i, j);
@@ -128,113 +109,137 @@ public class GraphEditDistance {
 
 		return costMatrix;
 	}
-	
+
 	private double getInsertCost(int i, int j) {
 		if(i == j) {
-			return INSERT_COST;
+			return getPosWeight(g2.getNode(j)) * INSERT_COST;
 		}
 		return Double.MAX_VALUE;
 	}
 
 	private double getDeleteCost(int i, int j) {
 		if(i == j) {
-			return DELETE_COST;
+			return getPosWeight(g1.getNode(i)) * DELETE_COST;
 		}
 		return Double.MAX_VALUE;
 	}
 
 	public double getSubstituteCost(Node node1, Node node2) {
-		return (getRelabelCost(node1, node2) + getEdgeDiff(node1, node2)) / 2;
+
+		double diff = (getRelabelCost(node1, node2) + getEdgeDiff(node1, node2)) / 2;
+
+		return diff * SUBSTITUTE_COST;
 	}
 
 	public double getRelabelCost(Node node1, Node node2) {
-		//TODO: check if attribute length is same for both nodes
-		List<String> attr1 = node1.getAttributes();
-		List<String> attr2 = node2.getAttributes();
-
-		double diff = 0, n = attr1.size();
-		for (int i = 0; i < 1; i++) {
-			if(!attr1.get(i).equalsIgnoreCase(attr2.get(i))) {
-				diff ++;
-			}
+		double diff = 0;
+		if(!node1.equals(node2)) {
+			diff = getPosWeight(node1, node2);
 		}
 
-		return (diff/n) * SUBSTITUTE_COST;
+		return diff ;
+	}
+
+	public double getPosWeight(Node node) {
+		return getPosWeight(node.getAttributes().get(0));
+	}
+
+	public double getPosWeight(Node node1, Node node2) {
+		return getPosWeight(node1.getAttributes().get(0)+","+node2.getAttributes().get(0));
+	}
+
+	public double getPosWeight(String key) {
+		Double posWeight = posEditWeights.get(key);
+		if(posWeight == null) {
+			return 1;
+		}	
+		return posWeight;
 	}
 
 	public double getEdgeDiff(Node node1, Node node2) {
-		List<Edge> edges1 = g1.getEdges(node1.getId());
-		List<Edge> edges2 = g2.getEdges(node2.getId());
-		List<Edge> diff1 =  edgeDiff(edges1, edges2, g1, g2);
-		List<Edge> diff2 = edgeDiff(edges2, edges1, g2, g1);
-
-		double len = (edges1.size() + edges2.size());
-		return (diff1.size()+diff2.size()) / len;
-	}
-
-
-
-	private List<Edge> edgeDiff(List<Edge> edges1 , List<Edge> edges2, Graph fromGraph, Graph toGraph) {
-		//TODO: include getGraph in edge, so it is possible to access graphs from edges?
-		/**
-		 * Returns the difference between two lists of edges. 
-		 * If two edges connect to the same node with just one node between them, then they are considered equal.
-		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
-		 * @param edges1	The first list of edges
-		 * @param edges2	The second list of edges
-		 * @param fromGraph The graph which contains edges1
-		 * @param toGraph	The graph which contains edges2
-		 */
-		List<Edge> edgeDiff = new ArrayList<>();
-		for(Edge e1 : edges1) {
-			if(!contains(e1, edges2, fromGraph, toGraph)) {
-				edgeDiff.add(e1);
-			}
-		}
-
-		return edgeDiff;
-	}
-
-	private boolean contains(Edge e1, List<Edge> edges, Graph fromGraph, Graph toGraph) {
-		for (Edge e2 : edges) {
-			if(e1.equals(e2) || leadsToSameNode(e1, e2, toGraph) || leadsToSameNode(e2, e1, fromGraph)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private boolean leadsToSameNode(Edge e1, Edge e2, Graph g, int recursiveCalls) {
-		/**
-		 * Checks if edge e2 leads to the same node as edge e1
-		 * Example g1 = 1 -> 2 -> 3, g2 = 1 -> 3, where the edge (1,2) in g1 equals the edge (1,3) in g2.
-		 * A limit of 3 recursive calls has been set, to avoid unpredictable runtime. 
-		 * Edges leading to a node many steps ahead are probably not that similar anyway.
-		 */
-		if(recursiveCalls>3) {
-			return false;
+		List<Edge> edges1 = g1.getEdges(node1);
+		List<Edge> edges2 = g2.getEdges(node2);
+		if(edges1.size() == 0 || edges2.size() == 0) {
+			return getMaxEdgeDiff(edges1, edges2);
 		}
 		
-		List<Edge> nextEdges = g.getEdges(e2.getTo());
-		if(nextEdges==null) {
-			return false;
-		}
-		for(Edge next: nextEdges){
-			if(e1.getTo().equals(next.getTo()) && e1.getFrom().equals(e2.getFrom())){
-				return true;
-			}
-			if(leadsToSameNode(e1, next, g, recursiveCalls+1)) {
-				return true;
+		int n = edges1.size();
+		int m = edges2.size();
+		double[][] edgeCostMatrix = new double[n+m][m+n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				edgeCostMatrix[i][j] = getEdgeEditCost(edges1.get(i), edges2.get(j));
 			}
 		}
-		return false;
+
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < m; j++) {
+				edgeCostMatrix[i+n][j] = getEdgeInsertCost(i, j, edges2.get(j));
+			}
+		}
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				edgeCostMatrix[j][i+m] = getEdgeDeleteCost(i, j, edges1.get(i));
+			}
+		}
+
+		int[][] assignment = HungarianAlgorithm.hgAlgorithm(edgeCostMatrix, "min");
+		double sum = 0; 
+		for (int i=0; i<assignment.length; i++){
+			sum += edgeCostMatrix[assignment[i][0]][assignment[i][1]];
+		}
+
+		return sum / ((n+m));
 	}
 	
-	private boolean leadsToSameNode(Edge e1, Edge e2, Graph g) {
-		return leadsToSameNode(e1, e2, g, 0);
+	public double getDeprelWeight(Edge edge) {
+		Double weight = deprelEditWeights.get(edge.getLabel());
+		if(weight == null) {
+			return 1;
+		}
+		return weight;
+	}
+	
+	public double getMaxEdgeDiff(List<Edge> edges1, List<Edge> edges2) {
+		double diff = 0;
+		for (Edge edge : edges2) {
+			diff += getDeprelWeight(edge);
+		}
+		
+		for (Edge edge : edges1) {
+			diff += getDeprelWeight(edge);
+		}
+		
+		return diff;
 	}
 
+	public double getEdgeInsertCost(int i, int j, Edge edge2) {
+		if(i==j) {
+			return getDeprelWeight(edge2) * INSERT_COST;
+		}
+		return Double.MAX_VALUE;
+	}
+
+	public double getEdgeDeleteCost(int i, int j, Edge edge1) {
+		if(i==j) {
+			return getDeprelWeight(edge1) * DELETE_COST;
+		}
+		return Double.MAX_VALUE;
+	}
+
+	public double getEdgeEditCost(Edge edge1, Edge edge2) {
+		if(edge1.equals(edge2)) {
+			return 0;
+		}
+		return 1;
+	}
+
+
 	public void printMatrix() {
+		if(costMatrix == null) {
+			costMatrix = createCostMatrix(g1, g2);
+		}
 		System.out.println("-------------");
 		System.out.println("Cost matrix: ");
 		for (int i = 0; i < costMatrix.length; i++) {
@@ -248,4 +253,6 @@ public class GraphEditDistance {
 			System.out.println();
 		}
 	}
+
+
 }
