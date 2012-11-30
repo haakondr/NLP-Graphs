@@ -83,7 +83,7 @@ public class PlagiarismSearch {
 		return progressPrinter;
 	}
 
-	public synchronized void depParseJobDone(DependencyParserWorker parser, String text) {
+	public void depParseJobDone(DependencyParserWorker parser, String text) {
 		progressPrinter.printProgressbar(text);
 
 		if(progressPrinter.isDone()) {
@@ -123,7 +123,7 @@ public class PlagiarismSearch {
 		}
 	}
 
-	public synchronized void indexBuilderJobDone() {
+	public void indexBuilderJobDone() {
 		progressPrinter.printProgressbar("");
 		if(progressPrinter.isDone()) {
 			for(IndexBuilder thread : indexBuilderThreads) {
@@ -189,7 +189,7 @@ public class PlagiarismSearch {
 		}
 	}
 
-	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
+	public void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
 			for(PlagiarismWorker plagWorker : plagThreads) {
