@@ -127,12 +127,16 @@ public class DatabaseService {
 		return files;
 	}
 	
-	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue) {
+	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue, Set<String> filesDone) {
 		DBCollection coll = db.getCollection(candidateCollection);
 		DBCursor cursor = coll.find();
 		while(cursor.hasNext()) {
 			DBObject temp = cursor.next();
-			PlagiarismJob job = new PlagiarismJob(temp.get("id").toString());
+			String filename = temp.get("id").toString();
+			if(filesDone.contains(filename)) {
+				continue;
+			}
+			PlagiarismJob job = new PlagiarismJob(filename);
 			BasicDBList passages = (BasicDBList)temp.get("passages");
 
 			for (Object obj : passages) {

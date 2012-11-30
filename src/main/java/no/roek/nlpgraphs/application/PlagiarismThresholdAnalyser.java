@@ -39,7 +39,7 @@ public class PlagiarismThresholdAnalyser {
 		}
 		
 		System.out.println("finding optimal threshold --------------------------");
-		double threshold = getOptimalThreshold(plagiarised, notPlagiarised, 20);
+		double threshold = getOptimalThreshold(plagiarised, notPlagiarised, 5);
 		double precision = getScore(plagiarised, notPlagiarised, threshold);
 		System.out.println("Optimal threshold = "+threshold+". score = "+precision);
 	}
@@ -49,7 +49,7 @@ public class PlagiarismThresholdAnalyser {
 	}
 	
 	public static double getOptimalThreshold(List<Double> plagiarised, List<Double> notPlagiarised, double from, double to, int recursiveCalls, int recursion) {
-		double i = (to-from) / 10;
+		double i = (to-from) / 100;
 		System.out.println("Checking between"+from+" and "+to);
 		double bestScore = 0;
 		double bestThreshold = 0;
@@ -66,7 +66,7 @@ public class PlagiarismThresholdAnalyser {
 		if((recursion) == 1) {
 			return bestThreshold;
 		}else {
-			return getOptimalThreshold(plagiarised, notPlagiarised, (bestThreshold-i), (bestThreshold+i), recursiveCalls, recursion-1);
+			return getOptimalThreshold(plagiarised, notPlagiarised, (bestThreshold-i*10), (bestThreshold+i*10), recursiveCalls, recursion-1);
 		}
 	}
 	

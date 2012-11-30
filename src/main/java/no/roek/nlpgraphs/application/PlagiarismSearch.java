@@ -167,7 +167,9 @@ public class PlagiarismSearch {
 	public void startPlagiarismSearchWithoutCandret() {
 		System.out.println("starting plagiarism search with candidate retrieval results from the database..");
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
-		db.retrieveAllPassages(plagQueue);
+		String dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
+		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir);
+		db.retrieveAllPassages(plagQueue, filesDone);
 
 		progressPrinter = new ProgressPrinter(plagQueue.size());
 		startPlagiarismSearch(plagQueue);
