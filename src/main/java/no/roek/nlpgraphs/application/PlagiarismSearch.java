@@ -139,6 +139,7 @@ public class PlagiarismSearch {
 	}
 
 	public void startPlagiarismSearch() {
+		//TODO: fix new resultsdir
 		System.out.println("starting plagiarism search..");
 		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 
@@ -168,8 +169,10 @@ public class PlagiarismSearch {
 		System.out.println("starting plagiarism search with candidate retrieval results from the database..");
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
 		String dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
-		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir);
-		System.out.println(filesDone.size()+" already done.");
+		new File(cs.getResultsDir()+dir).mkdirs();
+		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir, "txt");
+		
+		System.out.println(filesDone.size()+" files already done.");
 		db.retrieveAllPassages(plagQueue, filesDone);
 
 		progressPrinter = new ProgressPrinter(plagQueue.size());
