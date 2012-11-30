@@ -84,6 +84,8 @@ public class PlagiarismFinder {
 
 	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
 		int i = ascending ? 1 : -1;
+		System.out.println(ref.getSourceReference());
+		System.out.println(ref.getFilename());
 		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
 		if(adjRef != null) {
 			ref.setOffset(adjRef.getOffset());
