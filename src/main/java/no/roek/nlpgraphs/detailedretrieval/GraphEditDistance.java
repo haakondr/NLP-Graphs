@@ -86,7 +86,6 @@ public class GraphEditDistance {
 		 */
 		int n = g1.getNodes().size();
 		int m = g2.getNodes().size();
-
 		double[][] costMatrix = new double[n+m][n+m];
 
 		for (int i = 0; i < n; i++) {
