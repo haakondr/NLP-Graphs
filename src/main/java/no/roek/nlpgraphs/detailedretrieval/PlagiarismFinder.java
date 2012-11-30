@@ -62,30 +62,27 @@ public class PlagiarismFinder {
 		/**
 		 * Checks the given sentence pair for plagiarism with the graph edit distance algorithm
 		 */
-		Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
-		Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
-		if(train==null || test == null) {
-			return null;
-		}
-
-		if(train.getSize() > 100 || test.getSize() > 100) {
-			return null;
-		}
-
-
-		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
-		double dist = ged.getNormalizedDistance();
-		if(dist < plagiarismThreshold) {
-			return XMLUtils.getPlagiarismReference(train, test, true);
-		}else {
+		try {
+			Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
+			Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
+			if(train.getSize() > 100 || test.getSize() > 100) {
+				return null;
+			}
+			
+			GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
+			double dist = ged.getNormalizedDistance();
+			if(dist < plagiarismThreshold) {
+				return XMLUtils.getPlagiarismReference(train, test, true);
+			}else {
+				return null;
+			}
+		}catch(NullPointerException e) {
 			return null;
 		}
 	}
 
 	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
 		int i = ascending ? 1 : -1;
-		System.out.println(ref.getSourceReference()+ " "+sourceSentence+i);
-		System.out.println(ref.getFilename()+" "+suspiciousSentence+i);
 		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
 		if(adjRef != null) {
 			ref.setOffset(adjRef.getOffset());
