@@ -73,11 +73,9 @@ public class PlagiarismFinder {
 			return null;
 		}
 		
-		System.out.println("finding plagiarism for "+trainFile+" - "+testFile+". sourceGraph size: "+train.getSize()+" suspicious graph size: "+test.getSize());
 
 		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
 		double dist = ged.getNormalizedDistance();
-		System.out.println("Done GED for "+trainFile+" - "+testFile+". distance = "+dist);
 		if(dist < plagiarismThreshold) {
 			return XMLUtils.getPlagiarismReference(train, test, true);
 		}else {
