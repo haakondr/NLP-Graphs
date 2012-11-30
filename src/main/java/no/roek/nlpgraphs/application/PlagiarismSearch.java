@@ -169,6 +169,7 @@ public class PlagiarismSearch {
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
 		String dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
 		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir);
+		System.out.println(filesDone.size()+" already done.");
 		db.retrieveAllPassages(plagQueue, filesDone);
 
 		progressPrinter = new ProgressPrinter(plagQueue.size());
