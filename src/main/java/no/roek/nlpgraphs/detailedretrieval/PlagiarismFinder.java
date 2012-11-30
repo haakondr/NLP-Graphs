@@ -48,8 +48,8 @@ public class PlagiarismFinder {
 		for(PlagiarismPassage passage : job.getTextPairs()) {
 			PlagiarismReference ref = getPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
 			if(ref != null) {
-				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), false);
-				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), true);
+//				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), false);
+//				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), true);
 				plagReferences.add(ref);
 			}
 		}
