@@ -45,7 +45,6 @@ public class PlagiarismFinder {
 	public List<PlagiarismReference> findPlagiarism(PlagiarismJob job) {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
-		System.out.println("Finding plagiarism for "+job.getFilename());
 		for(PlagiarismPassage passage : job.getTextPairs()) {
 			PlagiarismReference ref = getPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
 			if(ref != null) {
