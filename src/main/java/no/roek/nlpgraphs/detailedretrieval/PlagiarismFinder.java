@@ -53,7 +53,7 @@ public class PlagiarismFinder {
 				plagReferences.add(ref);
 			}
 		}
-		
+
 
 		return plagReferences;
 	}
@@ -67,11 +67,11 @@ public class PlagiarismFinder {
 		if(train==null || test == null) {
 			return null;
 		}
-		
+
 		if(train.getSize() > 100 || test.getSize() > 100) {
 			return null;
 		}
-		
+
 
 		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
 		double dist = ged.getNormalizedDistance();
@@ -85,10 +85,13 @@ public class PlagiarismFinder {
 	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
 		int i = ascending ? 1 : -1;
 		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
-		ref.setOffset(adjRef.getOffset());
-		ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
-		ref.setSourceOffset(adjRef.getSourceOffset());
-		ref.setSourceLength(getNewLength(ref.getSourceOffset(), ref.getSourceLength(), adjRef.getSourceOffset(), i));
+		if(adjRef != null) {
+			ref.setOffset(adjRef.getOffset());
+			ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
+			ref.setSourceOffset(adjRef.getSourceOffset());
+			ref.setSourceLength(getNewLength(ref.getSourceOffset(), ref.getSourceLength(), adjRef.getSourceOffset(), i));
+			findAdjacentPlagiarism(ref, sourceSentence+i*2, suspiciousSentence+i*2, ascending);
+		}
 	}
 
 	public String getNewLength(String offsetString, String lengthString, String newOffsetString, int ascending) {
