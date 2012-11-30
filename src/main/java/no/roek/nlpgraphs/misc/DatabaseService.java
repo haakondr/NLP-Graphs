@@ -26,11 +26,12 @@ import com.mongodb.WriteConcern;
 public class DatabaseService {
 
 	private DB db;
-	private final String sourceCollection = "source-sentences";
-	private final String suspiciousCollection = "suspicious-sentences";
+	private final String sourceCollectionName = "source-sentences";
+	private final String suspiciousCollectionName = "suspicious-sentences";
 	private final String suspiciousDocsCollection = "suspicious-documents";
 	private final String sourceDocsCollection = "source-documents";
 	private final String candidateCollection = "candidate_passages";
+	private DBCollection suspiciousColl, sourceColl;
 	
 	public DatabaseService() {
 		try {
@@ -38,8 +39,10 @@ public class DatabaseService {
 			m.setWriteConcern(WriteConcern.NORMAL);
 			db = m.getDB("nlp-graphs");
 			
-			addIndex(sourceCollection);
-			addIndex(suspiciousCollection);
+			suspiciousColl = db.getCollection(suspiciousCollectionName);
+			sourceColl = db.getCollection(sourceCollectionName);
+			addIndex(sourceCollectionName);
+			addIndex(suspiciousCollectionName);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("Database not found");
@@ -48,8 +51,7 @@ public class DatabaseService {
 	}
 
 	public void addSentence(BasicDBObject dbSentence) {
-		String collName = getSentenceColl(dbSentence.getString("filename"));
-		DBCollection coll = db.getCollection(collName);
+		DBCollection coll = getSentenceColl(dbSentence.getString("filename"));
 		coll.insert(dbSentence);
 	}
 	
@@ -74,7 +76,7 @@ public class DatabaseService {
 	}
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
-		DBCollection coll = db.getCollection(getSentenceColl(filename));
+		DBCollection coll = getSentenceColl(filename);
 		BasicDBObject query = new BasicDBObject();
 		query.put("id", filename+"-"+sentenceNumber);
 
@@ -82,11 +84,11 @@ public class DatabaseService {
 		return (BasicDBObject)coll.findOne(query);
 	}
 	
-	private String getSentenceColl(String filename) {
+	private DBCollection getSentenceColl(String filename) {
 		if(filename.startsWith("source-document")) {
-			return sourceCollection;
+			return sourceColl;
 		}else if(filename.startsWith("suspicious-document")) {
-			return suspiciousCollection;
+			return suspiciousColl;
 		}else {
 			return null;
 		}
