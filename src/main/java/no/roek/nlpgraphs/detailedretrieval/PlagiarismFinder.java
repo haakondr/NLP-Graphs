@@ -69,6 +69,10 @@ public class PlagiarismFinder {
 			return null;
 		}
 		
+		if(train.getSize() > 100 || test.getSize() > 100) {
+			return null;
+		}
+		
 		System.out.println("finding plagiarism for "+trainFile+" - "+testFile+". sourceGraph size: "+train.getSize()+" suspicious graph size: "+test.getSize());
 
 		GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
