@@ -54,7 +54,7 @@ public class PlagiarismFinder {
 			}
 		}
 
-		return mergePassages(plagReferences);
+		return plagReferences;
 	}
 
 	public PlagiarismReference getPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
