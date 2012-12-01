@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class PlagiarismFinderTest {
+public class PassageMergerTest {
 
 	private PlagiarismReference ref1, ref2, ref3;
 	

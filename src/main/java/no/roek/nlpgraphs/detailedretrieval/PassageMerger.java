@@ -9,25 +9,26 @@ public class PassageMerger {
 		List<PlagiarismReference> merged = new ArrayList<>();
 		
 		for (PlagiarismReference ref : references) {
-			addRef(ref, merged);
+			PlagiarismReference temp = addRef(ref, merged);
+			if(temp!=null) {
+				merged.remove(temp);
+				merged.add(mergePassage(ref, temp));
+			}else {
+				merged.add(ref);
+			}
 		}
 		
 		return merged;
 	}
 	
-	public static void addRef(PlagiarismReference ref, List<PlagiarismReference> merged) {
-		boolean added = false;
+	public static PlagiarismReference addRef(PlagiarismReference ref, List<PlagiarismReference> merged) {
 		for (PlagiarismReference ref2 : merged) {
 			if(shouldMergePassages(ref, ref2)) {
-				merged.remove(ref2);
-				merged.add(mergePassage(ref, ref2));
-				added = true;
+				return ref2;
 			}
 		}
 		
-		if(!added) {
-			merged.add(ref);
-		}
+		return null;
 	}
 	
 	public static PlagiarismReference mergePassage(PlagiarismReference ref, PlagiarismReference other) {
