@@ -54,8 +54,7 @@ public class PlagiarismFinder {
 			}
 		}
 
-
-		return plagReferences;
+		return mergePassages(plagReferences);
 	}
 
 	public PlagiarismReference getPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
@@ -80,42 +79,128 @@ public class PlagiarismFinder {
 			return null;
 		}
 	}
+	
+	public List<PlagiarismReference> mergePassages(List<PlagiarismReference> references) {
+		List<PlagiarismReference> merged = new ArrayList<>();
+		
+		for (PlagiarismReference ref : references) {
+			addRef(ref, merged);
+		}
+		
+		return merged;
+	}
+	
+	public void addRef(PlagiarismReference ref, List<PlagiarismReference> merged) {
+		boolean added = false;
+		for (PlagiarismReference ref2 : merged) {
+			if(shouldMergePassages(ref, ref2)) {
+				merged.remove(ref2);
+				merged.add(mergePassage(ref, ref2));
+				added = true;
+			}
+		}
+		
+		if(!added) {
+			merged.add(ref);
+		}
+	}
+	
+	public PlagiarismReference mergePassage(PlagiarismReference ref, PlagiarismReference other) {
+		if(ref.getOffsetInt() == other.getOffsetInt()) {
+			int len = Math.max(ref.getLengthInt(), other.getLengthInt());
+			ref.setLength(len);
+		}
+		if(ref.getSourceOffsetInt() == other.getSourceOffsetInt()) {
+			int len = Math.max(ref.getSourceLengthInt(), other.getSourceLengthInt());
+			ref.setSourceLength(len);
+		}
+		
+		if(ref.getOffsetInt() < other.getOffsetInt()) {
+			ref.setLength(other.getOffsetInt() + other.getLengthInt() - ref.getOffsetInt());
+		}else {
+			ref.setLength(ref.getOffsetInt() + ref.getLengthInt() - other.getOffsetInt());
+			ref.setOffset(other.getOffsetInt());
+		}
 
-	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
-		int i = ascending ? 1 : -1;
-		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
-		if(adjRef != null) {
-			ref.setOffset(adjRef.getOffset());
-			ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
-			ref.setSourceOffset(adjRef.getSourceOffset());
-			ref.setSourceLength(getNewLength(ref.getSourceOffset(), ref.getSourceLength(), adjRef.getSourceOffset(), i));
-			findAdjacentPlagiarism(ref, sourceSentence+i*2, suspiciousSentence+i*2, ascending);
+		if(ref.getSourceOffsetInt() < other.getSourceOffsetInt()) {
+			ref.setSourceLength(other.getSourceOffsetInt() + other.getSourceLengthInt() - ref.getSourceOffsetInt());
+		}else {
+			ref.setSourceLength(ref.getSourceOffsetInt() + ref.getSourceLengthInt() - other.getSourceOffsetInt());
+			ref.setSourceOffset(other.getSourceOffsetInt());
+		}
+		
+		return ref;
+	}
+	
+	
+	public  boolean shouldMergePassages(PlagiarismReference ref1, PlagiarismReference ref2) {
+		if(!equalFilenames(ref1, ref2)) {
+			return false;
+		}
+		int suspiciousDiff = getPassageDiff(ref1.getOffsetInt(), ref1.getEndInt(), ref2.getOffsetInt(), ref2.getEndInt());
+		int sourceDiff = getPassageDiff(ref1.getSourceOffsetInt(), ref1.getSourceEndInt(), ref2.getSourceOffsetInt(), ref2.getSourceEndInt());
+		return (suspiciousDiff < 100) && (sourceDiff < 100);
+	}
+	
+	private boolean equalFilenames(PlagiarismReference ref1, PlagiarismReference ref2) {
+		return ref1.getFilename().equals(ref2.getFilename()) && ref1.getSourceReference().equals(ref2.getSourceReference());
+	}
+	
+	private int getPassageDiff(int offset1, int end1, int offset2, int end2) {
+		if(isOverlap(offset1, end1, offset2, end2)) {
+			return 0;
+		}
+		int dist1 = Math.abs(end1 - offset2);
+		int dist2 = Math.abs(end2 - offset1);
+		
+		return Math.min(dist1, dist2);
+	}
+
+	private boolean isOverlap(int offset1, int end1, int offset2, int end2) {
+		if(offset1 <= offset2 && offset2 <= end1) {
+			return true;
+		}else if(offset2 <= offset1 && offset1 <= end2) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 
-	public String getNewLength(String offsetString, String lengthString, String newOffsetString, int ascending) {
-		int offset = Integer.parseInt(offsetString);
-		int len = Integer.parseInt(lengthString);
-		int newOffset = Integer.parseInt(newOffsetString);
+//	public void findAdjacentPlagiarism(PlagiarismReference ref, int sourceSentence, int suspiciousSentence, boolean ascending) {
+//		int i = ascending ? 1 : -1;
+//		PlagiarismReference adjRef = getPlagiarism(ref.getSourceReference(), sourceSentence+i, ref.getFilename(), suspiciousSentence+i);
+//		if(adjRef != null) {
+//			ref.setOffset(adjRef.getOffset());
+//			ref.setLength(getNewLength(ref.getOffset(), ref.getLength(), adjRef.getOffset(), i));
+//			ref.setSourceOffset(adjRef.getSourceOffset());
+//			ref.setSourceLength(getNewLength(ref.getSourceOffset(), ref.getSourceLength(), adjRef.getSourceOffset(), i));
+//			findAdjacentPlagiarism(ref, sourceSentence+i*2, suspiciousSentence+i*2, ascending);
+//		}
+//	}
 
-		int newLen =  len + ((offset - newOffset) * ascending);
-		return Integer.toString(newLen);
-	}
+//	public String getNewLength(String offsetString, String lengthString, String newOffsetString, int ascending) {
+//		int offset = Integer.parseInt(offsetString);
+//		int len = Integer.parseInt(lengthString);
+//		int newOffset = Integer.parseInt(newOffsetString);
+//
+//		int newLen =  len + ((offset - newOffset) * ascending);
+//		return Integer.toString(newLen);
+//	}
 
 
-	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
-		/**
-		 * Only returns the plagiarism references from candidate retrieval.
-		 * Use this for measuring the candidate retrieval phase.
-		 */
-		List<PlagiarismReference> plagReferences = new ArrayList<>();
-		for (PlagiarismPassage pair : job.getTextPairs()) {
-			Graph suspicious = GraphUtils.getGraph(db.getSentence(pair.getTestFile(), pair.getTestSentence()));
-			Graph source = GraphUtils.getGraph(db.getSentence(pair.getTrainFile(), pair.getTrainSentence()));
-
-			plagReferences.add(XMLUtils.getPlagiarismReference(source, suspicious, false));
-		}
-
-		return plagReferences;
-	}
+//	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
+//		/**
+//		 * Only returns the plagiarism references from candidate retrieval.
+//		 * Use this for measuring the candidate retrieval phase.
+//		 */
+//		List<PlagiarismReference> plagReferences = new ArrayList<>();
+//		for (PlagiarismPassage pair : job.getTextPairs()) {
+//			Graph suspicious = GraphUtils.getGraph(db.getSentence(pair.getTestFile(), pair.getTestSentence()));
+//			Graph source = GraphUtils.getGraph(db.getSentence(pair.getTrainFile(), pair.getTrainSentence()));
+//
+//			plagReferences.add(XMLUtils.getPlagiarismReference(source, suspicious, false));
+//		}
+//
+//		return plagReferences;
+//	}
 }

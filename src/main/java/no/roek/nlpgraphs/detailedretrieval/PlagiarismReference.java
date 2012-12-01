@@ -61,19 +61,35 @@ public class PlagiarismReference {
 	public String getOffset() {
 		return offset;
 	}
+	
+	public int getOffsetInt() {
+		return Integer.parseInt(offset);
+	}
 
 	public String getLength() {
 		return length;
 	}
+	
+	public int getLengthInt() {
+		return Integer.parseInt(length);
+	}
 
 	public String getSourceOffset() {
 		return sourceOffset;
+	}
+	
+	public int getSourceOffsetInt() {
+		return Integer.parseInt(sourceOffset);
 	}
 
 	public String getSourceLength() {
 		return sourceLength;
 	}
 
+	public int getSourceLengthInt() {
+		return Integer.parseInt(sourceLength);
+	}
+	
 	public double getSimilarity() {
 		return similarity;
 	}
@@ -94,15 +110,43 @@ public class PlagiarismReference {
 		this.offset = offset;
 	}
 	
+	public void setOffset(int offset) {
+		this.offset = Integer.toString(offset);
+	}
+	
 	public void setLength(String length) {
 		this.length = length;
+	}
+	
+	public void setLength(int length) {
+		this.length = Integer.toString(length);
 	}
 	
 	public void setSourceOffset(String offset) {
 		this.sourceOffset = offset;
 	}
 	
+	public void setSourceOffset(int offset) {
+		this.sourceOffset = Integer.toString(offset);
+	}
+	
 	public void setSourceLength(String length) {
 		this.sourceLength = length;
+	}
+	
+	public void setSourceLength(int length) {
+		this.sourceLength = Integer.toString(length);
+	}
+	
+	public boolean equalFiles(PlagiarismReference other) {
+		return sourceReference.equals(other.getSourceReference()) && filename.equals(other.getFilename());
+	}
+	
+	public int getEndInt() {
+		return getOffsetInt() + getLengthInt();
+	}
+	
+	public int getSourceEndInt() {
+		return getSourceOffsetInt() + getSourceLengthInt();
 	}
 }
