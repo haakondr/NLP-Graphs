@@ -37,7 +37,7 @@ public class DatabaseService {
 		try {
 			Mongo m = new Mongo("localhost");
 			m.setWriteConcern(WriteConcern.NORMAL);
-			db = m.getDB("nlp-graphs");
+			db = m.getDB("pan10");
 			
 			suspiciousColl = db.getCollection(suspiciousCollectionName);
 			sourceColl = db.getCollection(sourceCollectionName);
