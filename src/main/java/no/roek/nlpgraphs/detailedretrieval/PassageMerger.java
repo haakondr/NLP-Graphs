@@ -9,7 +9,7 @@ public class PassageMerger {
 		List<PlagiarismReference> merged = new ArrayList<>();
 		
 		for (PlagiarismReference ref : references) {
-			PlagiarismReference temp = addRef(ref, merged);
+			PlagiarismReference temp = getAdjacentPassage(ref, merged);
 			if(temp!=null) {
 				merged.remove(temp);
 				merged.add(mergePassage(ref, temp));
@@ -21,7 +21,7 @@ public class PassageMerger {
 		return merged;
 	}
 	
-	public static PlagiarismReference addRef(PlagiarismReference ref, List<PlagiarismReference> merged) {
+	public static PlagiarismReference getAdjacentPassage(PlagiarismReference ref, List<PlagiarismReference> merged) {
 		for (PlagiarismReference ref2 : merged) {
 			if(shouldMergePassages(ref, ref2)) {
 				return ref2;
@@ -65,7 +65,7 @@ public class PassageMerger {
 		}
 		int suspiciousDiff = getPassageDiff(ref1.getOffsetInt(), ref1.getEndInt(), ref2.getOffsetInt(), ref2.getEndInt());
 		int sourceDiff = getPassageDiff(ref1.getSourceOffsetInt(), ref1.getSourceEndInt(), ref2.getSourceOffsetInt(), ref2.getSourceEndInt());
-		return (suspiciousDiff < 100) && (sourceDiff < 100);
+		return (suspiciousDiff < 10) && (sourceDiff < 10);
 	}
 	
 	private static  boolean equalFilenames(PlagiarismReference ref1, PlagiarismReference ref2) {
