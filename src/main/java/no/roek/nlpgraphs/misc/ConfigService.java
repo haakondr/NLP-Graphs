@@ -111,6 +111,6 @@ public class ConfigService {
 	}
 	
 	public int getRetrievalCount() {
-		return Integer.parseInt(configFile.getProperty("CANDRET_COUNT"));
+		return Integer.parseInt(configFile.getProperty("RETRIEVAL_COUNT"));
 	}
 }
