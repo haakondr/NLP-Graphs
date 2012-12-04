@@ -28,13 +28,16 @@ public class IndexBuilder extends Thread {
 		while(running) {
 			try {
 				String sentenceId = documentQueue.take();
-				System.out.println(sentenceId);
 				if(sentenceId.equals("die") || sentenceId == null) {
 					running = false;
 				}else {
 
+					try{
 					crs.addSentence(db.getSentence(sentenceId));
 					concurrencyService.indexBuilderJobDone();
+					}catch(NullPointerException e){
+						System.out.println(sentenceId);
+					}
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
