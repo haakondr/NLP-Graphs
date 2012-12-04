@@ -67,7 +67,9 @@ public class DatabaseService {
 	
 	public void addCandidatePassage(BasicDBList passages) {
 		DBCollection coll = db.getCollection(candidateCollection);
-		coll.insert(passages);
+		for (Object object : passages) {
+			coll.insert((DBObject)object);
+		}
 	}
 	
 	

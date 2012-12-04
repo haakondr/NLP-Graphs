@@ -38,7 +38,7 @@ public class SentenceRetrievalWorker extends Thread {
 					System.out.println("No files in queue. "+Thread.currentThread().getName()+" stopping..");
 					running = false;
 				}else {
-					PlagiarismJob job = getParseJob(file);
+					PlagiarismJob job = getJob(file);
 					db.addCandidatePassage(job.toDBObject());
 					searcher.candretJobDone("");
 				}
@@ -49,7 +49,7 @@ public class SentenceRetrievalWorker extends Thread {
 		}
 	}
 
-	public PlagiarismJob getParseJob(String file) {
+	public PlagiarismJob getJob(String file) {
 		PlagiarismJob plagJob = new PlagiarismJob(Paths.get(file));
 		try {
 			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), retrievalCount)) {
