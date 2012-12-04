@@ -2,6 +2,7 @@ package no.roek.nlpgraphs.candretrieval;
 
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.DatabaseService;
@@ -27,7 +28,7 @@ public class IndexBuilder extends Thread {
 		running = true;
 		while(running) {
 			try {
-				String sentenceId = documentQueue.take();
+				String sentenceId = documentQueue.poll(500, TimeUnit.SECONDS);
 				if(sentenceId.equals("die") || sentenceId == null) {
 					running = false;
 				}else {
