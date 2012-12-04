@@ -29,9 +29,10 @@ public class IndexBuilder extends Thread {
 		while(running) {
 			try {
 				String sentenceId = documentQueue.poll(100, TimeUnit.SECONDS);
-				if(sentenceId.equals("die") || sentenceId == null) {
-					running = false;
-					concurrencyService.indexBuilderDone();
+				if(sentenceId == null) {
+					stopThread();
+				}else if(sentenceId.equals("die")) {
+					stopThread();
 				}else {
 					crs.addSentence(db.getSentence(sentenceId));
 				}
@@ -40,6 +41,11 @@ public class IndexBuilder extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void stopThread() {
+		running = false;
+		concurrencyService.indexBuilderDone();
 	}
 
 	public void kill() {
