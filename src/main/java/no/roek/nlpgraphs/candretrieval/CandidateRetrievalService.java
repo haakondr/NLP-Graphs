@@ -79,6 +79,7 @@ public class CandidateRetrievalService {
 
 	public void addSentence(BasicDBObject dbSentence) {
 		String filename = dbSentence.getString("filename");
+		System.out.println(filename);
 		String sentenceNumber = dbSentence.getString("sentenceNumber");
 		BasicDBList dbTokens = (BasicDBList) dbSentence.get("tokens");
 		StringBuilder sb = new StringBuilder();

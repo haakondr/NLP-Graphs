@@ -31,20 +31,15 @@ public class IndexBuilder extends Thread {
 				if(sentenceId.equals("die") || sentenceId == null) {
 					running = false;
 				}else {
-
-					try{
 					crs.addSentence(db.getSentence(sentenceId));
 					concurrencyService.indexBuilderJobDone();
-					}catch(NullPointerException e){
-						System.out.println(sentenceId);
-					}
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public void kill() {
 		try {
 			documentQueue.put("die");
