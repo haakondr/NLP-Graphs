@@ -9,12 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
+import no.roek.nlpgraphs.document.WordToken;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -86,11 +88,32 @@ public class DatabaseService {
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
 		DBCollection coll = getSentenceColl(filename);
-		BasicDBObject query = new BasicDBObject();
-		query.put("id", filename+"-"+sentenceNumber);
+		BasicDBObject query = new BasicDBObject("id", filename+"-"+sentenceNumber);
 
 		//TODO: test if only one is returned
 		return (BasicDBObject)coll.findOne(query);
+	}
+	
+	public List<NLPSentence> getAllSentences(String filename) {
+		DBCollection coll = getSentenceColl(filename);
+		Pattern p = Pattern.compile(filename+"-*");
+		BasicDBObject query = new BasicDBObject("id", p);
+		
+		List<NLPSentence> sentences = new ArrayList<>();
+		DBCursor cursor = coll.find(query);
+		while(cursor.hasNext()) {
+			BasicDBObject obj = (BasicDBObject) cursor.next();
+			List<WordToken> words = new ArrayList<>();
+			BasicDBList dbTokens = (BasicDBList) obj.get("tokens");
+			for (Object object : dbTokens) {
+				BasicDBObject dbToken = (BasicDBObject) object;
+				words.add(new WordToken(dbToken.getString("word"), dbToken.getString("lemma"), dbToken.getString("pos")));
+			}
+			sentences.add(new NLPSentence(obj.getString("filename"), obj.getInt("sentenceNumber"), obj.getInt("offset"), obj.getInt("length"), words));
+		}
+		cursor.close();
+		
+		return sentences;
 	}
 	
 	private DBCollection getSentenceColl(String filename) {

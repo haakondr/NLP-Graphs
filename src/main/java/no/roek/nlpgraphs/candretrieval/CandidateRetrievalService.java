@@ -12,6 +12,7 @@ import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
@@ -145,7 +146,7 @@ public class CandidateRetrievalService {
 //		return doc;
 //	}
 
-	public List<PlagiarismPassage> getSimilarSentences(String filename, int retrievalCount) throws CorruptIndexException, IOException {
+	public List<PlagiarismPassage> getSimilarSentences(String filename, int retrievalCount, DatabaseService db) throws CorruptIndexException, IOException {
 		/**
 		 * Retrieves the n most similar sentences for every sentence in a file.
 		 */
@@ -161,18 +162,19 @@ public class CandidateRetrievalService {
 
 		List<PlagiarismPassage> simDocs = new LinkedList<>();
 		int n = 0;
-		for(NLPSentence testSentence : SentenceUtils.getSentencesFromParsedFile(filename)) {
-			if(testSentence.getLength()<80) {
+		
+		for(NLPSentence sentence : db.getAllSentences(filename)) {
+			if(sentence.getLength()<80) {
 				continue;
 			}
-			StringReader sr = new StringReader(testSentence.getLemmas());
+			StringReader sr = new StringReader(sentence.getLemmas());
 			Query query = mlt.like(sr, "LEMMAS");
 			ScoreDoc[] hits = is.search(query, retrievalCount).scoreDocs;
 			for (ScoreDoc scoreDoc : hits) {
 				int i = getIndexToInsert(scoreDoc, simDocs, n, retrievalCount);
 				if(i != -1) {
 					Document trainDoc = is.doc(scoreDoc.doc);
-					PlagiarismPassage sp = new PlagiarismPassage(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), testSentence.getFilename(), testSentence.getNumber(), scoreDoc.score);
+					PlagiarismPassage sp = new PlagiarismPassage(trainDoc.get("FILENAME"), Integer.parseInt(trainDoc.get("SENTENCE_NUMBER")), sentence.getFilename(), sentence.getNumber(), scoreDoc.score);
 					simDocs.add(i, sp);
 
 					n = simDocs.size();
