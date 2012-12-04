@@ -104,7 +104,7 @@ public class PlagiarismSearch {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for(String sentenceId : db.getAll("source-sentences", "id")) {
+		for(String sentenceId : db.getAllSourceSentences()) {
 			try {
 				documentQueue.put(sentenceId);
 			} catch (InterruptedException e) {

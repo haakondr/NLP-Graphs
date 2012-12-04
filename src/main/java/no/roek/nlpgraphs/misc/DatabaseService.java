@@ -136,6 +136,10 @@ public class DatabaseService {
 		return files;
 	}
 	
+	public Set<String> getAllSourceSentences() {
+		return getAll(sourceCollectionName, "id");
+	}
+	
 	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue, Set<String> filesDone) {
 		DBCollection coll = db.getCollection(candidateCollection);
 		DBCursor cursor = coll.find();
