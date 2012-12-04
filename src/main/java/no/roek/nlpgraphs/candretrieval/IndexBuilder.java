@@ -29,9 +29,7 @@ public class IndexBuilder extends Thread {
 		while(running) {
 			try {
 				String sentenceId = documentQueue.poll(100, TimeUnit.SECONDS);
-				if(sentenceId == null) {
-					stopThread();
-				}else if(sentenceId.equals("die")) {
+				if((sentenceId == null) || sentenceId.equals("die")) {
 					stopThread();
 				}else {
 					crs.addSentence(db.getSentence(sentenceId));
