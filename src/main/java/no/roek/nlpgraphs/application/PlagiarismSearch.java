@@ -99,11 +99,6 @@ public class PlagiarismSearch {
 		}
 	}
 
-//	public boolean shouldCreateIndex() {
-//		File indexDir = new File("lucene/"+trainDir);
-//		return !indexDir.exists();
-//	}
-
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
 		
@@ -163,7 +158,7 @@ public class PlagiarismSearch {
 		
 		candretThreads = new SentenceRetrievalWorker[cs.getSentenceRetrievalThreads()];
 		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
-			candretThreads[i] =  new SentenceRetrievalWorker(crs, retrievalQueue, db, this);
+			candretThreads[i] =  new SentenceRetrievalWorker(crs, cs.getRetrievalCount(), retrievalQueue, db, this);
 			candretThreads[i].setName("SentenceRetrieval-Thread-"+i);
 			candretThreads[i].start();
 			

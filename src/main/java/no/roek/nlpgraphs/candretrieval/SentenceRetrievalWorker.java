@@ -18,12 +18,14 @@ public class SentenceRetrievalWorker extends Thread {
 	private CandidateRetrievalService crs;
 	private DatabaseService db;
 	private PlagiarismSearch searcher;
+	private int retrievalCount;
 
-	public SentenceRetrievalWorker(CandidateRetrievalService crs, BlockingQueue<String> retrievalQueue, DatabaseService db, PlagiarismSearch searcher) {
+	public SentenceRetrievalWorker(CandidateRetrievalService crs, int retrievalCount, BlockingQueue<String> retrievalQueue, DatabaseService db, PlagiarismSearch searcher) {
 		this.crs = crs;
 		this.retrievalQueue = retrievalQueue;
 		this.db = db;
 		this.searcher = searcher;
+		this.retrievalCount = retrievalCount;
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class SentenceRetrievalWorker extends Thread {
 	public PlagiarismJob getParseJob(String file) {
 		PlagiarismJob plagJob = new PlagiarismJob(Paths.get(file));
 		try {
-			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), 150)) {
+			for(PlagiarismPassage sp : crs.getSimilarSentences(file.toString(), retrievalCount)) {
 				plagJob.addTextPair(sp);
 			}
 		} catch ( IOException e) {

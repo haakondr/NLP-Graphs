@@ -109,4 +109,8 @@ public class ConfigService {
 	public String getDeprelInsdelFile() {
 		return configFile.getProperty("DEPREL_INSDEL_FILE");
 	}
+	
+	public int getRetrievalCount() {
+		return Integer.parseInt(configFile.getProperty("CANDRET_COUNT"));
+	}
 }
