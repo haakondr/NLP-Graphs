@@ -145,7 +145,7 @@ public class PlagiarismSearch {
 		System.out.println("Starting candidate retrieval phase. The results will be stored to the database");
 		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 
-		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
+		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious_documents"), cs.getResultsDir(), "xml")) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
