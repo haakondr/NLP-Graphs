@@ -125,6 +125,17 @@ public class PlagiarismSearch {
 		cursor.close();
 	}
 
+	public void indexBuilderDone() {
+		for(IndexBuilder thread : indexBuilderThreads) {
+			thread.kill();
+		}
+
+		crs.closeWriter();
+
+		System.out.println("Index building done.. ");
+		App.main(null);
+	}
+	
 	public void indexBuilderJobDone() {
 		progressPrinter.printProgressbar("");
 		if(progressPrinter.isDone()) {
