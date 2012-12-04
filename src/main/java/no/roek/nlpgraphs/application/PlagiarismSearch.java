@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.mongodb.DBCursor;
+
 import no.roek.nlpgraphs.candretrieval.CandidateRetrievalService;
 import no.roek.nlpgraphs.candretrieval.IndexBuilder;
 import no.roek.nlpgraphs.candretrieval.SentenceRetrievalWorker;
@@ -104,17 +106,10 @@ public class PlagiarismSearch {
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for(String sentenceId : db.getSourceSentenceIds()) {
-			try {
-				documentQueue.put(sentenceId);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		
-		System.out.println("Indexing "+documentQueue.size()+" sentences");
-
-		progressPrinter = new ProgressPrinter(documentQueue.size());
+		DBCursor cursor = db.getSourceSentencesCursor();
+		
+		progressPrinter = new ProgressPrinter(cursor.size());
 		crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
@@ -123,6 +118,16 @@ public class PlagiarismSearch {
 			indexBuilderThreads[i].setName("IndexBuilder-"+i);
 			indexBuilderThreads[i].start();
 		}
+		
+		while(cursor.hasNext()) {
+			try{
+				documentQueue.put(cursor.next().get("id").toString());
+			}catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		cursor.close();
 	}
 
 	public void indexBuilderJobDone() {
