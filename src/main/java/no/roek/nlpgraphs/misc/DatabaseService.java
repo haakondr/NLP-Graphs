@@ -136,7 +136,8 @@ public class DatabaseService {
 		return files;
 	}
 	
-	public Set<String> getAllSourceSentences() {
+
+	public Set<String> getSourceSentenceIds() {
 		return getAll(sourceCollectionName, "id");
 	}
 	

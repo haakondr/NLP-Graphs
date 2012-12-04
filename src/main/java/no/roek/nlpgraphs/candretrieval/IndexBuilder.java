@@ -32,7 +32,6 @@ public class IndexBuilder extends Thread {
 					running = false;
 				}else {
 					
-//					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(filename));
 					crs.addSentence(db.getSentence(sentenceId));
 					concurrencyService.indexBuilderJobDone();
 				}

@@ -97,23 +97,24 @@ public class PlagiarismSearch {
 		}
 	}
 
-	public boolean shouldCreateIndex() {
-		File indexDir = new File("lucene/"+trainDir);
-		return !indexDir.exists();
-	}
+//	public boolean shouldCreateIndex() {
+//		File indexDir = new File("lucene/"+trainDir);
+//		return !indexDir.exists();
+//	}
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for(String sentenceId : db.getAllSourceSentences()) {
+		for(String sentenceId : db.getSourceSentenceIds()) {
 			try {
 				documentQueue.put(sentenceId);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		System.out.println("Indexing "+documentQueue.size()+" sentences");
 
 		progressPrinter = new ProgressPrinter(documentQueue.size());
-
 		crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
