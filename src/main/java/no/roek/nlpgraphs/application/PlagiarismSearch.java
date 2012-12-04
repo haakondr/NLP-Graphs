@@ -103,8 +103,7 @@ public class PlagiarismSearch {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
 		
 		DBCursor cursor = db.getSourceSentencesCursor();
-		
-		progressPrinter = new ProgressPrinter(cursor.size());
+		progressPrinter = new ProgressPrinter(cursor.count());
 		crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
