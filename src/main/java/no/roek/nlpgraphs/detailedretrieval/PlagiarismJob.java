@@ -10,6 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.gson.JsonObject;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.misc.Job;
@@ -58,7 +61,22 @@ public class PlagiarismJob extends Job {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return json.toString();
+	}
+
+	public BasicDBList toDBObject() {
+		BasicDBList passages = new BasicDBList();
+		for(PlagiarismPassage passage : textPairs) {
+			BasicDBObject p = new BasicDBObject();
+			p.put("testFile", passage.getTestFile());
+			p.put("trainFile", passage.getTrainFile());
+			p.put("testSentence", passage.getTestSentence());
+			p.put("trainSentence", passage.getTrainSentence());
+			p.put("candretScore", passage.getSimilarity());
+			passages.add(p);
+		}
+
+		return passages;
 	}
 }

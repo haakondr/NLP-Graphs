@@ -28,6 +28,7 @@ public class PlagiarismSearch {
 	private PosTagWorker[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
+	private SentenceRetrievalWorker[] candretThreads;
 	private int dependencyParserCount, posTagCount, plagThreadCount;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir;
@@ -91,8 +92,8 @@ public class PlagiarismSearch {
 				thread.kill();
 			}
 
-			//			System.out.println("Preprocessing done. Starting plagiarism search (index building if needed)");
-			//			App.main(null);
+			System.out.println("Preprocessing done. Exiting)");
+
 		}
 	}
 
@@ -132,15 +133,15 @@ public class PlagiarismSearch {
 
 			crs.closeWriter();
 
-			System.out.println("Index building done.. Starting plagiarism search.");
+			System.out.println("Index building done.. ");
 			App.main(null);
 		}
 
 	}
 
-	public void startPlagiarismSearch() {
-		//TODO: fix new resultsdir
-		System.out.println("starting plagiarism search..");
+
+	public void startCandidateRetrieval() {
+		System.out.println("Starting candidate retrieval phase. The results will be stored to the database");
 		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 
 		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
@@ -150,20 +151,57 @@ public class PlagiarismSearch {
 				e.printStackTrace();
 			}
 		}
-
 		progressPrinter = new ProgressPrinter(retrievalQueue.size());
 
-		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
-
+		
+		candretThreads = new SentenceRetrievalWorker[cs.getSentenceRetrievalThreads()];
 		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
-			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
-			worker.setName("SentenceRetrieval-Thread-"+i);
-			worker.start();
+			candretThreads[i] =  new SentenceRetrievalWorker(crs, retrievalQueue, db, this);
+			candretThreads[i].setName("SentenceRetrieval-Thread-"+i);
+			candretThreads[i].start();
+			
 		}
-
-		startPlagiarismSearch(plagQueue);
 	}
+
+	public void candretJobDone(String text) {
+		progressPrinter.printProgressbar(text);
+		if(progressPrinter.isDone()) {
+	
+			for (SentenceRetrievalWorker thread : candretThreads) {
+				thread.kill();
+			}
+			
+			System.out.println("\nCandidate retrieval search done. ");
+			App.main(null);
+		}
+	}
+	//	public void startPlagiarismSearch() {
+	//		//TODO: fix new resultsdir
+	//		System.out.println("starting plagiarism search..");
+	//		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
+	//
+	//		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
+	//			try {
+	//				retrievalQueue.put(file);
+	//			} catch (InterruptedException e) {
+	//				e.printStackTrace();
+	//			}
+	//		}
+	//
+	//		progressPrinter = new ProgressPrinter(retrievalQueue.size());
+	//
+	//		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
+	//		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
+	//
+	//		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
+	//			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
+	//			worker.setName("SentenceRetrieval-Thread-"+i);
+	//			worker.start();
+	//		}
+	//
+	//		startPlagiarismSearch(plagQueue);
+	//	}
 
 	public void startPlagiarismSearchWithoutCandret() {
 		System.out.println("starting plagiarism search with candidate retrieval results from the database..");
@@ -171,7 +209,7 @@ public class PlagiarismSearch {
 		String dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
 		new File(cs.getResultsDir()+dir).mkdirs();
 		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir, "txt");
-		
+
 		System.out.println(filesDone.size()+" files already done.");
 		db.retrieveAllPassages(plagQueue, filesDone);
 

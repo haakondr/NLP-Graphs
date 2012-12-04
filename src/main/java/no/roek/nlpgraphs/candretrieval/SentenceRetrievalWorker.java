@@ -5,25 +5,25 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
+import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.misc.ConfigService;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.Fileutils;
 
 public class SentenceRetrievalWorker extends Thread {
 
-	private BlockingQueue<PlagiarismJob> queue;
 	private BlockingQueue<String> retrievalQueue;
 	private CandidateRetrievalService crs;
-	private String candretDir;
-	
+	private DatabaseService db;
+	private PlagiarismSearch searcher;
 
-	public SentenceRetrievalWorker(CandidateRetrievalService crs, BlockingQueue<String> retrievalQueue, BlockingQueue<PlagiarismJob> queue) {
-		this.queue = queue;
+	public SentenceRetrievalWorker(CandidateRetrievalService crs, BlockingQueue<String> retrievalQueue, DatabaseService db, PlagiarismSearch searcher) {
 		this.crs = crs;
 		this.retrievalQueue = retrievalQueue;
-		ConfigService cs = new ConfigService();
-		candretDir = cs.getCandRetDir();
+		this.db = db;
+		this.searcher = searcher;
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class SentenceRetrievalWorker extends Thread {
 					running = false;
 				}else {
 					PlagiarismJob job = getParseJob(file);
-					Fileutils.writeToFile(candretDir+Paths.get(file).getFileName().toString(), job.toJson());
-					queue.put(job);
+					db.addCandidatePassage(job.toDBObject());
+					searcher.candretJobDone("");
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -58,5 +58,13 @@ public class SentenceRetrievalWorker extends Thread {
 		}
 		
 		return plagJob;
+	}
+	
+	public void kill() {
+		try {
+			retrievalQueue.put(null);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

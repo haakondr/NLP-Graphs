@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+import org.json.JSONObject;
+
 import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
@@ -61,6 +63,11 @@ public class DatabaseService {
 		String collName = getDocumentColl(filename);
 		DBCollection coll = db.getCollection(collName);
 		coll.insert(dbObject);
+	}
+	
+	public void addCandidatePassage(BasicDBList passages) {
+		DBCollection coll = db.getCollection(candidateCollection);
+		coll.insert(passages);
 	}
 	
 	
