@@ -96,7 +96,7 @@ public class DatabaseService {
 	
 	public List<NLPSentence> getAllSentences(String filename) {
 		DBCollection coll = getSentenceColl(filename);
-		Pattern p = Pattern.compile(filename+"-*");
+		Pattern p = Pattern.compile("^"+filename+"-*");
 		BasicDBObject query = new BasicDBObject("id", p);
 		
 		List<NLPSentence> sentences = new ArrayList<>();
