@@ -113,4 +113,12 @@ public class ConfigService {
 	public int getRetrievalCount() {
 		return Integer.parseInt(configFile.getProperty("RETRIEVAL_COUNT"));
 	}
+	
+	public String getDBName() {
+		return configFile.getProperty("DBNAME");
+	}
+	
+	public String getDBLocation() {
+		return configFile.getProperty("DBLOCATION");
+	}
 }

@@ -37,11 +37,11 @@ public class DatabaseService {
 	private final String candidateCollection = "candidate_passages";
 	private DBCollection suspiciousColl, sourceColl;
 	
-	public DatabaseService() {
+	public DatabaseService(String dbname, String dblocation) {
 		try {
-			Mongo m = new Mongo("localhost");
+			Mongo m = new Mongo(dblocation);
 			m.setWriteConcern(WriteConcern.NORMAL);
-			db = m.getDB("pan10");
+			db = m.getDB(dbname);
 			
 			suspiciousColl = db.getCollection(suspiciousCollectionName);
 			sourceColl = db.getCollection(sourceCollectionName);
