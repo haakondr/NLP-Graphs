@@ -9,6 +9,7 @@ import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
+import com.google.code.javakbest.JVC;
 import com.konstantinosnedas.HungarianAlgorithm;
 
 
@@ -44,20 +45,20 @@ public class GraphEditDistance {
 		return getDistance() / graphLength;
 	}
 
-	public double getDistance() {
-		/**
-		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
-		 */
-		this.costMatrix = createCostMatrix(g1, g2);
-		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
-
-		double sum = 0; 
-		for (int i=0; i<assignment.length; i++){
-			sum =  (sum + costMatrix[assignment[i][0]][assignment[i][1]]);
+		public double getDistance() {
+			/**
+			 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
+			 */
+			this.costMatrix = createCostMatrix(g1, g2);
+			int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
+	
+			double sum = 0; 
+			for (int i=0; i<assignment.length; i++){
+				sum =  (sum + costMatrix[assignment[i][0]][assignment[i][1]]);
+			}
+	
+			return sum;
 		}
-
-		return sum;
-	}
 
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
@@ -66,14 +67,15 @@ public class GraphEditDistance {
 		return costMatrix;
 	}
 
-	//	public double getDistance() {
-	//		/**
-	//		 * Retrieves the graph edit distance of graph g1 & g2,
-	//		 * using the Jonker-Volgenant algorithm to retrieve the (seemingly) optimal cost assignment of the cost matrix.
-	//		 */
-	//		JVC jvc = JVC.solve(this.costMatrix);
-	//		return jvc.getCost();
-	//	}
+	public double getJVDistance() {
+		/**
+		 * Retrieves the graph edit distance of graph g1 & g2,
+		 * using the Jonker-Volgenant algorithm to retrieve the (seemingly) optimal cost assignment of the cost matrix.
+		 */
+		this.costMatrix = createCostMatrix(g1, g2);
+		JVC jvc = JVC.solve(this.costMatrix);
+		return jvc.getCost();
+	}
 
 	private double[][] createCostMatrix(Graph g1, Graph g2) {
 		/**
@@ -161,7 +163,7 @@ public class GraphEditDistance {
 		if(edges1.size() == 0 || edges2.size() == 0) {
 			return getWeightSum(edges1) + getWeightSum(edges2);
 		}
-		
+
 		int n = edges1.size();
 		int m = edges2.size();
 		double[][] edgeCostMatrix = new double[n+m][m+n];
@@ -191,7 +193,7 @@ public class GraphEditDistance {
 
 		return sum / ((n+m));
 	}
-	
+
 	public double getDeprelWeight(Edge edge) {
 		Double weight = deprelEditWeights.get(edge.getLabel());
 		if(weight == null) {
@@ -199,13 +201,13 @@ public class GraphEditDistance {
 		}
 		return weight;
 	}
-	
+
 	public double getWeightSum(List<Edge> edges) {
 		double sum = 0;
 		for (Edge edge : edges) {
 			sum += getDeprelWeight(edge);
 		}
-		
+
 		return sum;
 	}
 

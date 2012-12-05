@@ -44,7 +44,7 @@ public class GED {
 		Map<String, Double> deprelEditWeights = EditWeightService.getInsDelCosts(cs.getDeprelInsdelFile());
 		GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
 
-		//				ged.printMatrix();
+//						ged.printMatrix();
 		printLatexEditPath(g1, g2, ged.getCostMatrix());
 		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
