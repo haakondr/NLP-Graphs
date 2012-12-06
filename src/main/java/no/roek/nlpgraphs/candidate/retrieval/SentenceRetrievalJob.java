@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.candretrieval;
+package no.roek.nlpgraphs.candidate.retrieval;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

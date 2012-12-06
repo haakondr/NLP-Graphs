@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailedretrieval;
+package no.roek.nlpgraphs.detailed.analysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;

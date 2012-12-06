@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.mongodb.BasicDBObject;
 
-import no.roek.nlpgraphs.detailedretrieval.GraphEditDistance;
+import no.roek.nlpgraphs.detailed.analysis.GraphEditDistance;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.EditWeightService;

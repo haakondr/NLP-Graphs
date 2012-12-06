@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.candretrieval;
+package no.roek.nlpgraphs.candidate.retrieval;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
+import no.roek.nlpgraphs.detailed.analysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;

@@ -2,7 +2,7 @@ package no.roek.nlpgraphs.postprocessing;
 
 import java.util.List;
 
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
+import no.roek.nlpgraphs.detailed.analysis.PlagiarismReference;
 
 public class SentenceRetrievalTest {
 

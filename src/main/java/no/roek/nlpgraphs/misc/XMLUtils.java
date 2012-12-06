@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
+import no.roek.nlpgraphs.detailed.analysis.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
 
 import org.apache.commons.io.IOUtils;
