@@ -47,6 +47,7 @@ public class DatabaseService {
 			sourceColl = db.getCollection(sourceCollectionName);
 			addIndex(sourceCollectionName);
 			addIndex(suspiciousCollectionName);
+			addIndex(candidateCollection);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("Database not found");
