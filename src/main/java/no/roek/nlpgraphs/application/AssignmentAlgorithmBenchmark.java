@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.code.javakbest.JVC;
@@ -15,9 +16,9 @@ public class AssignmentAlgorithmBenchmark {
 		List<Integer> xValues = new ArrayList<>();
 		List<Double> munkresSpeeds = new ArrayList<>();
 		List<Double> vjSpeeds = new ArrayList<>();
-		for (int i = 1; i < 200; i+=5) {
-			munkresSpeeds.add(getAvgSpeed(i, true));
-			vjSpeeds.add(getAvgSpeed(i, false));
+		for (int i = 1; i < 150; i+=5) {
+			munkresSpeeds.add(getMedianSpeed(i, true));
+			vjSpeeds.add(getMedianSpeed(i, false));
 			xValues.add(i);
 			System.out.println("Done calculating avg speed for nodecount: "+i);
 		}
@@ -77,11 +78,12 @@ public class AssignmentAlgorithmBenchmark {
 		}
 	}
 
-	public static double getAvgSpeed(int nodecount, boolean munkres) {
-		double[][] costMatrix= init(nodecount);
+	public static double getMedianSpeed(int nodecount, boolean munkres) {
+
 
 		List<Double> speeds = new ArrayList<>();
 		for (int i = 0; i < 1000; i++) {
+			double[][] costMatrix= init(nodecount);
 			if(munkres) {
 				speeds.add(getMunkresExecutionTime(costMatrix));
 			}else {
@@ -89,22 +91,18 @@ public class AssignmentAlgorithmBenchmark {
 			}
 		}
 
-		return avg(speeds);
+		return median(speeds);
 	}
 
-
-	public static double avg(List<Double> list) {
-		double sum = 0;
-		for (Double speed : list) {
-			sum += speed;
-		}
-		return sum / list.size();
+	public static double median(List<Double> list) {
+		Collections.sort(list);
+		int i = list.size() / 2;
+		return list.get(i);
 	}
 
 	public static double getMunkresExecutionTime(double[][] costMatrix) {
 		long start = System.currentTimeMillis();
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(costMatrix, "min");
-		
 		long end = System.currentTimeMillis();
 
 		return end-start;

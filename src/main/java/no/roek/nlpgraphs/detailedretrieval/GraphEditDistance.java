@@ -1,9 +1,7 @@
 package no.roek.nlpgraphs.detailedretrieval;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
@@ -30,6 +28,7 @@ public class GraphEditDistance {
 		this.g2 = g2;
 		this.posEditWeights = posEditWeights;
 		this.deprelEditWeights = deprelEditWeights;
+		this.costMatrix = createCostMatrix(g1, g2);
 	}
 
 	public GraphEditDistance(Graph g1, Graph g2, Map<String, Double> posEditWeights, Map<String, Double> deprelEditWeights) {
@@ -45,20 +44,6 @@ public class GraphEditDistance {
 		return getDistance() / graphLength;
 	}
 
-		public double getDistance() {
-			/**
-			 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
-			 */
-			this.costMatrix = createCostMatrix(g1, g2);
-			int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
-	
-			double sum = 0; 
-			for (int i=0; i<assignment.length; i++){
-				sum =  (sum + costMatrix[assignment[i][0]][assignment[i][1]]);
-			}
-	
-			return sum;
-		}
 
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
@@ -67,12 +52,11 @@ public class GraphEditDistance {
 		return costMatrix;
 	}
 
-	public double getJVDistance() {
+	public double getDistance() {
 		/**
 		 * Retrieves the graph edit distance of graph g1 & g2,
-		 * using the Jonker-Volgenant algorithm to retrieve the (seemingly) optimal cost assignment of the cost matrix.
+		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
 		 */
-		this.costMatrix = createCostMatrix(g1, g2);
 		JVC jvc = JVC.solve(this.costMatrix);
 		return jvc.getCost();
 	}
