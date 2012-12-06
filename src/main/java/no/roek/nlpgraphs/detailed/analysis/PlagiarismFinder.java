@@ -64,7 +64,7 @@ public class PlagiarismFinder {
 		try {
 			Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
 			Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
-			if(train.getSize() > 100 || test.getSize() > 100) {
+			if(train.getSize() > 80 || test.getSize() > 80) {
 				return null;
 			}
 			
