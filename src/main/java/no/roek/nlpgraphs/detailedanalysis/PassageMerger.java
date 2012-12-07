@@ -5,11 +5,11 @@ import java.util.List;
 
 public class PassageMerger {
 
-	public static List<PlagiarismReference> mergePassages(List<PlagiarismReference> references) {
+	public static List<PlagiarismReference> mergePassages(List<PlagiarismReference> references, int mergeDist) {
 		List<PlagiarismReference> merged = new ArrayList<>();
 		
 		for (PlagiarismReference ref : references) {
-			PlagiarismReference temp = getAdjacentPassage(ref, merged);
+			PlagiarismReference temp = getAdjacentPassage(ref, merged, mergeDist);
 			if(temp!=null) {
 				merged.remove(temp);
 				merged.add(mergePassage(ref, temp));
@@ -21,9 +21,9 @@ public class PassageMerger {
 		return merged;
 	}
 	
-	public static PlagiarismReference getAdjacentPassage(PlagiarismReference ref, List<PlagiarismReference> merged) {
+	public static PlagiarismReference getAdjacentPassage(PlagiarismReference ref, List<PlagiarismReference> merged, int mergeDist) {
 		for (PlagiarismReference ref2 : merged) {
-			if(shouldMergePassages(ref, ref2)) {
+			if(shouldMergePassages(ref, ref2, mergeDist)) {
 				return ref2;
 			}
 		}
@@ -59,13 +59,13 @@ public class PassageMerger {
 	}
 	
 	
-	public static  boolean shouldMergePassages(PlagiarismReference ref1, PlagiarismReference ref2) {
+	public static  boolean shouldMergePassages(PlagiarismReference ref1, PlagiarismReference ref2, int mergeDist) {
 		if(!equalFilenames(ref1, ref2)) {
 			return false;
 		}
 		int suspiciousDiff = getPassageDiff(ref1.getOffsetInt(), ref1.getEndInt(), ref2.getOffsetInt(), ref2.getEndInt());
 		int sourceDiff = getPassageDiff(ref1.getSourceOffsetInt(), ref1.getSourceEndInt(), ref2.getSourceOffsetInt(), ref2.getSourceEndInt());
-		return (suspiciousDiff < 500) && (sourceDiff < 500);
+		return (suspiciousDiff < mergeDist) && (sourceDiff < mergeDist);
 	}
 	
 	private static  boolean equalFilenames(PlagiarismReference ref1, PlagiarismReference ref2) {
