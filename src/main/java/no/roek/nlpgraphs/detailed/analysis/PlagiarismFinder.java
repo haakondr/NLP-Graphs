@@ -46,7 +46,6 @@ public class PlagiarismFinder {
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
 
 		for(PlagiarismPassage passage : job.getTextPairs()) {
-			System.out.println("finding plag for "+passage.getTestFile()+" sentence "+passage.getTestSentence());
 			PlagiarismReference ref = getPlagiarism(passage.getTrainFile(), passage.getTrainSentence(), passage.getTestFile(), passage.getTestSentence());
 			if(ref != null) {
 //				findAdjacentPlagiarism(ref, passage.getTrainSentence(), passage.getTestSentence(), false);
@@ -65,6 +64,7 @@ public class PlagiarismFinder {
 		try {
 			Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
 			Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
+			System.out.println(train.getFilename()+" "+train.getSentenceNumber()+" size: "+train.getSize()+". "+test.getFilename()+" "+test.getSentenceNumber()+" size: "+test.getSize());
 			if(train.getSize() > 80 || test.getSize() > 80) {
 				return null;
 			}
