@@ -44,7 +44,20 @@ public class GraphEditDistance {
 		return getDistance() / graphLength;
 	}
 
+	public double getDistance() {
+		/**
+		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
+		 */
+		this.costMatrix = createCostMatrix(g1, g2);
+		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
 
+		double sum = 0; 
+		for (int i=0; i<assignment.length; i++){
+			sum =  (sum + costMatrix[assignment[i][0]][assignment[i][1]]);
+		}
+
+		return sum;
+	}
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
 			this.costMatrix = createCostMatrix(g1, g2);
@@ -52,14 +65,14 @@ public class GraphEditDistance {
 		return costMatrix;
 	}
 
-	public double getDistance() {
-		/**
-		 * Retrieves the graph edit distance of graph g1 & g2,
-		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
-		 */
-		JVC jvc = JVC.solve(this.costMatrix);
-		return jvc.getCost();
-	}
+//	public double getDistance() {
+//		/**
+//		 * Retrieves the graph edit distance of graph g1 & g2,
+//		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
+//		 */
+//		JVC jvc = JVC.solve(this.costMatrix);
+//		return jvc.getCost();
+//	}
 
 	private double[][] createCostMatrix(Graph g1, Graph g2) {
 		/**
