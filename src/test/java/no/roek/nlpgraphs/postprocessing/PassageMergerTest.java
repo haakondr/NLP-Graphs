@@ -3,9 +3,9 @@ package no.roek.nlpgraphs.postprocessing;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailed.analysis.PassageMerger;
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismFinder;
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismReference;
+import no.roek.nlpgraphs.detailedanalysis.PassageMerger;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismFinder;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismReference;
 
 import org.junit.Before;
 import org.junit.Test;

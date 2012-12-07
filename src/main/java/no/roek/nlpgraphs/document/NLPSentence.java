@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismReference;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismReference;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 import org.json.JSONException;

@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailed.analysis;
+package no.roek.nlpgraphs.detailedanalysis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class PassageMerger {
 		}
 		int suspiciousDiff = getPassageDiff(ref1.getOffsetInt(), ref1.getEndInt(), ref2.getOffsetInt(), ref2.getEndInt());
 		int sourceDiff = getPassageDiff(ref1.getSourceOffsetInt(), ref1.getSourceEndInt(), ref2.getSourceOffsetInt(), ref2.getSourceEndInt());
-		return (suspiciousDiff < 10) && (sourceDiff < 10);
+		return (suspiciousDiff < 4000) && (sourceDiff < 4000);
 	}
 	
 	private static  boolean equalFilenames(PlagiarismReference ref1, PlagiarismReference ref2) {

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismJob;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.document.WordToken;

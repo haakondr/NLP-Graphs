@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailed.analysis;
+package no.roek.nlpgraphs.detailedanalysis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -57,21 +57,21 @@ public class PlagiarismFinder {
 		return plagReferences;
 	}
 
-	public PlagiarismReference getPlagiarism(String trainFile, int trainSentence, String testFile, int testSentence) {
+	public PlagiarismReference getPlagiarism(String sourceFile, int sourceSentence, String suspiciousFile, int suspiciousSentence) {
 		/**
 		 * Checks the given sentence pair for plagiarism with the graph edit distance algorithm
 		 */
 		try {
-			Graph train = GraphUtils.getGraph(db.getSentence(trainFile, trainSentence));
-			Graph test = GraphUtils.getGraph(db.getSentence(testFile, testSentence));
-			if(train.getSize() > 80 || test.getSize() > 80) {
+			Graph source = GraphUtils.getGraph(db.getSentence(sourceFile, sourceSentence));
+			Graph suspicious = GraphUtils.getGraph(db.getSentence(suspiciousFile, suspiciousSentence));
+			if(source.getSize() > 80 || suspicious.getSize() > 80) {
 				return null;
 			}
 			
-			GraphEditDistance ged = new GraphEditDistance(test, train, posEditWeights, deprelEditWeights);
+			GraphEditDistance ged = new GraphEditDistance(suspicious, source, posEditWeights, deprelEditWeights);
 			double dist = ged.getNormalizedDistance();
 			if(dist < plagiarismThreshold) {
-				return XMLUtils.getPlagiarismReference(train, test, true);
+				return XMLUtils.getPlagiarismReference(source, suspicious, true);
 			}else {
 				return null;
 			}

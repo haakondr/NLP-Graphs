@@ -14,7 +14,7 @@ import com.konstantinosnedas.HungarianAlgorithm;
 import com.mongodb.BasicDBObject;
 
 
-import no.roek.nlpgraphs.detailed.analysis.GraphEditDistance;
+import no.roek.nlpgraphs.detailedanalysis.GraphEditDistance;
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;

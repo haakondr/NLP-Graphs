@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.candidate.retrieval;
+package no.roek.nlpgraphs.candidateretrieval;
 //package no.roek.nlpgraphs.search;
 //
 //import java.io.File;

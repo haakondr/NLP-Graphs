@@ -6,63 +6,48 @@ import no.roek.nlpgraphs.misc.GraphUtils;
 
 public class PlagiarismPassage {
 
-	private String trainFile, testFile;
-	private int trainSentence, testSentence;
+	private String sourceFile, suspiciousFile;
+	private int sourceSentence, suspiciousSentence;
 	private double similarity;
 	
-	public PlagiarismPassage(String trainFile, int trainSentence, String testFile, int testSentence, double similarity) {
-		this.trainFile = trainFile;
-		this.trainSentence = trainSentence;
-		this.testFile = testFile;
-		this.testSentence = testSentence;
+	public PlagiarismPassage(String sourceFile, int sourceSentence, String suspiciousFile, int suspiciousSentence, double similarity) {
+		this.sourceFile = sourceFile;
+		this.sourceSentence = sourceSentence;
+		this.suspiciousFile = suspiciousFile;
+		this.suspiciousSentence = suspiciousSentence;
 		this.similarity = similarity;
 	}
 
-//	public Graph getTrainGraph() {
-//		if(trainGraph == null) {
-//			trainGraph = GraphUtils.getGraphFromFile(dir+trainDir+trainFile, trainSentence);
-//		}
-//		return trainGraph;
-//	}
-	
-//	public Graph getTestGraph() {
-//		if(testGraph == null) {
-//			testGraph = GraphUtils.getGraphFromFile(dir+testDir+testFile, testSentence);
-//		}
-//		
-//		return testGraph;
-//	}
-	
 	public String getTrainFile() {
-		return trainFile;
+		return sourceFile;
 	}
 
 	public void setTrainFile(String trainFile) {
-		this.trainFile = trainFile;
+		this.sourceFile = trainFile;
 	}
 
 	public String getTestFile() {
-		return testFile;
+		return suspiciousFile;
 	}
 
 	public void setTestFile(String testFile) {
-		this.testFile = testFile;
+		this.suspiciousFile = testFile;
 	}
 
 	public int getTrainSentence() {
-		return trainSentence;
+		return sourceSentence;
 	}
 
 	public void setTrainSentence(int trainSentence) {
-		this.trainSentence = trainSentence;
+		this.sourceSentence = trainSentence;
 	}
 
 	public int getTestSentence() {
-		return testSentence;
+		return suspiciousSentence;
 	}
 
 	public void setTestSentence(int testSentence) {
-		this.testSentence = testSentence;
+		this.suspiciousSentence = testSentence;
 	}
 
 	public double getSimilarity() {

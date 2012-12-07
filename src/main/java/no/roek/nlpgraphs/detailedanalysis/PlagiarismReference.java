@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailed.analysis;
+package no.roek.nlpgraphs.detailedanalysis;
 
 public class PlagiarismReference {
 	private String filename, obfuscation,language, sourceReference, sourceLanguage;

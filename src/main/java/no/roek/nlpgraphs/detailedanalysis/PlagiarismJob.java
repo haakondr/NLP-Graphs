@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailed.analysis;
+package no.roek.nlpgraphs.detailedanalysis;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

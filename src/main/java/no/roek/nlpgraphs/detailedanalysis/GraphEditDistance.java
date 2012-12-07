@@ -1,4 +1,4 @@
-package no.roek.nlpgraphs.detailed.analysis;
+package no.roek.nlpgraphs.detailedanalysis;
 
 import java.util.List;
 import java.util.Map;

@@ -8,11 +8,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.mongodb.DBCursor;
 
-import no.roek.nlpgraphs.candidate.retrieval.CandidateRetrievalService;
-import no.roek.nlpgraphs.candidate.retrieval.IndexBuilder;
-import no.roek.nlpgraphs.candidate.retrieval.SentenceRetrievalWorker;
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismJob;
-import no.roek.nlpgraphs.detailed.analysis.PlagiarismWorker;
+import no.roek.nlpgraphs.candidateretrieval.CandidateRetrievalService;
+import no.roek.nlpgraphs.candidateretrieval.IndexBuilder;
+import no.roek.nlpgraphs.candidateretrieval.SentenceRetrievalWorker;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismWorker;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.Fileutils;
