@@ -24,15 +24,15 @@ public class PassageMergerTest {
 	
 	@Test
 	public void shouldMergePassages() {
-		assertEquals(true, PassageMerger.shouldMergePassages(ref1, ref2));
-		assertEquals(true, PassageMerger.shouldMergePassages(ref2, ref1));
-		assertEquals(true, PassageMerger.shouldMergePassages(ref2, ref3));
+		assertEquals(true, PassageMerger.shouldMergePassages(ref1, ref2, 60));
+		assertEquals(true, PassageMerger.shouldMergePassages(ref2, ref1, 60));
+		assertEquals(true, PassageMerger.shouldMergePassages(ref2, ref3, 60));
 	}
 	
 	@Test
 	public void shouldNotMergePassages() {
-		assertEquals(false, PassageMerger.shouldMergePassages(ref1, ref3));
-		assertEquals(false, PassageMerger.shouldMergePassages(ref3, ref1));
+		assertEquals(false, PassageMerger.shouldMergePassages(ref1, ref3,1));
+		assertEquals(false, PassageMerger.shouldMergePassages(ref3, ref1, 1));
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class PassageMergerTest {
 		refs.add(ref3);
 		refs.add(new PlagiarismReference("suspicious-document0001.txt", "detected-plagiarism", 600, 300, "source-document0005.txt", 0, 110));
 		refs.add(new PlagiarismReference("suspicious-document0001.txt", "detected-plagiarism", 600, 300, "othername5.txt", 0, 110));
-		List<PlagiarismReference> mergedReferences = PassageMerger.mergePassages(refs);
+		List<PlagiarismReference> mergedReferences = PassageMerger.mergePassages(refs, 60);
 
 		assertEquals(3, mergedReferences.size());
 	}
