@@ -65,7 +65,7 @@ public class PassageMerger {
 		}
 		int suspiciousDiff = getPassageDiff(ref1.getOffsetInt(), ref1.getEndInt(), ref2.getOffsetInt(), ref2.getEndInt());
 		int sourceDiff = getPassageDiff(ref1.getSourceOffsetInt(), ref1.getSourceEndInt(), ref2.getSourceOffsetInt(), ref2.getSourceEndInt());
-		return (suspiciousDiff < 1000) && (sourceDiff < 1000);
+		return (suspiciousDiff < 500) && (sourceDiff < 500);
 	}
 	
 	private static  boolean equalFilenames(PlagiarismReference ref1, PlagiarismReference ref2) {
