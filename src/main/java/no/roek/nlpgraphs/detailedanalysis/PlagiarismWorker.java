@@ -27,6 +27,7 @@ public class PlagiarismWorker extends Thread {
 	private PlagiarismSearch concurrencyService;
 	private String resultsDir, dir;
 	private boolean running;
+	private int mergeDist;
 
 	public PlagiarismWorker(BlockingQueue<PlagiarismJob> queue, PlagiarismSearch concurrencyService, DatabaseService db) {
 		this.queue = queue;
@@ -34,7 +35,8 @@ public class PlagiarismWorker extends Thread {
 		this.concurrencyService = concurrencyService;
 		ConfigService cs = new ConfigService();
 		this.resultsDir = cs.getResultsDir();
-		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
+		this.mergeDist = cs.getMergeDist();
+		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"mergedist_"+mergeDist+"/";
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class PlagiarismWorker extends Thread {
 					break;
 				}
 				List<PlagiarismReference> plagReferences = plagFinder.findPlagiarism(job);
-				XMLUtils.writeResults(resultsDir+dir, job.getFile().getFileName().toString(), PassageMerger.mergePassages(plagReferences, cs.getMergeDist()));
+				XMLUtils.writeResults(resultsDir+dir, job.getFile().getFileName().toString(), PassageMerger.mergePassages(plagReferences, mergeDist));
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
