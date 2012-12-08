@@ -34,7 +34,7 @@ public class DatabaseService {
 	private final String suspiciousCollectionName = "suspicious_sentences";
 	private final String suspiciousDocsCollection = "suspicious_documents";
 	private final String sourceDocsCollection = "source_documents";
-	private final String candidateCollection = "candidate_passages";
+	private final String candidateCollection = "candidate_passages_150";
 	private DBCollection suspiciousColl, sourceColl;
 	
 	public DatabaseService(String dbname, String dblocation) {
