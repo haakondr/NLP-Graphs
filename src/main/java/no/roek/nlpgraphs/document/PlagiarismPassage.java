@@ -11,11 +11,15 @@ public class PlagiarismPassage {
 	private double similarity;
 	
 	public PlagiarismPassage(String sourceFile, int sourceSentence, String suspiciousFile, int suspiciousSentence, double similarity) {
+		this(sourceFile, sourceSentence, suspiciousFile, suspiciousSentence);
+		this.similarity = similarity;
+	}
+	
+	public PlagiarismPassage(String sourceFile, int sourceSentence, String suspiciousFile, int suspiciousSentence) {
 		this.sourceFile = sourceFile;
 		this.sourceSentence = sourceSentence;
 		this.suspiciousFile = suspiciousFile;
 		this.suspiciousSentence = suspiciousSentence;
-		this.similarity = similarity;
 	}
 
 	public String getTrainFile() {
