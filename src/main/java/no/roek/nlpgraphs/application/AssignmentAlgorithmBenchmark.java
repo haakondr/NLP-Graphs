@@ -5,7 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import no.roek.nlpgraphs.detailedanalysis.GraphEditDistance;
+import no.roek.nlpgraphs.graph.Graph;
+import no.roek.nlpgraphs.graph.Node;
 
 import com.google.code.javakbest.JVC;
 import com.konstantinosnedas.HungarianAlgorithm;
@@ -16,7 +21,7 @@ public class AssignmentAlgorithmBenchmark {
 		List<Integer> xValues = new ArrayList<>();
 		List<Double> munkresSpeeds = new ArrayList<>();
 		List<Double> vjSpeeds = new ArrayList<>();
-		for (int i = 1; i < 150; i+=5) {
+		for (int i = 1; i < 250; i+=5) {
 			munkresSpeeds.add(getMedianSpeed(i, true));
 			vjSpeeds.add(getMedianSpeed(i, false));
 			xValues.add(i);
@@ -79,15 +84,27 @@ public class AssignmentAlgorithmBenchmark {
 	}
 
 	public static double getMedianSpeed(int nodecount, boolean munkres) {
-
-
 		List<Double> speeds = new ArrayList<>();
+		GraphEditDistance ged = initGED(nodecount);
 		for (int i = 0; i < 1000; i++) {
-			double[][] costMatrix= init(nodecount);
 			if(munkres) {
-				speeds.add(getMunkresExecutionTime(costMatrix));
+				speeds.add(getMunkresExecutionTime(ged.getCostMatrix()));
 			}else {
-				speeds.add(getVJExecutionTime(costMatrix));
+				speeds.add(getVJExecutionTime(ged.getCostMatrix()));
+			}
+		}
+
+		return median(speeds);
+	}
+	
+	public static double getMedianGEDSpeed(int nodecount, boolean munkres) {
+		List<Double> speeds = new ArrayList<>();
+		GraphEditDistance ged = initGED(nodecount);
+		for (int i = 0; i < 1000; i++) {
+			if(munkres) {
+				speeds.add(getMunkresGEDTime(ged));
+			}else {
+				speeds.add(getVolgenantJonkerGEDTime(ged));
 			}
 		}
 
@@ -100,6 +117,24 @@ public class AssignmentAlgorithmBenchmark {
 		return list.get(i);
 	}
 
+	public static double getMunkresGEDTime(GraphEditDistance ged) {
+		long start = System.currentTimeMillis();
+		ged.createCostMatrix();
+		ged.getDistance();
+		long end = System.currentTimeMillis();
+
+		return end-start;
+	}
+	
+	public static double getVolgenantJonkerGEDTime(GraphEditDistance ged) {
+		long start = System.currentTimeMillis();
+		ged.createCostMatrix();
+		ged.getVolgenantJonkerDistance();
+		long end = System.currentTimeMillis();
+
+		return end-start;
+	}
+	
 	public static double getMunkresExecutionTime(double[][] costMatrix) {
 		long start = System.currentTimeMillis();
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(costMatrix, "min");
@@ -130,5 +165,18 @@ public class AssignmentAlgorithmBenchmark {
 
 		return costMatrix;
 	}
+
+	public static GraphEditDistance initGED(int nodecount) {
+		Graph g1 = new Graph();
+		Graph g2 = new Graph();
+		
+		for (int i = 0; i < nodecount; i++) {
+			g1.addNode(new Node(""+i, ""+Math.random(), new String[] {"lol"}));
+			g2.addNode(new Node(""+i, ""+Math.random(), new String[] {"lol"}));
+		}
+		
+		return new GraphEditDistance(g1, g2, new HashMap<String,Double>(), new HashMap<String,Double>());
+	}
+	
 
 }
