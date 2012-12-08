@@ -109,11 +109,7 @@ public class PlagiarismFinder {
 		 * Use this for measuring the candidate retrieval phase.
 		 */
 		List<PlagiarismReference> plagReferences = new ArrayList<>();
-		int i = 0;
 		for (PlagiarismPassage pair : job.getTextPairs()) {
-			if(i==50) {
-				break;
-			}
 			Graph suspicious = GraphUtils.getGraph(db.getSentence(pair.getTestFile(), pair.getTestSentence()));
 			Graph source = GraphUtils.getGraph(db.getSentence(pair.getTrainFile(), pair.getTrainSentence()));
 

@@ -49,9 +49,7 @@ public class PlagiarismWorker extends Thread {
 					running = false;
 					break;
 				}
-//				List<PlagiarismReference> plagReferences = plagFinder.findPlagiarism(job);
-				//TODO: FJERN DETTE og uncomment over
-				List<PlagiarismReference> plagReferences = plagFinder.listCandidateReferences(job);
+				List<PlagiarismReference> plagReferences = plagFinder.findPlagiarism(job);
 				XMLUtils.writeResults(resultsDir+dir, job.getFile().getFileName().toString(), PassageMerger.mergePassages(plagReferences, mergeDist));
 				concurrencyService.plagJobDone(this, "queue: "+queue.size());
 			} catch (InterruptedException e) {
