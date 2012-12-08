@@ -186,7 +186,7 @@ public class DatabaseService {
 			for (Object obj : passages) {
 				BasicDBObject dbObject = (BasicDBObject) obj;
 				PlagiarismPassage passage = new PlagiarismPassage(dbObject.getString("source_file"), dbObject.getInt("source_sentence"), 
-						dbObject.getString("suspicous_file"), dbObject.getInt("suspicous_sentence"), dbObject.getDouble("candret_score"));
+						dbObject.getString("suspicious_file"), dbObject.getInt("suspicious_sentence"), dbObject.getDouble("candret_score"));
 				job.addTextPair(passage);
 				
 			}
