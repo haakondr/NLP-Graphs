@@ -37,7 +37,7 @@ public class PlagiarismWorker extends Thread {
 		ConfigService cs = new ConfigService();
 		this.resultsDir = cs.getResultsDir();
 		this.mergeDist = cs.getMergeDist();
-		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold();
+		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
 	}
 
 	@Override
