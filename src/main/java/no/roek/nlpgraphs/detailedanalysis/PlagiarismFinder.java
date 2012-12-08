@@ -103,19 +103,19 @@ public class PlagiarismFinder {
 //	}
 
 
-//	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
-//		/**
-//		 * Only returns the plagiarism references from candidate retrieval.
-//		 * Use this for measuring the candidate retrieval phase.
-//		 */
-//		List<PlagiarismReference> plagReferences = new ArrayList<>();
-//		for (PlagiarismPassage pair : job.getTextPairs()) {
-//			Graph suspicious = GraphUtils.getGraph(db.getSentence(pair.getTestFile(), pair.getTestSentence()));
-//			Graph source = GraphUtils.getGraph(db.getSentence(pair.getTrainFile(), pair.getTrainSentence()));
-//
-//			plagReferences.add(XMLUtils.getPlagiarismReference(source, suspicious, false));
-//		}
-//
-//		return plagReferences;
-//	}
+	public List<PlagiarismReference> listCandidateReferences(PlagiarismJob job) {
+		/**
+		 * Only returns the plagiarism references from candidate retrieval.
+		 * Use this for measuring the candidate retrieval phase.
+		 */
+		List<PlagiarismReference> plagReferences = new ArrayList<>();
+		for (PlagiarismPassage pair : job.getTextPairs()) {
+			Graph suspicious = GraphUtils.getGraph(db.getSentence(pair.getTestFile(), pair.getTestSentence()));
+			Graph source = GraphUtils.getGraph(db.getSentence(pair.getTrainFile(), pair.getTrainSentence()));
+
+			plagReferences.add(XMLUtils.getPlagiarismReference(source, suspicious, false));
+		}
+
+		return plagReferences;
+	}
 }
