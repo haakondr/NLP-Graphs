@@ -6,11 +6,11 @@ import java.util.List;
 
 public class Edge {
 
-	private String id;
-	private Node from;
-	private Node to;
-	private String label;
-	private List<String> attributes;
+	protected String id;
+	protected Node from;
+	protected Node to;
+	protected String label;
+	protected List<String> attributes;
 	
 	public Edge(String id, Node from, Node to, String label) {
 		this.id = id;
@@ -64,18 +64,11 @@ public class Edge {
 	public boolean equals(Object obj) {
 		if(getClass() == obj.getClass()) {
 			Edge other = (Edge) obj;
-			return label.equals(other.getLabel());
+			return label.equals(other.getLabel()) && from.equals(other.getFrom());
+//			return label.equals(other.getLabel()) && from.equals(other.getFrom()) && to.equals(other.getTo());
+//			return label.equals(other.getLabel());
 		}
 		return false;
-	}
-	
-	public boolean attributesEqual(Edge other) {
-		for (int i = 0; i < attributes.size(); i++) {
-			if(!attributes.get(i).equals(other.getAttributes().get(i))) {
-				return false;
-			}
-		}
-		return true;
 	}
 	
 	@Override

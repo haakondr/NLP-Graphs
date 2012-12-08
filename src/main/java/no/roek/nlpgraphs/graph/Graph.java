@@ -15,10 +15,10 @@ import no.roek.nlpgraphs.document.WordToken;
 
 public class Graph {
 
-	private String filename, originalText;
-	private int offset, length, sentenceNumber;
-	private List<Node> nodes;
-	private HashMap<String, List<Edge>> edges;
+	protected String filename, originalText;
+	protected int offset, length, sentenceNumber;
+	protected List<Node> nodes;
+	protected HashMap<String, List<Edge>> edges;
 
 
 	public Graph(String filename) {
@@ -55,6 +55,7 @@ public class Graph {
 	}
 
 	public void addEdge(Edge edge) {
+		//TODO: Try to uncomment
 //		edges.get(edge.getTo().getId()).add(edge);
 		edges.get(edge.getFrom().getId()).add(edge);
 	}
