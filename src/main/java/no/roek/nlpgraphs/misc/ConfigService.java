@@ -54,8 +54,8 @@ public class ConfigService {
 		return Integer.parseInt(configFile.getProperty("DOCUMENT_RECALL"));
 	}
 
-	public int getPlagiarismThreshold() {
-		return Integer.parseInt(configFile.getProperty("PLAGIARISM_THRESHOLD"));
+	public double getPlagiarismThreshold() {
+		return Double.parseDouble(configFile.getProperty("PLAGIARISM_THRESHOLD"));
 	}
 
 	public String getMaltParams() {
@@ -80,5 +80,49 @@ public class ConfigService {
 
 	public int getSentenceRetrievalThreads() {
 		return Integer.parseInt(configFile.getProperty("SENTENCE_RETRIEVAL_THREADS"));
+	}
+	
+	public int getIndexBuilderThreads() {
+		return Integer.parseInt(configFile.getProperty("INDEX_BUILDER_THREADS"));
+	}
+	
+	public String getCandRetDir() {
+		return configFile.getProperty("CANDRET_DIR");
+	}
+	
+	public String getIndexDir() {
+		return configFile.getProperty("INDEX_DIR");
+	}
+	
+	public String getWordNetDir() {
+		return configFile.getProperty("WORDNET_DIR");
+	}
+	
+	public String getPosSubFile() {
+		return configFile.getProperty("POS_SUB_FILE");
+	}
+	
+	public String getPosInsdelFile() {
+		return configFile.getProperty("POS_INSDEL_FILE");
+	}
+	
+	public String getDeprelInsdelFile() {
+		return configFile.getProperty("DEPREL_INSDEL_FILE");
+	}
+	
+	public int getRetrievalCount() {
+		return Integer.parseInt(configFile.getProperty("RETRIEVAL_COUNT"));
+	}
+	
+	public String getDBName() {
+		return configFile.getProperty("DBNAME");
+	}
+	
+	public String getDBLocation() {
+		return configFile.getProperty("DBLOCATION");
+	}
+	
+	public int getMergeDist() {
+		return Integer.parseInt(configFile.getProperty("MERGE_DISTANCE"));
 	}
 }

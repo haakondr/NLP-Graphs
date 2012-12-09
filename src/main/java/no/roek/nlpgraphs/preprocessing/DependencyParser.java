@@ -1,58 +1,91 @@
 package no.roek.nlpgraphs.preprocessing;
 
-import java.util.concurrent.BlockingQueue;
 
-import no.roek.nlpgraphs.concurrency.ConcurrencyService;
-import no.roek.nlpgraphs.concurrency.ParseJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.ProgressPrinter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import no.roek.nlpgraphs.misc.DatabaseService;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
-public class DependencyParser extends Thread{
-	private final BlockingQueue<ParseJob> queue;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+
+
+public class DependencyParser {
+
 	private MaltParserService maltService;
-	private String parsedFilesDir;
-	private ConcurrencyService concurrencyService;
-	private boolean running;
-	
-	public DependencyParser(BlockingQueue<ParseJob> queue,  String maltParams, ConcurrencyService concurrencyService) {
-		this.queue = queue;
+
+	public DependencyParser() {
 		ConfigService cs = new ConfigService();
-		this.parsedFilesDir = cs.getParsedFilesDir();
-		this.concurrencyService = concurrencyService;
-		
 		try {
 			this.maltService = new MaltParserService();
-			maltService.initializeParserModel(maltParams);
+			maltService.initializeParserModel(cs.getMaltParams());
 		} catch (MaltChainedException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void run() {
-		running = true;
-		while(running) {
-			try {
-				ParseJob job = queue.take();
-				ParseUtils.dependencyParse(job, parsedFilesDir, maltService);
-				concurrencyService.depParseJobDone(this, "parse queue: "+queue.size());
-			} catch (InterruptedException | NullPointerException | MaltChainedException e) {
-				e.printStackTrace();
-				running = false;
-			}
+	public void dependencyParse(ParseJob job, DatabaseService db) {
+		for(NLPSentence sentence : job.getSentences()) {
+			db.addSentence(parseSentence(sentence));
 		}
-		System.out.println("Stopping "+Thread.currentThread().getName()+": all files are parsed.");
 	}
-	
-	public synchronized void kill() {
-		running = false;
+
+	public BasicDBObject parseSentence(NLPSentence sentence) {
+		BasicDBObject obj = new BasicDBObject();
+		try {
+			obj.put("id", sentence.getFilename()+"-"+sentence.getNumber());
+			obj.put("filename", sentence.getFilename());
+			obj.put("sentenceNumber", sentence.getNumber());
+			obj.put("offset", sentence.getStart());
+			obj.put("length", sentence.getLength());
+			String[] parsedSentence = maltService.parseTokens(sentence.getPostags());
+
+			BasicDBList tokenList = new BasicDBList();
+			for(String parsedToken : parsedSentence) {
+				tokenList.add(getToken(parsedToken));
+			}
+
+			obj.put("tokens", tokenList);
+		} catch (MaltChainedException e) {
+			e.printStackTrace();
+		}
+		
+		return obj;
+	}
+
+	public BasicDBObject parseSentence(String[] postagString, String filename, int sentenceNumber, int offset, int length) {
+		BasicDBObject obj = new BasicDBObject();
+
+		try {
+			obj.put("filename", filename);
+			obj.put("sentenceNumber", sentenceNumber);
+			obj.put("offset", offset);
+			obj.put("length", length);
+			String[] parsedSentence = maltService.parseTokens(postagString);
+			BasicDBList tokenList = new BasicDBList();
+			for(String parsedToken : parsedSentence) {
+				tokenList.add(getToken(parsedToken));
+			}
+
+			obj.put("tokens", tokenList);
+		} catch (MaltChainedException e) {
+			e.printStackTrace();
+		}
+
+		return obj;
+	}
+
+	public BasicDBObject getToken(String parsedToken) {
+		BasicDBObject obj = new BasicDBObject();
+		String[] token = parsedToken.split("\t");
+		obj.put("id", token[0]);
+		obj.put("word", token[1]);
+		obj.put("lemma", token[2]);
+		obj.put("pos", token[4]);
+		obj.put("rel", token[6]);
+		obj.put("deprel", token[7]);
+
+		return obj;
 	}
 }

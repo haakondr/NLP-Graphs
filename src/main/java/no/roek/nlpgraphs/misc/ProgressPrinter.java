@@ -2,14 +2,15 @@ package no.roek.nlpgraphs.misc;
 
 public class ProgressPrinter {
 	
-	private int total, current;
+	private final int total;
+	private volatile int current;
 	
 	public ProgressPrinter(int total) {
 		this.total = total;
 	}
 	
 	
-	private synchronized int getPercent() {
+	private int getPercent() {
 		return (current * 100) / total;
 	}
 	
