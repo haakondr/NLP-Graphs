@@ -64,8 +64,8 @@ public class Edge {
 	public boolean equals(Object obj) {
 		if(getClass() == obj.getClass()) {
 			Edge other = (Edge) obj;
-//			return label.equals(other.getLabel()) && from.equals(other.getFrom()) && to.equals(other.getTo());
-			return label.equals(other.getLabel());
+			return label.equals(other.getLabel()) && from.equals(other.getFrom()) && to.equals(other.getTo());
+//			return label.equals(other.getLabel());
 		}
 		return false;
 	}
