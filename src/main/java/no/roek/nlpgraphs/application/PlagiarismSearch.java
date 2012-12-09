@@ -230,6 +230,7 @@ public class PlagiarismSearch {
 
 	private void startPlagiarismSearch(BlockingQueue<PlagiarismJob> plagQueue) {
 		plagThreadCount = cs.getPlagiarismThreads();
+		new File(cs.getResultsDir()).mkdirs();
 		plagThreads = new PlagiarismWorker[plagThreadCount];
 		for (int i = 0; i < plagThreadCount; i++) {
 			plagThreads[i] = new PlagiarismWorker(plagQueue, this, db);
