@@ -1,18 +1,17 @@
 package no.roek.nlpgraphs.misc;
 
-import java.io.File;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
+import no.roek.nlpgraphs.document.WordToken;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -26,20 +25,24 @@ import com.mongodb.WriteConcern;
 public class DatabaseService {
 
 	private DB db;
-	private final String sourceCollection = "source-sentences";
-	private final String suspiciousCollection = "suspicious-sentences";
-	private final String suspiciousDocsCollection = "suspicious-documents";
-	private final String sourceDocsCollection = "source-documents";
+	private final String sourceCollectionName = "source_sentences";
+	private final String suspiciousCollectionName = "suspicious_sentences";
+	private final String suspiciousDocsCollection = "suspicious_documents";
+	private final String sourceDocsCollection = "source_documents";
 	private final String candidateCollection = "candidate_passages";
+	private DBCollection suspiciousColl, sourceColl;
 	
-	public DatabaseService() {
+	public DatabaseService(String dbname, String dblocation) {
 		try {
-			Mongo m = new Mongo("localhost");
+			Mongo m = new Mongo(dblocation);
 			m.setWriteConcern(WriteConcern.NORMAL);
-			db = m.getDB("nlp-graphs");
+			db = m.getDB(dbname);
 			
-			addIndex(sourceCollection);
-			addIndex(suspiciousCollection);
+			suspiciousColl = db.getCollection(suspiciousCollectionName);
+			sourceColl = db.getCollection(sourceCollectionName);
+			addIndex(sourceCollectionName);
+			addIndex(suspiciousCollectionName);
+			addIndex(candidateCollection);
 			
 		} catch (UnknownHostException e) {
 			System.out.println("Database not found");
@@ -48,8 +51,7 @@ public class DatabaseService {
 	}
 
 	public void addSentence(BasicDBObject dbSentence) {
-		String collName = getSentenceColl(dbSentence.getString("filename"));
-		DBCollection coll = db.getCollection(collName);
+		DBCollection coll = getSentenceColl(dbSentence.getString("filename"));
 		coll.insert(dbSentence);
 	}
 	
@@ -59,6 +61,13 @@ public class DatabaseService {
 		String collName = getDocumentColl(filename);
 		DBCollection coll = db.getCollection(collName);
 		coll.insert(dbObject);
+	}
+	
+	public void addCandidatePassage(BasicDBList passages) {
+		DBCollection coll = db.getCollection(candidateCollection);
+		for (Object object : passages) {
+			coll.insert((DBObject)object);
+		}
 	}
 	
 	
@@ -74,19 +83,40 @@ public class DatabaseService {
 	}
 
 	public BasicDBObject getSentence(String filename, String sentenceNumber) {
-		DBCollection coll = db.getCollection(getSentenceColl(filename));
-		BasicDBObject query = new BasicDBObject();
-		query.put("id", filename+"-"+sentenceNumber);
+		DBCollection coll = getSentenceColl(filename);
+		BasicDBObject query = new BasicDBObject("id", filename+"-"+sentenceNumber);
 
 		//TODO: test if only one is returned
 		return (BasicDBObject)coll.findOne(query);
 	}
 	
-	private String getSentenceColl(String filename) {
+	public List<NLPSentence> getAllSentences(String filename) {
+		DBCollection coll = getSentenceColl(filename);
+		Pattern p = Pattern.compile("^"+filename+"-*");
+		BasicDBObject query = new BasicDBObject("id", p);
+		
+		List<NLPSentence> sentences = new ArrayList<>();
+		DBCursor cursor = coll.find(query);
+		while(cursor.hasNext()) {
+			BasicDBObject obj = (BasicDBObject) cursor.next();
+			List<WordToken> words = new ArrayList<>();
+			BasicDBList dbTokens = (BasicDBList) obj.get("tokens");
+			for (Object object : dbTokens) {
+				BasicDBObject dbToken = (BasicDBObject) object;
+				words.add(new WordToken(dbToken.getString("word"), dbToken.getString("lemma"), dbToken.getString("pos")));
+			}
+			sentences.add(new NLPSentence(obj.getString("filename"), obj.getInt("sentenceNumber"), obj.getInt("offset"), obj.getInt("length"), words));
+		}
+		cursor.close();
+		
+		return sentences;
+	}
+	
+	private DBCollection getSentenceColl(String filename) {
 		if(filename.startsWith("source-document")) {
-			return sourceCollection;
+			return sourceColl;
 		}else if(filename.startsWith("suspicious-document")) {
-			return suspiciousCollection;
+			return suspiciousColl;
 		}else {
 			return null;
 		}
@@ -127,18 +157,31 @@ public class DatabaseService {
 		return files;
 	}
 	
-	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue) {
+
+	public Set<String> getSourceSentenceIds() {
+		return getAll(sourceCollectionName, "id");
+	}
+	
+	public DBCursor getSourceSentencesCursor() {
+		return sourceColl.find();
+	}
+	
+	public void retrieveAllPassages(BlockingQueue<PlagiarismJob> queue, Set<String> filesDone) {
 		DBCollection coll = db.getCollection(candidateCollection);
 		DBCursor cursor = coll.find();
 		while(cursor.hasNext()) {
 			DBObject temp = cursor.next();
-			PlagiarismJob job = new PlagiarismJob(temp.get("id").toString());
+			String filename = temp.get("id").toString();
+			if(filesDone.contains(filename)) {
+				continue;
+			}
+			PlagiarismJob job = new PlagiarismJob(filename);
 			BasicDBList passages = (BasicDBList)temp.get("passages");
 
 			for (Object obj : passages) {
 				BasicDBObject dbObject = (BasicDBObject) obj;
 				PlagiarismPassage passage = new PlagiarismPassage(dbObject.getString("source_file"), dbObject.getInt("source_sentence"), 
-						dbObject.getString("suspicous_file"), dbObject.getInt("suspicous_sentence"), dbObject.getDouble("candret_score"));
+						dbObject.getString("suspicious_file"), dbObject.getInt("suspicious_sentence"), dbObject.getDouble("candret_score"));
 				job.addTextPair(passage);
 				
 			}

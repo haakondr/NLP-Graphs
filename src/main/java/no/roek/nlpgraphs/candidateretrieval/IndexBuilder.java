@@ -1,11 +1,10 @@
-package no.roek.nlpgraphs.candretrieval;
+package no.roek.nlpgraphs.candidateretrieval;
 
-import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.DatabaseService;
-import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class IndexBuilder extends Thread {
 
@@ -27,15 +26,18 @@ public class IndexBuilder extends Thread {
 		running = true;
 		while(running) {
 			try {
-				String sentenceId = documentQueue.take();
-				if(sentenceId.equals("die")) {
+				String sentenceId = documentQueue.poll(100, TimeUnit.SECONDS);
+				
+				
+				if(sentenceId == null) {
+					concurrencyService.indexBuilderDone();
+					running = false;
+				}else if(sentenceId.equals("die")) {
 					running = false;
 				}else {
-					
-//					crs.addDocument(SentenceUtils.getSentencesFromParsedFile(filename));
 					crs.addSentence(db.getSentence(sentenceId));
-					concurrencyService.indexBuilderJobDone();
 				}
+				concurrencyService.indexBuilderJobDone();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

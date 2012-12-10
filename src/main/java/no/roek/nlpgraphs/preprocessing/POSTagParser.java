@@ -1,7 +1,6 @@
 package no.roek.nlpgraphs.preprocessing;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,18 +9,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.misc.ConfigService;
+
 import org.apache.commons.io.IOUtils;
 
-import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.document.WordToken;
-import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.ling.WordLemmaTag;
 import edu.stanford.nlp.ling.WordTag;
 import edu.stanford.nlp.objectbank.TokenizerFactory;
-import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.Morphology;
 import edu.stanford.nlp.process.PTBTokenizer;
@@ -31,7 +29,7 @@ public class POSTagParser {
 
 	private MaxentTagger tagger;
 	private Morphology lemmatiser;
-	
+
 	public POSTagParser() {
 		ConfigService cs = new ConfigService();
 		lemmatiser = new Morphology();
@@ -41,9 +39,9 @@ public class POSTagParser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public ParseJob posTagFile(Path file) {
-		
+
 		BufferedReader reader = null;
 		try {
 			ParseJob parseJob = new ParseJob(file);
@@ -53,9 +51,9 @@ public class POSTagParser {
 
 			//TODO: somehow keep original text? PTBTokenizer documentation mentions invertible flag in options, but how to get original text?
 			TokenizerFactory<CoreLabel> ptbTokenizerFactory = PTBTokenizer.PTBTokenizerFactory.newCoreLabelTokenizerFactory("untokenizable=noneKeep");
-//			TokenizerFactory<CoreLabel> ptbTokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "untokenizable=noneKeep, invertible=true");
+			//			TokenizerFactory<CoreLabel> ptbTokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "untokenizable=noneKeep, invertible=true");
 			dp.setTokenizerFactory(ptbTokenizerFactory);
-			
+
 			for(NLPSentence sentence : getSentences(dp, file.getFileName().toString())) {
 				parseJob.addSentence(sentence);
 			}
@@ -68,10 +66,10 @@ public class POSTagParser {
 		}
 		return null;
 	}
-	
+
 	public String[] postagSentence(String sentence) {
 		String taggedSentence = tagger.tagString(sentence);
-		
+
 		List<String> tokens = new ArrayList<>();
 		int i = 1;
 		for(String token : taggedSentence.split(" ")) {
@@ -80,17 +78,22 @@ public class POSTagParser {
 			tokens.add(i+"\t"+temp[0]+"\t"+lemma+"\t"+temp[1]+"\t"+temp[1]+"\t_");
 			i++;
 		}
-		
+
 		return tokens.toArray(new String[0]);
 	}
-	
+
 	private List<NLPSentence> getSentences(DocumentPreprocessor dp, String filename) {
+		/**
+		 * Retrieves all sentences from a file.
+		 * Sentences with less than 3 words, and more than 80 words are omitted,
+		 * as these sentences are most likely wrongly parsed.
+		 */
 		List<NLPSentence> sentences = new ArrayList<>();
-		
+
 		int sentenceNumber = 1;
 		for(List<HasWord> words : dp) {
 			List<TaggedWord> taggedWords = tagger.tagSentence(words);
-			if(taggedWords.size()>0) {
+			if(taggedWords.size()>3 && taggedWords.size()<80) {
 				int start = taggedWords.get(0).beginPosition();
 
 				int end = taggedWords.get(taggedWords.size()-1).endPosition();
@@ -98,12 +101,13 @@ public class POSTagParser {
 				sentence.setPostags(getPosTagString(taggedWords));
 				sentences.add(sentence);
 				sentenceNumber++;
+
 			}
 		}
-		
+
 		return sentences;
 	}
-	
+
 	private String[] getPosTagString(List<TaggedWord> taggedWords) {
 		List<String> temp = new ArrayList<>();
 		int i = 1;

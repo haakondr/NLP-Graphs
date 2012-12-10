@@ -18,7 +18,7 @@ public class App {
 		}else if(choice==3) {
 			ps.createIndex();
 		}else if(choice==4) {
-			ps.startPlagiarismSearch();
+			ps.startCandidateRetrieval();
 		}else if(choice==5) {
 			ps.startPlagiarismSearchWithoutCandret();
 		}
@@ -37,7 +37,7 @@ public class App {
 			System.out.println("1: Graph edit distance calculation of two sentences");
 			System.out.println("2: preprocess the data specified in DATA_DIR in app.properties");
 			System.out.println("3: build index required for the candidate retrieval phase");
-			System.out.println("4: start detailed analysis - graph edit distance plagiarism search. (both indexing and preprocessing have to be done)");
+			System.out.println("4: start candidate retrieval. The results will be saved to the data base.");
 			System.out.println("5: start detailed analysis with candidate retrieval results written to file.");
 			System.out.println("exit: exits the application");
 			String action = in.readLine();

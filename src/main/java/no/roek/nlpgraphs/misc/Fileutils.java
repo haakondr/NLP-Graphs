@@ -98,6 +98,16 @@ public class Fileutils {
 		return tasks;
 	}
 
+	
+	public static Set<String> getFileNames(String dir, String newSuffix) {
+		Set<String> filenames = new HashSet<>();
+		File[] files = getFiles(Paths.get(dir));
+		for (File file : files) {
+			filenames.add(replaceFileExtention(file.getName(), newSuffix));
+		}
+		
+		return filenames;
+	}
 	public static Set<String> getFileNames(String  dir) {
 		Set<String> filenames = new HashSet<>();
 		File[] files = getFileList(dir);

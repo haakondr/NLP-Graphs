@@ -1,23 +1,5 @@
 package no.roek.nlpgraphs.preprocessing;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
-
-import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.graph.Graph;
-import no.roek.nlpgraphs.graph.Node;
-import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.GraphUtils;
-import no.roek.nlpgraphs.misc.SentenceUtils;
-
-import org.junit.Test;
-import org.maltparser.MaltParserService;
-import org.maltparser.core.exception.MaltChainedException;
-
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class ParseTest {
 

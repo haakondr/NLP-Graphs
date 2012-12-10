@@ -3,11 +3,7 @@ package no.roek.nlpgraphs.preprocessing;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
-import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
-
-import org.maltparser.MaltParserService;
-import org.maltparser.core.exception.MaltChainedException;
 
 public class DependencyParserWorker extends Thread{
 	private final BlockingQueue<ParseJob> queue;

@@ -109,4 +109,20 @@ public class ConfigService {
 	public String getDeprelInsdelFile() {
 		return configFile.getProperty("DEPREL_INSDEL_FILE");
 	}
+	
+	public int getRetrievalCount() {
+		return Integer.parseInt(configFile.getProperty("RETRIEVAL_COUNT"));
+	}
+	
+	public String getDBName() {
+		return configFile.getProperty("DBNAME");
+	}
+	
+	public String getDBLocation() {
+		return configFile.getProperty("DBLOCATION");
+	}
+	
+	public int getMergeDist() {
+		return Integer.parseInt(configFile.getProperty("MERGE_DISTANCE"));
+	}
 }

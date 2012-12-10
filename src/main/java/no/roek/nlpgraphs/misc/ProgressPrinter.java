@@ -14,7 +14,7 @@ public class ProgressPrinter {
 		return (current * 100) / total;
 	}
 	
-	public void printProgressbar(String text){
+	public synchronized void printProgressbar(String text){
 		current++;
 		int percent = getPercent();
 		

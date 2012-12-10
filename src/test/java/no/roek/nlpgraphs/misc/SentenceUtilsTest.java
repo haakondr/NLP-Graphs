@@ -1,12 +1,6 @@
 package no.roek.nlpgraphs.misc;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import no.roek.nlpgraphs.document.NLPSentence;
 

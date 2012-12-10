@@ -1,6 +1,5 @@
 package no.roek.nlpgraphs.misc;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismReference;
 import no.roek.nlpgraphs.graph.Graph;
 
 import org.apache.commons.io.IOUtils;

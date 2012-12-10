@@ -4,17 +4,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismReference;
 import no.roek.nlpgraphs.misc.SentenceUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
-import edu.stanford.nlp.ling.WordLemmaTag;
 
 public class NLPSentence {
 

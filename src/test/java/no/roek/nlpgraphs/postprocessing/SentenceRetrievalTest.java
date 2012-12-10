@@ -1,8 +1,5 @@
 package no.roek.nlpgraphs.postprocessing;
 
-import java.util.List;
-
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismReference;
 
 public class SentenceRetrievalTest {
 

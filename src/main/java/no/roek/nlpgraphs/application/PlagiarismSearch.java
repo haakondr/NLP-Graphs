@@ -6,11 +6,11 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import no.roek.nlpgraphs.candretrieval.CandidateRetrievalService;
-import no.roek.nlpgraphs.candretrieval.IndexBuilder;
-import no.roek.nlpgraphs.candretrieval.SentenceRetrievalWorker;
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismJob;
-import no.roek.nlpgraphs.detailedretrieval.PlagiarismWorker;
+import no.roek.nlpgraphs.candidateretrieval.CandidateRetrievalService;
+import no.roek.nlpgraphs.candidateretrieval.IndexBuilder;
+import no.roek.nlpgraphs.candidateretrieval.SentenceRetrievalWorker;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
+import no.roek.nlpgraphs.detailedanalysis.PlagiarismWorker;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.Fileutils;
@@ -18,6 +18,8 @@ import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.preprocessing.DependencyParserWorker;
 import no.roek.nlpgraphs.preprocessing.ParseJob;
 import no.roek.nlpgraphs.preprocessing.PosTagWorker;
+
+import com.mongodb.DBCursor;
 
 public class PlagiarismSearch {
 
@@ -28,6 +30,7 @@ public class PlagiarismSearch {
 	private PosTagWorker[] posTagThreads;
 	private PlagiarismWorker[] plagThreads;
 	private IndexBuilder[] indexBuilderThreads;
+	private SentenceRetrievalWorker[] candretThreads;
 	private int dependencyParserCount, posTagCount, plagThreadCount;
 	private ProgressPrinter progressPrinter;
 	private String dataDir, trainDir, testDir;
@@ -38,7 +41,7 @@ public class PlagiarismSearch {
 		dataDir = cs.getDataDir();
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
-		db = new DatabaseService();
+		db = new DatabaseService(cs.getDBName(), cs.getDBLocation());
 	}
 
 	public void preprocess() {
@@ -83,7 +86,7 @@ public class PlagiarismSearch {
 		return progressPrinter;
 	}
 
-	public synchronized void depParseJobDone(DependencyParserWorker parser, String text) {
+	public void depParseJobDone(DependencyParserWorker parser, String text) {
 		progressPrinter.printProgressbar(text);
 
 		if(progressPrinter.isDone()) {
@@ -91,28 +94,16 @@ public class PlagiarismSearch {
 				thread.kill();
 			}
 
-			//			System.out.println("Preprocessing done. Starting plagiarism search (index building if needed)");
-			//			App.main(null);
-		}
-	}
+			System.out.println("Preprocessing done. Exiting)");
 
-	public boolean shouldCreateIndex() {
-		File indexDir = new File("lucene/"+trainDir);
-		return !indexDir.exists();
+		}
 	}
 
 	public void createIndex() {
 		BlockingQueue<String> documentQueue = new LinkedBlockingQueue<>();
-		for(String sentenceId : db.getAll("source-sentences", "id")) {
-			try {
-				documentQueue.put(sentenceId);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		progressPrinter = new ProgressPrinter(documentQueue.size());
-
+		
+		DBCursor cursor = db.getSourceSentencesCursor();
+		progressPrinter = new ProgressPrinter(cursor.count());
 		crs = new CandidateRetrievalService(Paths.get(trainDir));
 
 		indexBuilderThreads = new IndexBuilder[cs.getIndexBuilderThreads()];
@@ -121,9 +112,30 @@ public class PlagiarismSearch {
 			indexBuilderThreads[i].setName("IndexBuilder-"+i);
 			indexBuilderThreads[i].start();
 		}
+		
+		while(cursor.hasNext()) {
+			try{
+				documentQueue.put(cursor.next().get("id").toString());
+			}catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		cursor.close();
 	}
 
-	public synchronized void indexBuilderJobDone() {
+	public void indexBuilderDone() {
+		for(IndexBuilder thread : indexBuilderThreads) {
+			thread.kill();
+		}
+
+		crs.closeWriter();
+
+		System.out.println("Index building done.. ");
+		App.main(null);
+	}
+	
+	public void indexBuilderJobDone() {
 		progressPrinter.printProgressbar("");
 		if(progressPrinter.isDone()) {
 			for(IndexBuilder thread : indexBuilderThreads) {
@@ -132,42 +144,59 @@ public class PlagiarismSearch {
 
 			crs.closeWriter();
 
-			System.out.println("Index building done.. Starting plagiarism search.");
+			System.out.println("Index building done.. ");
 			App.main(null);
 		}
 
 	}
 
-	public void startPlagiarismSearch() {
-		System.out.println("starting plagiarism search..");
+
+	public void startCandidateRetrieval() {
+		System.out.println("Starting candidate retrieval phase. The results will be stored to the database");
 		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
 
-		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
+		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious_documents"), cs.getResultsDir(), "xml")) {
 			try {
 				retrievalQueue.put(file);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-
 		progressPrinter = new ProgressPrinter(retrievalQueue.size());
 
-		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
 		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
-
+		
+		candretThreads = new SentenceRetrievalWorker[cs.getSentenceRetrievalThreads()];
 		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
-			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
-			worker.setName("SentenceRetrieval-Thread-"+i);
-			worker.start();
+			candretThreads[i] =  new SentenceRetrievalWorker(crs, cs.getRetrievalCount(), retrievalQueue, db, this);
+			candretThreads[i].setName("SentenceRetrieval-Thread-"+i);
+			candretThreads[i].start();
+			
 		}
+	}
 
-		startPlagiarismSearch(plagQueue);
+	public void candretJobDone(String text) {
+		progressPrinter.printProgressbar(text);
+		if(progressPrinter.isDone()) {
+	
+			for (SentenceRetrievalWorker thread : candretThreads) {
+				thread.kill();
+			}
+			
+			System.out.println("\nCandidate retrieval search done. ");
+			App.main(null);
+		}
 	}
 
 	public void startPlagiarismSearchWithoutCandret() {
 		System.out.println("starting plagiarism search with candidate retrieval results from the database..");
 		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>();
-		db.retrieveAllPassages(plagQueue);
+		String dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
+		new File(cs.getResultsDir()+dir).mkdirs();
+		Set<String> filesDone = Fileutils.getFileNames(cs.getResultsDir()+dir, "txt");
+
+		System.out.println(filesDone.size()+" files already done.");
+		db.retrieveAllPassages(plagQueue, filesDone);
 
 		progressPrinter = new ProgressPrinter(plagQueue.size());
 		startPlagiarismSearch(plagQueue);
@@ -183,7 +212,7 @@ public class PlagiarismSearch {
 		}
 	}
 
-	public synchronized void plagJobDone(PlagiarismWorker worker, String text) {
+	public void plagJobDone(PlagiarismWorker worker, String text) {
 		progressPrinter.printProgressbar(text);
 		if(progressPrinter.isDone()) {
 			for(PlagiarismWorker plagWorker : plagThreads) {

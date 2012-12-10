@@ -1,3 +1,4 @@
+package no.roek.nlpgraphs.detailedanalysis;
 //package no.roek.nlpgraphs.detailedretrieval;
 //
 //import java.util.Map;

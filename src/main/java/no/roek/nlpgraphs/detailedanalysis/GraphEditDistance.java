@@ -1,9 +1,7 @@
-package no.roek.nlpgraphs.detailedretrieval;
+package no.roek.nlpgraphs.detailedanalysis;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
@@ -29,6 +27,7 @@ public class GraphEditDistance {
 		this.g2 = g2;
 		this.posEditWeights = posEditWeights;
 		this.deprelEditWeights = deprelEditWeights;
+		this.costMatrix = createCostMatrix(g1, g2);
 	}
 
 	public GraphEditDistance(Graph g1, Graph g2, Map<String, Double> posEditWeights, Map<String, Double> deprelEditWeights) {
@@ -58,22 +57,12 @@ public class GraphEditDistance {
 
 		return sum;
 	}
-
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
 			this.costMatrix = createCostMatrix(g1, g2);
 		}
 		return costMatrix;
 	}
-
-	//	public double getDistance() {
-	//		/**
-	//		 * Retrieves the graph edit distance of graph g1 & g2,
-	//		 * using the Jonker-Volgenant algorithm to retrieve the (seemingly) optimal cost assignment of the cost matrix.
-	//		 */
-	//		JVC jvc = JVC.solve(this.costMatrix);
-	//		return jvc.getCost();
-	//	}
 
 	private double[][] createCostMatrix(Graph g1, Graph g2) {
 		/**
@@ -86,7 +75,6 @@ public class GraphEditDistance {
 		 */
 		int n = g1.getNodes().size();
 		int m = g2.getNodes().size();
-
 		double[][] costMatrix = new double[n+m][n+m];
 
 		for (int i = 0; i < n; i++) {
@@ -162,7 +150,7 @@ public class GraphEditDistance {
 		if(edges1.size() == 0 || edges2.size() == 0) {
 			return getWeightSum(edges1) + getWeightSum(edges2);
 		}
-		
+
 		int n = edges1.size();
 		int m = edges2.size();
 		double[][] edgeCostMatrix = new double[n+m][m+n];
@@ -192,7 +180,7 @@ public class GraphEditDistance {
 
 		return sum / ((n+m));
 	}
-	
+
 	public double getDeprelWeight(Edge edge) {
 		Double weight = deprelEditWeights.get(edge.getLabel());
 		if(weight == null) {
@@ -200,13 +188,13 @@ public class GraphEditDistance {
 		}
 		return weight;
 	}
-	
+
 	public double getWeightSum(List<Edge> edges) {
 		double sum = 0;
 		for (Edge edge : edges) {
 			sum += getDeprelWeight(edge);
 		}
-		
+
 		return sum;
 	}
 
