@@ -29,7 +29,7 @@ public class DatabaseService {
 	private final String suspiciousCollectionName = "suspicious_sentences";
 	private final String suspiciousDocsCollection = "suspicious_documents";
 	private final String sourceDocsCollection = "source_documents";
-	private final String candidateCollection = "candidate_passages";
+	private final String candidateCollection = "candidate_passages_150";
 	private DBCollection suspiciousColl, sourceColl;
 	
 	public DatabaseService(String dbname, String dblocation) {
@@ -181,7 +181,7 @@ public class DatabaseService {
 			for (Object obj : passages) {
 				BasicDBObject dbObject = (BasicDBObject) obj;
 				PlagiarismPassage passage = new PlagiarismPassage(dbObject.getString("source_file"), dbObject.getInt("source_sentence"), 
-						dbObject.getString("suspicious_file"), dbObject.getInt("suspicious_sentence"), dbObject.getDouble("candret_score"));
+						dbObject.getString("suspicious_file"), dbObject.getInt("suspicious_sentence"));
 				job.addTextPair(passage);
 				
 			}

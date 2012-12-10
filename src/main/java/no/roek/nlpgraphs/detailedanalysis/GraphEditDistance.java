@@ -7,6 +7,7 @@ import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
+import com.google.code.javakbest.JVC;
 import com.konstantinosnedas.HungarianAlgorithm;
 
 
@@ -27,7 +28,7 @@ public class GraphEditDistance {
 		this.g2 = g2;
 		this.posEditWeights = posEditWeights;
 		this.deprelEditWeights = deprelEditWeights;
-		this.costMatrix = createCostMatrix(g1, g2);
+		this.costMatrix = createCostMatrix();
 	}
 
 	public GraphEditDistance(Graph g1, Graph g2, Map<String, Double> posEditWeights, Map<String, Double> deprelEditWeights) {
@@ -47,7 +48,6 @@ public class GraphEditDistance {
 		/**
 		 * Retrieves the approximated graph edit distance between the two graphs g1 & g2.
 		 */
-		this.costMatrix = createCostMatrix(g1, g2);
 		int[][] assignment = HungarianAlgorithm.hgAlgorithm(this.costMatrix, "min");
 
 		double sum = 0; 
@@ -57,14 +57,29 @@ public class GraphEditDistance {
 
 		return sum;
 	}
+	
+	public double getVolgenantJonkerDistance() {
+		JVC jvc = JVC.solve(this.costMatrix);
+		return jvc.getCost();
+	}
+	
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
-			this.costMatrix = createCostMatrix(g1, g2);
+			this.costMatrix = createCostMatrix();
 		}
 		return costMatrix;
 	}
 
-	private double[][] createCostMatrix(Graph g1, Graph g2) {
+//	public double getDistance() {
+//		/**
+//		 * Retrieves the graph edit distance of graph g1 & g2,
+//		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
+//		 */
+//		JVC jvc = JVC.solve(this.costMatrix);
+//		return jvc.getCost();
+//	}
+
+	public double[][] createCostMatrix() {
 		/**
 		 * Creates the cost matrix used as input to Munkres algorithm.
 		 * The matrix consists of 4 sectors: upper left, upper right, bottom left, bottom right.
@@ -221,9 +236,6 @@ public class GraphEditDistance {
 
 
 	public void printMatrix() {
-		if(costMatrix == null) {
-			costMatrix = createCostMatrix(g1, g2);
-		}
 		System.out.println("-------------");
 		System.out.println("Cost matrix: ");
 		for (int i = 0; i < costMatrix.length; i++) {
