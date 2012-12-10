@@ -1,5 +1,12 @@
 package no.roek.nlpgraphs.detailedanalysis;
 
+<<<<<<< HEAD
+=======
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+>>>>>>> f9fb64655251eebe9827a14b5b9e41a65f6c77c3
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
@@ -24,7 +31,7 @@ public class PlagiarismWorker extends Thread {
 		ConfigService cs = new ConfigService();
 		this.resultsDir = cs.getResultsDir();
 		this.mergeDist = cs.getMergeDist();
-		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"mergedist_"+mergeDist+"/";
+		this.dir = "plagthreshold_"+cs.getPlagiarismThreshold()+"/";
 	}
 
 	@Override
