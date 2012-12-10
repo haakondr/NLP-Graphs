@@ -70,15 +70,6 @@ public class GraphEditDistance {
 		return costMatrix;
 	}
 
-//	public double getDistance() {
-//		/**
-//		 * Retrieves the graph edit distance of graph g1 & g2,
-//		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
-//		 */
-//		JVC jvc = JVC.solve(this.costMatrix);
-//		return jvc.getCost();
-//	}
-
 	public double[][] createCostMatrix() {
 		/**
 		 * Creates the cost matrix used as input to Munkres algorithm.
