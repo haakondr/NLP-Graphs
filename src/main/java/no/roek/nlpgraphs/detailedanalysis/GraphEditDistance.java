@@ -7,6 +7,7 @@ import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
+import com.google.code.javakbest.JVC;
 import com.konstantinosnedas.HungarianAlgorithm;
 
 
@@ -61,6 +62,7 @@ public class GraphEditDistance {
 		JVC jvc = JVC.solve(this.costMatrix);
 		return jvc.getCost();
 	}
+	
 	public double[][] getCostMatrix() {
 		if(costMatrix==null) {
 			this.costMatrix = createCostMatrix();
@@ -68,20 +70,7 @@ public class GraphEditDistance {
 		return costMatrix;
 	}
 
-<<<<<<< HEAD
-	private double[][] createCostMatrix(Graph g1, Graph g2) {
-=======
-//	public double getDistance() {
-//		/**
-//		 * Retrieves the graph edit distance of graph g1 & g2,
-//		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
-//		 */
-//		JVC jvc = JVC.solve(this.costMatrix);
-//		return jvc.getCost();
-//	}
-
 	public double[][] createCostMatrix() {
->>>>>>> f9fb64655251eebe9827a14b5b9e41a65f6c77c3
 		/**
 		 * Creates the cost matrix used as input to Munkres algorithm.
 		 * The matrix consists of 4 sectors: upper left, upper right, bottom left, bottom right.
