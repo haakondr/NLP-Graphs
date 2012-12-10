@@ -8,19 +8,17 @@ import java.io.InputStreamReader;
 public class App {
 
 	public static void main(String[] args) {
-		PlagiarismSearch ps = new PlagiarismSearch();
-
 		int choice = getChoice();
 		if(choice==1) {
 			GED.main(args);
 		}else if(choice==2) {
-			ps.preprocess();			
+			new PlagiarismSearch().preprocess();			
 		}else if(choice==3) {
-			ps.createIndex();
+			new PlagiarismSearch().createIndex();
 		}else if(choice==4) {
-			ps.startCandidateRetrieval();
+			new PlagiarismSearch().startCandidateRetrieval();
 		}else if(choice==5) {
-			ps.startPlagiarismSearchWithoutCandret();
+			new PlagiarismSearch().startPlagiarismSearchWithoutCandret();
 		}
 	}
 	
