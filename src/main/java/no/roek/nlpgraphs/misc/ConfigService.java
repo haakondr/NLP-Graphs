@@ -42,10 +42,6 @@ public class ConfigService {
 		return configFile.getProperty("TRAIN_DIR");
 	}
 
-	public String getAnnotationsDir() {
-		return configFile.getProperty("ANNOTATIONS_DIR");
-	}
-
 	public String getResultsDir() {
 		return configFile.getProperty("RESULTS_DIR");
 	}
