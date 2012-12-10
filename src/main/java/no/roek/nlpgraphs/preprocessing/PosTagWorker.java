@@ -1,14 +1,11 @@
 package no.roek.nlpgraphs.preprocessing;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.misc.ConfigService;
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTagWorker extends Thread {
 

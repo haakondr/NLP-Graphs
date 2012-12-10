@@ -7,7 +7,6 @@ import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 
-import com.google.code.javakbest.JVC;
 import com.konstantinosnedas.HungarianAlgorithm;
 
 
@@ -64,15 +63,6 @@ public class GraphEditDistance {
 		}
 		return costMatrix;
 	}
-
-//	public double getDistance() {
-//		/**
-//		 * Retrieves the graph edit distance of graph g1 & g2,
-//		 * using the Jonker-Volgenant algorithm to retrieve the optimal cost assignment of the cost matrix.
-//		 */
-//		JVC jvc = JVC.solve(this.costMatrix);
-//		return jvc.getCost();
-//	}
 
 	private double[][] createCostMatrix(Graph g1, Graph g2) {
 		/**

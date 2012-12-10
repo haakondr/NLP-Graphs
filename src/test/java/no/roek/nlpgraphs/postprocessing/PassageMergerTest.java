@@ -1,15 +1,15 @@
 package no.roek.nlpgraphs.postprocessing;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import no.roek.nlpgraphs.detailedanalysis.PassageMerger;
-import no.roek.nlpgraphs.detailedanalysis.PlagiarismFinder;
 import no.roek.nlpgraphs.detailedanalysis.PlagiarismReference;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class PassageMergerTest {
 

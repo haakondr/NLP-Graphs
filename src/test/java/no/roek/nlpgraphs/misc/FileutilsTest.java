@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.sun.media.sound.InvalidFormatException;
-
 public class FileutilsTest {
 
 	@Test

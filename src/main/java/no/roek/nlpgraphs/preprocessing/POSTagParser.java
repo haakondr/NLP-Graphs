@@ -1,7 +1,6 @@
 package no.roek.nlpgraphs.preprocessing;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,18 +9,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.NLPSentence;
+import no.roek.nlpgraphs.misc.ConfigService;
+
 import org.apache.commons.io.IOUtils;
 
-import no.roek.nlpgraphs.document.NLPSentence;
-import no.roek.nlpgraphs.document.WordToken;
-import no.roek.nlpgraphs.misc.ConfigService;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.ling.WordLemmaTag;
 import edu.stanford.nlp.ling.WordTag;
 import edu.stanford.nlp.objectbank.TokenizerFactory;
-import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.Morphology;
 import edu.stanford.nlp.process.PTBTokenizer;

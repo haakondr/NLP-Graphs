@@ -5,17 +5,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.roek.nlpgraphs.document.PlagiarismPassage;
+import no.roek.nlpgraphs.misc.Job;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.JsonObject;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-
-import no.roek.nlpgraphs.document.PlagiarismPassage;
-import no.roek.nlpgraphs.misc.Job;
 
 public class PlagiarismJob extends Job {
 

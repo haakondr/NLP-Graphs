@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mongodb.DBCursor;
-
 import no.roek.nlpgraphs.candidateretrieval.CandidateRetrievalService;
 import no.roek.nlpgraphs.candidateretrieval.IndexBuilder;
 import no.roek.nlpgraphs.candidateretrieval.SentenceRetrievalWorker;
@@ -20,6 +18,8 @@ import no.roek.nlpgraphs.misc.ProgressPrinter;
 import no.roek.nlpgraphs.preprocessing.DependencyParserWorker;
 import no.roek.nlpgraphs.preprocessing.ParseJob;
 import no.roek.nlpgraphs.preprocessing.PosTagWorker;
+
+import com.mongodb.DBCursor;
 
 public class PlagiarismSearch {
 
@@ -187,32 +187,6 @@ public class PlagiarismSearch {
 			App.main(null);
 		}
 	}
-	//	public void startPlagiarismSearch() {
-	//		//TODO: fix new resultsdir
-	//		System.out.println("starting plagiarism search..");
-	//		BlockingQueue<String> retrievalQueue = new LinkedBlockingQueue<>();
-	//
-	//		for (String file : Fileutils.getFilesNotDone(db.getFiles("suspicious-documents"), cs.getResultsDir(), "xml")) {
-	//			try {
-	//				retrievalQueue.put(file);
-	//			} catch (InterruptedException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//
-	//		progressPrinter = new ProgressPrinter(retrievalQueue.size());
-	//
-	//		BlockingQueue<PlagiarismJob> plagQueue = new LinkedBlockingQueue<>(10);
-	//		CandidateRetrievalService crs = new CandidateRetrievalService(Paths.get(trainDir));
-	//
-	//		for (int i = 0; i < cs.getSentenceRetrievalThreads() ; i++) {
-	//			SentenceRetrievalWorker worker = new SentenceRetrievalWorker(crs, retrievalQueue, plagQueue);
-	//			worker.setName("SentenceRetrieval-Thread-"+i);
-	//			worker.start();
-	//		}
-	//
-	//		startPlagiarismSearch(plagQueue);
-	//	}
 
 	public void startPlagiarismSearchWithoutCandret() {
 		System.out.println("starting plagiarism search with candidate retrieval results from the database..");

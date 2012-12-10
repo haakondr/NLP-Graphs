@@ -1,24 +1,12 @@
 package no.roek.nlpgraphs.detailedanalysis;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
-import no.roek.nlpgraphs.document.PlagiarismPassage;
-import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
-import no.roek.nlpgraphs.misc.Fileutils;
-import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.misc.XMLUtils;
-
-import org.apache.commons.io.IOUtils;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.output.XMLOutputter;
 
 public class PlagiarismWorker extends Thread {
 

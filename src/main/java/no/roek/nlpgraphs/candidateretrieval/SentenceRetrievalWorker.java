@@ -1,6 +1,5 @@
 package no.roek.nlpgraphs.candidateretrieval;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
@@ -8,9 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
-import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
-import no.roek.nlpgraphs.misc.Fileutils;
 
 public class SentenceRetrievalWorker extends Thread {
 

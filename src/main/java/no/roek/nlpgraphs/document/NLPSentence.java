@@ -10,12 +10,6 @@ import no.roek.nlpgraphs.misc.SentenceUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
-import edu.stanford.nlp.ling.WordLemmaTag;
-
 public class NLPSentence {
 
 	protected int number, start, length;

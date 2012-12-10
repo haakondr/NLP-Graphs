@@ -4,6 +4,7 @@ package no.roek.nlpgraphs.preprocessing;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.misc.ConfigService;
 import no.roek.nlpgraphs.misc.DatabaseService;
+
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 

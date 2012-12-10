@@ -1,17 +1,12 @@
 package no.roek.nlpgraphs.misc;
 
-import java.io.File;
 import java.net.UnknownHostException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
-
-import org.json.JSONObject;
 
 import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;

@@ -1,12 +1,10 @@
 package no.roek.nlpgraphs.candidateretrieval;
 
-import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import no.roek.nlpgraphs.application.PlagiarismSearch;
 import no.roek.nlpgraphs.misc.DatabaseService;
-import no.roek.nlpgraphs.misc.SentenceUtils;
 
 public class IndexBuilder extends Thread {
 

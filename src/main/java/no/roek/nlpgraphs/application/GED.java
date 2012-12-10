@@ -7,27 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import com.google.gson.JsonObject;
-import com.konstantinosnedas.HungarianAlgorithm;
-import com.mongodb.BasicDBObject;
-
-
 import no.roek.nlpgraphs.detailedanalysis.GraphEditDistance;
-import no.roek.nlpgraphs.graph.Edge;
 import no.roek.nlpgraphs.graph.Graph;
 import no.roek.nlpgraphs.graph.Node;
 import no.roek.nlpgraphs.misc.ConfigService;
-import no.roek.nlpgraphs.misc.DatabaseService;
 import no.roek.nlpgraphs.misc.EditWeightService;
 import no.roek.nlpgraphs.misc.GraphUtils;
 import no.roek.nlpgraphs.preprocessing.DependencyParser;
 import no.roek.nlpgraphs.preprocessing.POSTagParser;
 
+import com.konstantinosnedas.HungarianAlgorithm;
+import com.mongodb.BasicDBObject;
+
 public class GED {
 
-	//TODO: move most of these classes to utility classes?
 	public static void main(String[] args) {
 		ConfigService cs = new ConfigService();
 
@@ -45,16 +38,13 @@ public class GED {
 		GraphEditDistance ged = new GraphEditDistance(g1, g2, posEditWeights, deprelEditWeights);
 
 //						ged.printMatrix();
-		printLatexEditPath(g1, g2, ged.getCostMatrix());
-		printLatexMatrix(g1, g2, ged.getCostMatrix());
+//		printLatexEditPath(g1, g2, ged.getCostMatrix());
+//		printLatexMatrix(g1, g2, ged.getCostMatrix());
 		System.out.println("GED for the two graphs: "+ged.getDistance()+". Normalised: "+ged.getNormalizedDistance());
 		System.out.println("Edit path:");
 		for(String editPath : getEditPath(g1, g2, ged.getCostMatrix(), true)) {
 			System.out.println(editPath);
 		}
-//		for(String freeEdit : getFreeEdits(g1, g2, ged.getCostMatrix())) {
-//			System.out.print(freeEdit+", ");
-//		}
 	}
 
 	public static void printNodes(Graph g) {
