@@ -2,9 +2,11 @@ A thesis project focusing on the usage of dependency graphs as a representation 
 Sentences are represented as graph objects, tagged with part-of-speech tags and relations between tokens.
 This representation is used as a measure of similarity between two sentences, utilized for plagiarism detection.
 
+The interesting part of the program is mainly GraphEditDistance.java, which is the focus of this thesis.
 --------------------------------
 
 Dependencies: java7, maven
+a  MongoDB database must be running at the location specified in app.properties  (for a full run, not for calculating graph edit distance between two sentences with GED.java)
 
 Usage:
 
