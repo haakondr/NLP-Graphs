@@ -8,19 +8,11 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
+import com.mongodb.*;
 import no.roek.nlpgraphs.detailedanalysis.PlagiarismJob;
 import no.roek.nlpgraphs.document.NLPSentence;
 import no.roek.nlpgraphs.document.PlagiarismPassage;
 import no.roek.nlpgraphs.document.WordToken;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.WriteConcern;
 
 public class DatabaseService {
 
@@ -34,7 +26,7 @@ public class DatabaseService {
 	
 	public DatabaseService(String dbname, String dblocation, int port) {
 		try {
-			Mongo m = new Mongo(dblocation, port);
+            Mongo m = new MongoClient(dblocation, port);
 			m.setWriteConcern(WriteConcern.NORMAL);
 			db = m.getDB(dbname);
 
