@@ -32,12 +32,12 @@ public class DatabaseService {
 	private final String candidateCollection = "candidate_passages_150";
 	private DBCollection suspiciousColl, sourceColl;
 	
-	public DatabaseService(String dbname, String dblocation) {
+	public DatabaseService(String dbname, String dblocation, int port) {
 		try {
-			Mongo m = new Mongo(dblocation);
+			Mongo m = new Mongo(dblocation, port);
 			m.setWriteConcern(WriteConcern.NORMAL);
 			db = m.getDB(dbname);
-			
+
 			suspiciousColl = db.getCollection(suspiciousCollectionName);
 			sourceColl = db.getCollection(sourceCollectionName);
 			addIndex(sourceCollectionName);

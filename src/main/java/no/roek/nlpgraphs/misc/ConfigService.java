@@ -117,7 +117,11 @@ public class ConfigService {
 	public String getDBLocation() {
 		return configFile.getProperty("DBLOCATION");
 	}
-	
+
+    public int getDBPort() {
+        return Integer.parseInt(configFile.getProperty("DBPORT"));
+    }
+
 	public int getMergeDist() {
 		return Integer.parseInt(configFile.getProperty("MERGE_DISTANCE"));
 	}

@@ -41,7 +41,7 @@ public class PlagiarismSearch {
 		dataDir = cs.getDataDir();
 		trainDir = cs.getTrainDir();
 		testDir = cs.getTestDir();
-		db = new DatabaseService(cs.getDBName(), cs.getDBLocation());
+		db = new DatabaseService(cs.getDBName(), cs.getDBLocation(), cs.getDBPort());
 	}
 
 	public void preprocess() {
